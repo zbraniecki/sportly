@@ -72,3 +72,11 @@ class TestResult(models.Model):
                                str(self.datetime)[:-6],  # fugly
                                self.result,
                                self.test.units)
+
+class TeamActivity(models.Model):
+    player= models.ForeignKey(Player)
+    value = models.IntegerField()
+
+    def __unicode__(self):
+        return '%s (%d)' % (self.player.__unicode__(), self.value)
+
