@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from playerpicker.models import TeamActivity
+#from playerpicker.models import TeamActivity
 
 def teamactivity(request):
     pid = request.REQUEST.get('pid', None)
