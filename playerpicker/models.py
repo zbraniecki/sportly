@@ -1,4 +1,5 @@
 from django.db import models
+import ast
 
 class Person(models.Model):
     name = models.CharField(max_length=200)
@@ -46,13 +47,85 @@ class Skill(models.Model):
 class View(models.Model):
     name = models.CharField(max_length=200)
     people = models.ManyToManyField(Person, through="ViewValue")
+    event = models.ForeignKey(Event, blank=True, null=True)
     formula = models.CharField(max_length=200, blank=True, null=True)
+    views = models.ManyToManyField("View", blank=True, null=True)
 
     def __unicode__(self):
         return '%s' % self.name
 
-    def compute(self):
-        pass
+    def value(self, pid):
+        try:
+            vw = ViewValue.objects.get(view=self, person=pid)
+            return vw.value
+        except ViewValue.DoesNotExist:
+            return None
+
+    @property
+    def people(self):
+        if self.event:
+            return Roster.objects.get(event=self.event).players.all()
+        return Person.objects.all()
+
+    @property
+    def people_with_values(self):
+        players = self.people
+        vwl = ViewValue.objects.filter(view=self)
+        for player in players:
+            try:
+                player.value = vwl.get(person=player).value
+            except ViewValue.DoesNotExist:
+                player.value = None
+        return players
+
+    def compute_expr(self, expr, person):
+        if isinstance(expr, ast.Name):
+            if expr.id.startswith('V'):
+                view = View.objects.get(id=expr.id[1:])
+                val = view.value(pid=person.id)
+                if val is None:
+                    return 0
+                return val
+            raise SyntaxError("Unknown name: %s" % expr.id)
+        if isinstance(expr, ast.Num):
+            return expr.n
+        if isinstance(expr, ast.BinOp):
+            left = self.compute_expr(expr.left, person=person)
+            right = self.compute_expr(expr.right, person=person)
+            if isinstance(expr.op, ast.Mult):
+                return left*right
+        raise SyntaxError("Unknown expr literal: %s" % type(expr))
+
+    def compile_formula(self, fs):
+        try:
+            exp = ast.parse(fs)
+        except SyntaxError:
+            raise SyntaxError("Could not parse formula: %s" % fs)
+        exp = exp.body[0]
+        if not isinstance(exp, ast.Expr):
+            raise SyntaxError()
+        return exp
+
+
+    def compute_value(self, person):
+        exp = self.compile_formula(self.formula)
+        val = self.compute_expr(exp.value, person=person)
+        return val
+
+    def compute_values(self):
+        people = self.people
+        vwl = ViewValue.objects.filter(view=self)
+        for person in people:
+            value = self.compute_value(person)
+            try:
+                vw = vwl.get(person=person)
+                vw.value = value
+            except ViewValue.DoesNotExist:
+                vw = ViewValue(person=person,
+                               view=self,
+                               value=value)
+            vw.save()
+        
 
 class ViewValue(models.Model):
     person = models.ForeignKey(Person)

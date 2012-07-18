@@ -1,10 +1,15 @@
 from django.shortcuts import render_to_response
-from playerpicker.models import View, ViewValue
+from playerpicker.models import View, ViewValue, Person, Roster
 
-def view(request):
-    v1 = View.objects.all()[0]
-    vwl = ViewValue.objects.filter(view=v1)
-    return render_to_response('playerpicker/view.html', {'view': v1, 'vwl': vwl})
+def views(request):
+    views = View.objects.all()
+    return render_to_response('playerpicker/views.html', {'views': views})
+
+def view(request, vid):
+    v1 = View.objects.get(pk=vid)
+
+    v1.compute_values()
+    return render_to_response('playerpicker/plainview.html', {'view': v1})
 
 def skills(request):
     players = Player.objects.all()
