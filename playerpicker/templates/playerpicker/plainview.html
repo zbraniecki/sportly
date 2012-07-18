@@ -9,7 +9,7 @@
       {% for pwv in view.people_with_values %}
       <li id="li-{{pwv.id}}">
           <label>{{ pwv }}</label>
-          <input type="text" class="amount" value="{{ pwv.value }}" />
+          <input type="text" class="amount" value="{{ pwv.value|default_if_none:"" }}" />
       </li>
       {% endfor %}
   </ul>

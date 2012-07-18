@@ -113,6 +113,8 @@ class View(models.Model):
             exp = ast.parse(fs)
         except SyntaxError:
             raise SyntaxError("Could not parse formula: %s" % fs)
+        if len(exp.body) is 0:
+            raise SyntaxError("Empty formula")
         exp = exp.body[0]
         if not isinstance(exp, ast.Expr):
             raise SyntaxError()
@@ -142,7 +144,7 @@ class View(models.Model):
 class ViewValue(models.Model):
     person = models.ForeignKey(Person)
     view = models.ForeignKey(View)
-    value = models.IntegerField()
+    value = models.FloatField()
 
     def __unicode__(self):
         return u"%s \u2014 %s [%s]" % (self.person.__unicode__(),

@@ -8,7 +8,8 @@ def views(request):
 def view(request, vid):
     v1 = View.objects.get(pk=vid)
 
-    v1.compute_values()
+    if v1.formula:
+        v1.compute_values()
     return render_to_response('playerpicker/plainview.html', {'view': v1})
 
 def skills(request):
