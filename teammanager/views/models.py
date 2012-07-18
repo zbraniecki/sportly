@@ -1,6 +1,6 @@
 from django.db import models
-from playerpicker.utils import compile_formula, compute_expr
-from events.models import Event, Roster, Person
+from teammanager.views.utils import compile_formula, compute_expr
+from teammanager.events.models import Event, Roster, Person
 
 
 

@@ -100,10 +100,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'fourhands.urls'
+ROOT_URLCONF = 'teammanager.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'fourhands.wsgi.application'
+WSGI_APPLICATION = 'teammanager.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -122,9 +122,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'playerpicker',
-    'events',
-    'people',
+    
+    
+    'teammanager.views',
+    'teammanager.events',
+    'teammanager.people',
 )
 
 # A sample logging configuration. The only tangible logging
