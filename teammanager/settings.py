@@ -123,11 +123,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     
-    
+    'teammanager.core', 
     'teammanager.views',
     'teammanager.events',
-    'teammanager.people',
-    'teammanager.team',
 )
 
 # A sample logging configuration. The only tangible logging

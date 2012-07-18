@@ -1,7 +1,7 @@
 [
   {
     "pk": 1, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Braniecki", 
       "name": "Zbigniew"
@@ -9,7 +9,7 @@
   }, 
   {
     "pk": 2, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Chlebicka", 
       "name": "Gra\u017cyna"
@@ -17,7 +17,7 @@
   }, 
   {
     "pk": 3, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Cichowska", 
       "name": "Zuzanna"
@@ -25,7 +25,7 @@
   }, 
   {
     "pk": 4, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Corbetta", 
       "name": "Michele"
@@ -33,7 +33,7 @@
   }, 
   {
     "pk": 5, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "G\u0105siorowska", 
       "name": "Matylda"
@@ -41,7 +41,7 @@
   }, 
   {
     "pk": 6, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Gecow", 
       "name": "Marcin"
@@ -49,7 +49,7 @@
   }, 
   {
     "pk": 7, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Go\u0142\u0119biowski", 
       "name": "Micha\u0142"
@@ -57,7 +57,7 @@
   }, 
   {
     "pk": 8, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Goss", 
       "name": "Marcin"
@@ -65,7 +65,7 @@
   }, 
   {
     "pk": 9, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Jankowska", 
       "name": "Olga"
@@ -73,7 +73,7 @@
   }, 
   {
     "pk": 10, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Jesionek", 
       "name": "Ewa"
@@ -81,7 +81,7 @@
   }, 
   {
     "pk": 11, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Kadenaci", 
       "name": "Adam"
@@ -89,7 +89,7 @@
   }, 
   {
     "pk": 12, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Kryci\u0144ski", 
       "name": "Jan"
@@ -97,7 +97,7 @@
   }, 
   {
     "pk": 13, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Ma\u0142ek", 
       "name": "Adam"
@@ -105,7 +105,7 @@
   }, 
   {
     "pk": 14, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Moroz", 
       "name": "Antoni"
@@ -113,7 +113,7 @@
   }, 
   {
     "pk": 15, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Piechowska", 
       "name": "Klara"
@@ -121,7 +121,7 @@
   }, 
   {
     "pk": 16, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Polatowski", 
       "name": "Piotr"
@@ -129,7 +129,7 @@
   }, 
   {
     "pk": 17, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Sawicka", 
       "name": "Katarzyna"
@@ -137,7 +137,7 @@
   }, 
   {
     "pk": 18, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Sroka", 
       "name": "Adrian"
@@ -145,7 +145,7 @@
   }, 
   {
     "pk": 19, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Szejko", 
       "name": "Piotr"
@@ -153,7 +153,7 @@
   }, 
   {
     "pk": 20, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "T\u0119perowska", 
       "name": "Magdalena"
@@ -161,7 +161,7 @@
   }, 
   {
     "pk": 21, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Wr\u00f3blewska", 
       "name": "Sylwia"
@@ -169,7 +169,7 @@
   }, 
   {
     "pk": 22, 
-    "model": "people.person", 
+    "model": "core.person", 
     "fields": {
       "lastname": "Kryci\u0144ski", 
       "name": "Micha\u0142"

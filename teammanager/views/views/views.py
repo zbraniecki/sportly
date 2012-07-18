@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from teammanager.views.models import View, ViewValue, Person, Roster
+from teammanager.views.models import View, ViewValue, Person
 
 def views(request):
     views = View.objects.all()

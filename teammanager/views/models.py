@@ -1,6 +1,6 @@
 from django.db import models
 from teammanager.views.utils import compile_formula, compute_expr
-from teammanager.events.models import Event, Roster, Person
+from teammanager.core.models import Event, Person, Team
 
 
 
@@ -8,6 +8,7 @@ class View(models.Model):
     name = models.CharField(max_length=200)
     people = models.ManyToManyField(Person, through="ViewValue")
     event = models.ForeignKey(Event, blank=True, null=True)
+    team = models.ForeignKey(Team, blank=True, null=True)
     formula = models.CharField(max_length=200, blank=True, null=True)
     views = models.ManyToManyField("View", blank=True, null=True)
 
@@ -24,8 +25,8 @@ class View(models.Model):
     @property
     def people(self):
         if self.event:
-            return Roster.objects.get(event=self.event).players.all()
-        return Person.objects.all()
+            return self.event.available_players.all()
+        return self.team.roster.all()
 
     @property
     def people_with_values(self):
