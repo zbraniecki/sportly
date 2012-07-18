@@ -1,7 +1,7 @@
-from events.models import Event, \
-                          Tournament, \
-                          Training, \
-                          Roster
+from teammanager.events.models import Event, \
+                                      Tournament, \
+                                      Training, \
+                                      Roster
 
 from django.contrib import admin
 

@@ -1,4 +1,4 @@
-from events.models import Person
+from teammanager.events.models import Person
 
 from django.contrib import admin
 

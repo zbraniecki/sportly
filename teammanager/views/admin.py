@@ -1,5 +1,5 @@
-from playerpicker.models import View, \
-                                ViewValue
+from teammanager.views.models import View, \
+                                     ViewValue
 
 from django.contrib import admin
 

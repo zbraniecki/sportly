@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'teammanager.views',
     'teammanager.events',
     'teammanager.people',
+    'teammanager.team',
 )
 
 # A sample logging configuration. The only tangible logging
