@@ -87,6 +87,15 @@ class View(models.Model):
                     return 0
                 return val
             raise SyntaxError("Unknown name: %s" % expr.id)
+        if isinstance(expr, ast.Attribute):
+            if not isinstance(expr.value, ast.Name):
+                raise SyntaxError("Unknown attribute value: %s" % expr.value)
+            if expr.value.id is not "P":
+                raise SyntaxError("Unknown attribute value: %s" % expr.value.id)
+            if expr.attr is "height":
+                return 183
+                return person.height
+            raise SyntaxError("Unknown attribute: %s" % expr.value.attr)
         if isinstance(expr, ast.Num):
             return expr.n
         if isinstance(expr, ast.BinOp):
@@ -94,7 +103,10 @@ class View(models.Model):
             right = self.compute_expr(expr.right, person=person)
             if isinstance(expr.op, ast.Mult):
                 return left*right
-        raise SyntaxError("Unknown expr literal: %s" % type(expr))
+            if isinstance(expr.op, ast.Add):
+                return left+right
+            raise SyntaxError("Unknown operator: %s" % type(expr.op))
+        raise SyntaxError("Unknown expr type: %s" % type(expr))
 
     def compile_formula(self, fs):
         try:
