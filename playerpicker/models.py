@@ -1,5 +1,6 @@
 from django.db import models
-import ast
+from playerpicker.utils import compile_formula, compute_expr
+from events.models import Event
 
 class Person(models.Model):
     name = models.CharField(max_length=200)
@@ -7,12 +8,6 @@ class Person(models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.name, self.lastname)
-
-class Event(models.Model):
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return self.name
 
 class Roster(models.Model):
     def default_roster_name(self):
@@ -33,16 +28,6 @@ class Roster(models.Model):
         if not self.name:
             self.name = self.default_roster_name()
         super(Roster, self).save(*args, **kwargs)
-
-
-'''
-class Skill(models.Model):
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return '%s' % self.name
-'''
-
 
 class View(models.Model):
     name = models.CharField(max_length=200)
@@ -78,52 +63,9 @@ class View(models.Model):
                 player.value = None
         return players
 
-    def compute_expr(self, expr, person):
-        if isinstance(expr, ast.Name):
-            if expr.id.startswith('V'):
-                view = View.objects.get(id=expr.id[1:])
-                val = view.value(pid=person.id)
-                if val is None:
-                    return 0
-                return val
-            raise SyntaxError("Unknown name: %s" % expr.id)
-        if isinstance(expr, ast.Attribute):
-            if not isinstance(expr.value, ast.Name):
-                raise SyntaxError("Unknown attribute value: %s" % expr.value)
-            if expr.value.id is not "P":
-                raise SyntaxError("Unknown attribute value: %s" % expr.value.id)
-            if expr.attr is "height":
-                return 183
-                return person.height
-            raise SyntaxError("Unknown attribute: %s" % expr.value.attr)
-        if isinstance(expr, ast.Num):
-            return expr.n
-        if isinstance(expr, ast.BinOp):
-            left = self.compute_expr(expr.left, person=person)
-            right = self.compute_expr(expr.right, person=person)
-            if isinstance(expr.op, ast.Mult):
-                return left*right
-            if isinstance(expr.op, ast.Add):
-                return left+right
-            raise SyntaxError("Unknown operator: %s" % type(expr.op))
-        raise SyntaxError("Unknown expr type: %s" % type(expr))
-
-    def compile_formula(self, fs):
-        try:
-            exp = ast.parse(fs)
-        except SyntaxError:
-            raise SyntaxError("Could not parse formula: %s" % fs)
-        if len(exp.body) is 0:
-            raise SyntaxError("Empty formula")
-        exp = exp.body[0]
-        if not isinstance(exp, ast.Expr):
-            raise SyntaxError()
-        return exp
-
-
     def compute_value(self, person):
-        exp = self.compile_formula(self.formula)
-        val = self.compute_expr(exp.value, person=person)
+        exp = compile_formula(self, self.formula)
+        val = compute_expr(self, exp.value, person=person)
         return val
 
     def compute_values(self):
@@ -152,6 +94,7 @@ class ViewValue(models.Model):
                                       self.value)
 
 ############################
+
 
 
 '''
