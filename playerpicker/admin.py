@@ -1,15 +1,16 @@
-from playerpicker.models import Person, \
-                                View, \
-                                ViewValue, \
-                                Roster
+from playerpicker.models import View, \
+                                ViewValue
 
 from django.contrib import admin
 
-class RosterAdmin(admin.ModelAdmin):
-    filter_horizontal = ["players"]
+class ViewValueInline(admin.TabularInline):
+    model = ViewValue
 
-admin.site.register(Person)
-admin.site.register(View)
+class ViewAdmin(admin.ModelAdmin):
+    inlines = [
+        ViewValueInline,
+    ]
+
+admin.site.register(View, ViewAdmin)
 admin.site.register(ViewValue)
-admin.site.register(Roster, RosterAdmin)
 

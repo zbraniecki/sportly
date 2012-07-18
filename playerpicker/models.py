@@ -1,33 +1,8 @@
 from django.db import models
 from playerpicker.utils import compile_formula, compute_expr
-from events.models import Event
+from events.models import Event, Roster, Person
 
-class Person(models.Model):
-    name = models.CharField(max_length=200)
-    lastname = models.CharField(max_length=200)
 
-    def __unicode__(self):
-        return '%s %s' % (self.name, self.lastname)
-
-class Roster(models.Model):
-    def default_roster_name(self):
-        if self.event:
-            return "Roster for %s" % self.event.name
-        return "Default roster"
-    
-    name = models.CharField(max_length=200,
-                            null=True,
-                            blank=True)
-    event = models.ForeignKey(Event, null=True, blank=True)
-    players = models.ManyToManyField(Person, null=True, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.name:
-            self.name = self.default_roster_name()
-        super(Roster, self).save(*args, **kwargs)
 
 class View(models.Model):
     name = models.CharField(max_length=200)
@@ -37,7 +12,7 @@ class View(models.Model):
     views = models.ManyToManyField("View", blank=True, null=True)
 
     def __unicode__(self):
-        return '%s' % self.name
+        return '%s (V%s)' % (self.name, self.pk)
 
     def value(self, pid):
         try:

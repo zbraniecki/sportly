@@ -28,6 +28,8 @@ def compute_expr(self, expr, person):
             return left*right
         if isinstance(expr.op, ast.Add):
             return left+right
+        if isinstance(expr.op, ast.Sub):
+            return left-right
         raise SyntaxError("Unknown operator: %s" % type(expr.op))
     raise SyntaxError("Unknown expr type: %s" % type(expr))
 

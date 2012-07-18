@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'playerpicker',
     'events',
+    'people',
 )
 
 # A sample logging configuration. The only tangible logging
