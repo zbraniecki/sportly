@@ -1,9 +1,10 @@
 import ast
 
-def compute_expr(self, expr, person):
+from teammanager.views.models import View
+
+def compute_expr(expr, person):
     if isinstance(expr, ast.Name):
         if expr.id.startswith('V'):
-            from playerpicker.models import View
             view = View.objects.get(id=expr.id[1:])
             val = view.value(pid=person.id)
             if val is None:
@@ -22,8 +23,8 @@ def compute_expr(self, expr, person):
     if isinstance(expr, ast.Num):
         return expr.n
     if isinstance(expr, ast.BinOp):
-        left = compute_expr(self, expr.left, person=person)
-        right = compute_expr(self, expr.right, person=person)
+        left = compute_expr(expr.left, person=person)
+        right = compute_expr(expr.right, person=person)
         if isinstance(expr.op, ast.Mult):
             return left*right
         if isinstance(expr.op, ast.Add):
@@ -75,3 +76,16 @@ def compile_formula(fs):
 def get_formula_views(formula):
     exp = compile_formula(formula)
     return get_views_from_expr(exp.value)
+
+
+def get_view_dependency_tree(vid=None,view=None):
+    if view is None:
+        view = View.objects.get(id=vid)
+    children = []
+    for sv in view.views.all():
+        children.append(get_view_dependency_tree(view=sv))
+    res = {
+      'name': view.name,
+      'children': children
+    }
+    return res

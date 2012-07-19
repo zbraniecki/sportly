@@ -1,5 +1,4 @@
 from django.db import models
-from teammanager.views.utils import compile_formula, compute_expr, get_formula_views
 from teammanager.core.models import Event, Person, Team
 
 
@@ -16,6 +15,7 @@ class View(models.Model):
         return '%s (V%s)' % (self.name, self.pk)
 
     def save(self, *args, **kwargs):
+        from teammanager.views.utils import get_formula_views
         super(View, self).save(*args, **kwargs)
         if self.formula:
             vl = get_formula_views(self.formula)
@@ -50,8 +50,9 @@ class View(models.Model):
         return players
 
     def compute_value(self, person):
-        exp = compile_formula(self, self.formula)
-        val = compute_expr(self, exp.value, person=person)
+        from teammanager.views.utils import compile_formula, compute_expr
+        exp = compile_formula(self.formula)
+        val = compute_expr(exp.value, person=person)
         return val
 
     def compute_values(self):

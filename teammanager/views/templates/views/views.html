@@ -8,7 +8,7 @@
     <ul>
     {% for v in views %}
       <li id="li-{{v.id}}">
-        <a href="{% url playerpicker.views.views.view vid=v.id %}">{{ v.name }}</a>
+        <a href="{% url teammanager.views.views.views.view vid=v.id %}">{{ v.name }}</a>
       </li>
       {% endfor %}
     </ul>
