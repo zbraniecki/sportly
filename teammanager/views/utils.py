@@ -33,7 +33,34 @@ def compute_expr(self, expr, person):
         raise SyntaxError("Unknown operator: %s" % type(expr.op))
     raise SyntaxError("Unknown expr type: %s" % type(expr))
 
-def compile_formula(self, fs):
+def get_views_from_expr(expr):
+    vl = []
+    if isinstance(expr, ast.Name):
+        if expr.id.startswith('V'):
+            vl.append(expr.id[1:])
+            return vl
+        raise SyntaxError("Unknown name: %s" % expr.id)
+    if isinstance(expr, ast.Attribute):
+        if not isinstance(expr.value, ast.Name):
+            raise SyntaxError("Unknown attribute value: %s" % expr.value)
+        if expr.value.id is not "P":
+            raise SyntaxError("Unknown attribute value: %s" % expr.value.id)
+        if expr.attr is "height":
+            return vl
+        raise SyntaxError("Unknown attribute: %s" % expr.value.attr)
+    if isinstance(expr, ast.Num):
+        return vl
+    if isinstance(expr, ast.BinOp):
+        vl.extend(get_views_from_expr(expr.left))
+        vl.extend(get_views_from_expr(expr.right))
+        if isinstance(expr.op, (ast.Mult,
+                               ast.Add,
+                               ast.Sub)):
+            return vl
+        raise SyntaxError("Unknown operator: %s" % type(expr.op))
+    raise SyntaxError("Unknown expr type: %s" % type(expr))
+
+def compile_formula(fs):
     try:
         exp = ast.parse(fs)
     except SyntaxError:
@@ -44,3 +71,7 @@ def compile_formula(self, fs):
     if not isinstance(exp, ast.Expr):
         raise SyntaxError()
     return exp
+
+def get_formula_views(formula):
+    exp = compile_formula(formula)
+    return get_views_from_expr(exp.value)

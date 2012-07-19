@@ -1,5 +1,5 @@
 from django.db import models
-from teammanager.views.utils import compile_formula, compute_expr
+from teammanager.views.utils import compile_formula, compute_expr, get_formula_views
 from teammanager.core.models import Event, Person, Team
 
 
@@ -14,6 +14,16 @@ class View(models.Model):
 
     def __unicode__(self):
         return '%s (V%s)' % (self.name, self.pk)
+
+    def save(self, *args, **kwargs):
+        super(View, self).save(*args, **kwargs)
+        if self.formula:
+            vl = get_formula_views(self.formula)
+            self.views.clear()
+            for v in vl:
+                view = View.objects.get(id=v)
+                self.views.add(view)
+
 
     def value(self, pid):
         try:

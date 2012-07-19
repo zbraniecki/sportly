@@ -10,6 +10,9 @@ class ViewAdmin(admin.ModelAdmin):
     inlines = [
         ViewValueInline,
     ]
+    readonly_fields = [
+        'views'
+    ]
 
 admin.site.register(View, ViewAdmin)
 admin.site.register(ViewValue)
