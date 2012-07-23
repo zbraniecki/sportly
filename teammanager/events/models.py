@@ -93,9 +93,14 @@ class Edition(models.Model):
         return name
 
     def short_name(self):
+        if self.name:
+            name = self.name
+        else:
+            name = "(%s)" % self.start_date
         if self.event:
-            return "%s %s" % (self.event.name, self.name)
-        return self.name
+            return "%s %s" % (self.event.name, name)
+        return name
+
 
 class SelectionType(models.Model):
     """
@@ -109,7 +114,7 @@ class SelectionType(models.Model):
 
 class EventTeam(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    event = models.ForeignKey(Edition, blank=True, null=True)
+    event = models.ForeignKey(Edition, blank=True, null=True) # rename to edition
     team = models.ForeignKey(Team)
     selection_type = models.ForeignKey(SelectionType)
     players = models.ManyToManyField(Person,
@@ -122,6 +127,16 @@ class EventTeam(models.Model):
             return "%s (%s)" % (self.name, self.event.__unicode__())
         return "%s (%s)" % (self.team.__unicode__(),
                             self.event.__unicode__())
+
+    def yes_players(self):
+        return self.signups.filter(status__name="yes") 
+
+    def maybe_players(self):
+        return self.signups.filter(status__name="maybe") 
+
+    def no_players(self):
+        return self.signups.filter(status__name="no") 
+
 
 class SignUpStatus(models.Model):
     """
@@ -137,7 +152,7 @@ class SignUpStatus(models.Model):
 class TeamSignUp(models.Model):
     person = models.ForeignKey(Person)
     status = models.ForeignKey(SignUpStatus)
-    event = models.ForeignKey(EventTeam)
+    event = models.ForeignKey(EventTeam, related_name="signups")
 
     def __unicode__(self):
         return "Signup for %s for %s: %s" % (self.person.__unicode__(),

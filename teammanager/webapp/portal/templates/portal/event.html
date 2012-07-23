@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <link rel='stylesheet' type='text/css' href='/site_media/css/cupertino/theme.css' />
+    <link rel='stylesheet' type='text/css' href='/site_media/css/fullcalendar.css' />
+    <script type="text/javascript" src="/site_media/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/site_media/js/jquery-ui-1.8.21.custom.min.js"></script>
+    <script type='text/javascript' src='/site_media/js/fullcalendar.js'></script>
+<script type='text/javascript'>
+
+function fillCalendar() {
+  $('#calendar').fullCalendar({
+    theme: true,
+    header: {
+      left: 'title',
+      center: '',
+      right: 'today,prev,next'
+    },
+    defaultView: 'basicWeek',
+    aspectRatio: 2,
+    editable: false,
+    firstDay: 1,
+    events: 'http://127.0.0.1:8000/api/events',
+  });
+		
+}
+
+function updateSignUp(dec) {
+  jQuery.ajax({
+    'url': '/api/events/{{eteam.id}}/signup/'+dec,
+    'success': function(data) {
+    }
+  });
+}
+
+$(document).ready(function() {
+  fillCalendar();
+});
+
+</script>
+<style type='text/css'>
+
+body {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+}
+
+#page {
+    width: 900px;
+    margin: 0 auto;
+}
+
+#calendar {
+    font-size: 10px;
+  width: 300px;
+}
+
+</style>
+</head>
+  <body>
+    <div id="page">
+      <h1>{{ team.name }}</h1>
+      <div id="user">Logged in as: {{ user }}</div>
+      <div id="calendar"></div>
+      <select id="decision" onchange="updateSignUp(this.value)">
+          <option value="yes">Wezmę udział</option>
+          <option value="maybe">Może wezmę</option>
+          <option value="no">Nie wezmę</option>
+          <option value="undecided" selected=selected>Nie wiem</option>
+      </select>
+      <div id="event">
+        <h3>{{event.short_name}}</h3>
+        <p>Start date: {{ event.start_date }}</p>
+        <p>Start time: {{ event.start_time }}</p>
+        <p>End date: {{ event.end_date }}</p>
+        <p>End time: {{ event.end_time }}</p>
+        <div id="#registered">
+          <p>Wezmą udział:</p>
+          <ul>
+            {% for su in eteam.yes_players %}
+            <li>{{su.person}}</li>
+            {% endfor %}
+          </ul>
+        <div>
+        <div id="#maybe">
+          <p>Może:</p>
+          <ul>
+            {% for su in eteam.maybe_players %}
+            <li>{{su.person}}</li>
+            {% endfor %}
+          </ul>
+        <div>
+        <div id="#rejected">
+          <p>Nie wezmą udziału:</p>
+          <ul>
+            {% for su in eteam.no_players %}
+            <li>{{su.person}}</li>
+            {% endfor %}
+          </ul>
+        <div>
+      </div>
+    </div>
+  </body>
+</html>
+
