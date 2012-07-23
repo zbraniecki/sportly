@@ -1,6 +1,6 @@
 from django.db import models
-from teammanager.core.models import Event, Person, Team
-
+from teammanager.core.models import Person, Team
+from teammanager.events.models import Event
 
 
 class View(models.Model):
