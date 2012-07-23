@@ -7,4 +7,5 @@ urlpatterns = patterns('teammanager.webapp.portal.views',
 
 urlpatterns += patterns('teammanager.webapp.portal.api',
     url(r'^api/authenticate$', 'authenticate'),
+    url(r'^api/events$', 'events'),
 )

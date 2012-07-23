@@ -92,6 +92,11 @@ class Edition(models.Model):
             return "%s > %s" % (self.parent.__unicode__(), name)
         return name
 
+    def short_name(self):
+        if self.event:
+            return "%s %s" % (self.event.name, self.name)
+        return self.name
+
 class SelectionType(models.Model):
     """
     open
