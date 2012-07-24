@@ -27,7 +27,7 @@ class EditionAdmin(admin.ModelAdmin):
     #filter_horizontal = ["players"]
     date_hierarchy = 'start_date'
     inlines = [
-      EditionInvitationInline,
+        EditionInvitationInline,
     ]
 
 class EventAdmin(admin.ModelAdmin):

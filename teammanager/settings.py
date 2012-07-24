@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'teammanager.core', 
     'teammanager.views',
     'teammanager.events',
+    'teammanager.scores',
     'teammanager.webapp.portal',
 )
 
