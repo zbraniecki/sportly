@@ -1,21 +1,21 @@
 from teammanager.events.models import GameType, Visibility, EditionInvitation
-from teammanager.events.models import EventTeamInvitation, EventType, Event, EventTeamPersonRole
-from teammanager.events.models import Edition, SelectionType, EventTeam
+from teammanager.events.models import SquadInvitation, EventType, Event, SquadPersonRole
+from teammanager.events.models import Edition, SelectionType, Squad
 from teammanager.events.models import SignUpStatus, TeamSignUp, EditionSignUp, TeamRole
 
 
 from django.contrib import admin
 from django.contrib.contenttypes import generic
 
-class EventTeamPersonRoleInline(admin.TabularInline):
-    model = EventTeamPersonRole
+class SquadPersonRoleInline(admin.TabularInline):
+    model = SquadPersonRole
 
 
-class EventTeamInvitationInline(admin.TabularInline):
-    model = EventTeamInvitation
+class SquadInvitationInline(admin.TabularInline):
+    model = SquadInvitation
 
-class EventTeamAdmin(admin.ModelAdmin):
-    inlines = (EventTeamPersonRoleInline, EventTeamInvitationInline)
+class SquadAdmin(admin.ModelAdmin):
+    inlines = (SquadPersonRoleInline, SquadInvitationInline)
 
 
 class EditionInvitationInline(generic.GenericTabularInline):
@@ -38,13 +38,13 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(GameType)
 admin.site.register(Visibility)
 admin.site.register(EditionInvitation)
-admin.site.register(EventTeamInvitation)
+admin.site.register(SquadInvitation)
 admin.site.register(EventType)
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventTeamPersonRole)
+admin.site.register(SquadPersonRole)
 admin.site.register(Edition, EditionAdmin)
 admin.site.register(SelectionType)
-admin.site.register(EventTeam, EventTeamAdmin)
+admin.site.register(Squad, SquadAdmin)
 admin.site.register(SignUpStatus)
 admin.site.register(TeamSignUp)
 admin.site.register(EditionSignUp)

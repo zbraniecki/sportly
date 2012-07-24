@@ -26,7 +26,7 @@ function fillCalendar() {
 
 function updateSignUp(dec) {
   jQuery.ajax({
-    'url': '/api/events/{{eteam.id}}/signup/'+dec,
+    'url': '/api/events/{{squad.id}}/signup/'+dec,
     'success': function(data) {
     }
   });
@@ -60,7 +60,7 @@ body {
 </head>
   <body>
     <div id="page">
-      <h1>{{ team.name }}</h1>
+      <h1><a href="/">{{ team.name }}</a></h1>
       <div id="user">Logged in as: {{ user }}</div>
       <div id="calendar"></div>
       <select id="decision" onchange="updateSignUp(this.value)">
@@ -78,7 +78,7 @@ body {
         <div id="#registered">
           <p>Wezmą udział:</p>
           <ul>
-            {% for su in eteam.yes_players %}
+            {% for su in squad.yes_players %}
             <li>{{su.person}}</li>
             {% endfor %}
           </ul>
@@ -86,7 +86,7 @@ body {
         <div id="#maybe">
           <p>Może:</p>
           <ul>
-            {% for su in eteam.maybe_players %}
+            {% for su in squad.maybe_players %}
             <li>{{su.person}}</li>
             {% endfor %}
           </ul>
@@ -94,7 +94,7 @@ body {
         <div id="#rejected">
           <p>Nie wezmą udziału:</p>
           <ul>
-            {% for su in eteam.no_players %}
+            {% for su in squad.no_players %}
             <li>{{su.person}}</li>
             {% endfor %}
           </ul>

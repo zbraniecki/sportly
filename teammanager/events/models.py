@@ -33,13 +33,13 @@ class EditionInvitation(models.Model):
         return "Invitation for %s to %s" % (self.invitee.__unicode__(),
                                             self.edition.__unicode__())
 
-class EventTeamInvitation(models.Model):
-    event_team = models.ForeignKey("EventTeam")
+class SquadInvitation(models.Model):
+    squad = models.ForeignKey("Squad")
     invitee = models.ForeignKey(Person)
 
     def __unicode__(self):
         return "Invitation for %s to %s" % (self.invitee.__unicode__(),
-                                            self.event_team.__unicode__())
+                                            self.squad.__unicode__())
 
 class EventType(models.Model):
     """
@@ -112,13 +112,13 @@ class SelectionType(models.Model):
     def __unicode__(self):
         return self.name
 
-class EventTeam(models.Model):
+class Squad(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     event = models.ForeignKey(Edition, blank=True, null=True) # rename to edition
     team = models.ForeignKey(Team)
     selection_type = models.ForeignKey(SelectionType)
     players = models.ManyToManyField(Person,
-                                     through="EventTeamPersonRole",
+                                     through="SquadPersonRole",
                                      blank=True,
                                      null=True)
 
@@ -152,11 +152,11 @@ class SignUpStatus(models.Model):
 class TeamSignUp(models.Model):
     person = models.ForeignKey(Person)
     status = models.ForeignKey(SignUpStatus)
-    event = models.ForeignKey(EventTeam, related_name="signups")
+    squad = models.ForeignKey(Squad, related_name="signups")
 
     def __unicode__(self):
         return "Signup for %s for %s: %s" % (self.person.__unicode__(),
-                                             self.event.__unicode__(),
+                                             self.squad.__unicode__(),
                                              self.status.__unicode__())
 
 class EditionSignUp(models.Model):
@@ -186,9 +186,9 @@ class TeamRole(models.Model):
     def __unicode__(self):
         return self.name
 
-class EventTeamPersonRole(models.Model):
+class SquadPersonRole(models.Model):
     person = models.ForeignKey(Person)
-    eventteam = models.ForeignKey(EventTeam)
+    squad = models.ForeignKey(Squad)
     roles = models.ManyToManyField(TeamRole)
 
     def __unicode__(self):

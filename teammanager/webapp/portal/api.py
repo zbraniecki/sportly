@@ -5,7 +5,7 @@ import datetime
 
 from django.db import models
 from teammanager.core.models import Person
-from teammanager.events.models import Edition, TeamSignUp, SignUpStatus, EventTeam
+from teammanager.events.models import Edition, TeamSignUp, SignUpStatus, Squad
 
 def authenticate(request):
     username = request.REQUEST.get('username', None)
@@ -43,14 +43,14 @@ def events(request):
     response = json.dumps(l, default=dthandler)
     return HttpResponse(response, mimetype="application/json")
 
-def event_signup(request, eid, dec):
+def squad_signup(request, eid, dec):
     person = Person.objects.get(name="Zbigniew")
     if dec == 'undecided':
         status = None
     else:
         status = SignUpStatus.objects.get(name=dec)
     try:
-        ts = TeamSignUp.objects.get(event__id=eid, person=person)
+        ts = TeamSignUp.objects.get(squad__id=eid, person=person)
         if status is None:
             ts.delete()
         else:
@@ -58,8 +58,8 @@ def event_signup(request, eid, dec):
             ts.save()
     except TeamSignUp.DoesNotExist:
         if status is not None:
-            et = EventTeam.objects.get(id=eid)
-            ts = TeamSignUp(event=et,
+            sq = Squad.objects.get(id=eid)
+            ts = TeamSignUp(squad=sq,
                             person=person,
                             status=status)
             ts.save()
