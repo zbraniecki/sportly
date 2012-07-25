@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'teammanager.events',
     'teammanager.scores',
     'teammanager.webapp.portal',
+    'teammanager.webapp.dashboard',
 )
 
 # A sample logging configuration. The only tangible logging

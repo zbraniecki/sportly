@@ -19,9 +19,9 @@ class GameState(models.Model):
         return self.name
 
 class Game(models.Model):
-    edition = models.ForeignKey(Edition)
-    team1 = models.ForeignKey(Squad, related_name='+')
-    team2 = models.ForeignKey(Squad, related_name='+')
+    edition = models.ForeignKey(Edition, related_name='games')
+    team1 = models.ForeignKey(Squad, related_name='+') #squad1
+    team2 = models.ForeignKey(Squad, related_name='+') #squad2
     start = models.DateTimeField()
     length = models.PositiveIntegerField()
     points1 = models.PositiveIntegerField()
@@ -40,10 +40,10 @@ class GameMomentType(models.Model):
         return self.name
 
 class GameMoment(models.Model):
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(Game, related_name='moments')
     moment_type = models.ForeignKey(GameMomentType)
     player1 = models.ForeignKey(Person, blank=True, null=True, related_name='+')
     player2 = models.ForeignKey(Person, blank=True, null=True, related_name='+')
     team = models.ForeignKey(Squad, blank=True, null=True, related_name='+')
-    time = models.TimeField()
+    time = models.TimeField() # PositiveIntegerField
     desc = models.CharField(max_length=200, blank=True, null=True)

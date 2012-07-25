@@ -1,0 +1,41 @@
+<html>
+  <head>
+<script type='text/javascript'>
+
+</script>
+<style type='text/css'>
+
+body {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+}
+
+#page {
+    width: 900px;
+    margin: 0 auto;
+}
+
+#calendar {
+    font-size: 10px;
+  width: 300px;
+}
+
+</style>
+</head>
+  <body>
+    <div id="page">
+      <h1>Edition: {{ edition.short_name }}</h1>
+      <h3>Games:</h3>
+      <ul>
+        {% for game in edition.games.all %}
+        <li><a href="/dashboard/game/{{game.id}}">{{ game.team1.team }} vs. {{ game.team2.team }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
+
+
+

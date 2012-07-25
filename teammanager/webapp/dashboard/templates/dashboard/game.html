@@ -1,0 +1,54 @@
+<html>
+  <head>
+<script type='text/javascript'>
+
+</script>
+<style type='text/css'>
+
+body {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+}
+
+#page {
+    width: 900px;
+    margin: 0 auto;
+}
+
+</style>
+</head>
+  <body>
+    <div id="page">
+      <h1>Game: {{ game.team1.team.name }} vs. {{ game.team2.team.name }}</h1>
+      <h3>Score: {{game.points1}} : {{game.points2}}</h3>
+      <h3>Start: {{game.start}}</h3>
+      <h3>Status: {{game.state}}</h3>
+      <table border="1">
+        <tr>
+          <th>What</th>
+          <th>Who</th>
+          <th>Assist</th>
+          <th>Team</th>
+          <th>Time</th>
+          <th>Desc</th>
+        </tr>
+        {% for moment in game.moments.all %}
+        <tr>
+            <td>{{moment.moment_type}}</td>
+            <td>{{moment.player1}}</td>
+            <td>{{moment.player2}}</td>
+            <td>{{moment.team.team}}</td>
+            <td>{{moment.time}}</td>
+            <td>{{moment.desc}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </body>
+</html>
+
+
+
+

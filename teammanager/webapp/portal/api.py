@@ -35,7 +35,7 @@ def events(request):
         occurance = {
           'title': edition.short_name(),
           'start': edition.start_date,
-          'url': '/events/%s' % edition.id
+          'url': '/portal/events/%s' % edition.id
         }
         if edition.end_date:
             occurance['end'] = edition.end_date;

@@ -3,6 +3,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from teammanager.core.models import Person, Team
 
+# rename it pls
 class GameType(models.Model):
     """
     outdoor, indoor, beach
@@ -63,6 +64,7 @@ class Event(models.Model):
     parent = models.ForeignKey("Event", blank=True, null=True)
     location = models.CharField(max_length=200, blank=True, null=True)
     visibility = models.ForeignKey(Visibility)
+    #organizer team or person?
 
     def __unicode__(self):
         return self.name
@@ -81,6 +83,7 @@ class Edition(models.Model):
     end_time = models.TimeField(blank=True, null=True)
     location = models.CharField(max_length=200)
     visibility = models.ForeignKey(Visibility)
+    # organizer team or person?
 
     def __unicode__(self):
         if self.name:
