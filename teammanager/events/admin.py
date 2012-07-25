@@ -1,7 +1,8 @@
-from teammanager.events.models import GameType, Visibility, EditionInvitation
+from teammanager.events.models import GameType, Visibility, EditionDivisionInvitation
 from teammanager.events.models import SquadInvitation, EventType, Event, SquadPersonRole
-from teammanager.events.models import Edition, SelectionType, Squad
+from teammanager.events.models import Edition, SelectionType, Squad, EditionDivision
 from teammanager.events.models import SignUpStatus, TeamSignUp, EditionSignUp, TeamRole
+from teammanager.events.models import AcceptedStatus
 
 
 from django.contrib import admin
@@ -18,16 +19,19 @@ class SquadAdmin(admin.ModelAdmin):
     inlines = (SquadPersonRoleInline, SquadInvitationInline)
 
 
-class EditionInvitationInline(generic.GenericTabularInline):
-    model = EditionInvitation
-    fk_name = "edition"
+class EditionDivisionInvitationInline(generic.GenericTabularInline):
+    model = EditionDivisionInvitation
+    fk_name = "edition_division"
+
+class EditionDivisionInline(admin.TabularInline):
+    model = EditionDivision
 
 class EditionAdmin(admin.ModelAdmin):
     list_filter = ('event__event_type', 'event__game_type', 'start_date')
     #filter_horizontal = ["players"]
     date_hierarchy = 'start_date'
     inlines = [
-        EditionInvitationInline,
+        EditionDivisionInline,
     ]
 
 class EventAdmin(admin.ModelAdmin):
@@ -37,7 +41,7 @@ class EventAdmin(admin.ModelAdmin):
 
 admin.site.register(GameType)
 admin.site.register(Visibility)
-admin.site.register(EditionInvitation)
+admin.site.register(EditionDivisionInvitation)
 admin.site.register(SquadInvitation)
 admin.site.register(EventType)
 admin.site.register(Event, EventAdmin)
@@ -46,6 +50,7 @@ admin.site.register(Edition, EditionAdmin)
 admin.site.register(SelectionType)
 admin.site.register(Squad, SquadAdmin)
 admin.site.register(SignUpStatus)
+admin.site.register(AcceptedStatus)
 admin.site.register(TeamSignUp)
 admin.site.register(EditionSignUp)
 admin.site.register(TeamRole)

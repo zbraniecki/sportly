@@ -1,6 +1,8 @@
-from teammanager.events.models import Event, EventType, Edition, Squad
-from teammanager.scores.models import Game
+from teammanager.events.models import EventType, Edition, EditionDivision
+from teammanager.scores.models import Game, Phase, Group
 from django.shortcuts import render_to_response
+
+from teammanager.webapp.dashboard import utils
 
 import datetime
 
@@ -28,7 +30,25 @@ def index(request):
 
 def edition(request, eid):
     edition = Edition.objects.get(id=eid)
-    return render_to_response('dashboard/sparring.html', {'edition': edition,})
+    #if edition.event.event_type.name == 'Sparring':
+    #    return render_to_response('dashboard/sparring.html', {'edition': edition,})
+    #if edition.event.event_type.name == 'Tournament':
+    #    return render_to_response('dashboard/tournament.html', {'edition': edition,})
+    return render_to_response('dashboard/edition.html', {'edition': edition,})
+
+def division(request, edid):
+    ed = EditionDivision.objects.get(id=edid)
+    return render_to_response('dashboard/division.html', {'ed': ed,})
+
+def phase(request, pid):
+    phase = Phase.objects.get(id=pid)
+    return render_to_response('dashboard/phase.html', {'phase': phase,})
+
+def group(request, gid):
+    group = Group.objects.get(id=gid)
+    table = utils.generate_group_table(group)
+    return render_to_response('dashboard/group.html', {'group': group,
+                                                       'table': table})
 
 def game(request, gid):
     game = Game.objects.get(id=gid)

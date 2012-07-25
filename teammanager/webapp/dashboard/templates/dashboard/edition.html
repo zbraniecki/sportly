@@ -26,9 +26,17 @@ body {
 </head>
   <body>
     <div id="page">
+      <a href="/dashboard/">&lt;&lt; all</a>
       <h1>Edition: {{ edition.short_name }}</h1>
+      <ul class="divisions">
+        {% for ed in edition.divisions.all %}
+        <li><a href="/dashboard/division/{{ed.id}}">{{ed.division.name}}</a></li>
+        {% endfor %}
+      </ul>
     </div>
   </body>
 </html>
+
+
 
 

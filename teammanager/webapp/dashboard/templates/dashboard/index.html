@@ -27,7 +27,7 @@ body {
   <body>
     <div id="page">
       <h1>Dashboard</h1>
-      <h3>Tournamnets</h3>
+      <h3>Tournaments</h3>
       <ul>
         {% for ed in tournaments %}
         <li><a href="/dashboard/edition/{{ed.id}}">{{ ed.short_name }}</a></li>

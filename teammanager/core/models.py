@@ -19,6 +19,10 @@ class Division(models.Model):
     def __unicode__(self):
         return self.name
 
+###
+#  Club as a top level above the Team
+###
+
 class Team(models.Model):
     name = models.CharField(max_length=200)
     sport = models.ForeignKey(Sport)
