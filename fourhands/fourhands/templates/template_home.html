@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags %}
+{% block base_content %}
+{% addtoblock "css" %}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/home.css" media="all" />{% endaddtoblock %}
+  <div id="intro">
+    <h1>Intro</h1>
+    {% placeholder template_intro_content %}
+  </div>
+  <div id="games">
+    <h1>Games</h1>
+    {% placeholder template_games_content %}
+  </div>
+  <div id="news">
+    <h1>News</h1>
+    {% placeholder template_news_content %}
+  </div>
+  <div id="gallery">
+    <h1>Gallery</h1>
+    {% placeholder template_gallery_content %}
+  </div>
+{% endblock %}

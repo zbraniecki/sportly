@@ -1,0 +1,12 @@
+#roster {
+  margin: 0 auto;
+}
+
+#roster img {
+  width: 60px;
+}
+
+#roster td,
+#roster th {
+  border: 1px solid #ccc;
+}

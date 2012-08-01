@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags fourhands_tags %}
+{% block base_content %}
+{% addtoblock "css" %}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/schedule.css" media="all" />{% endaddtoblock %}
+<table id="schedule">
+  <tr>
+    <th>Date</th>
+    <th>Event</th>
+    <th>Type</th>
+    <th>Division</th>
+  </tr>
+  {% schedule_table %}
+</table>
+{% endblock %}
+
+

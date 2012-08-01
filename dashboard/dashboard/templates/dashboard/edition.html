@@ -1,0 +1,42 @@
+<html>
+  <head>
+<script type='text/javascript'>
+
+</script>
+<style type='text/css'>
+
+body {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+}
+
+#page {
+    width: 900px;
+    margin: 0 auto;
+}
+
+#calendar {
+    font-size: 10px;
+  width: 300px;
+}
+
+</style>
+</head>
+  <body>
+    <div id="page">
+      <a href="/dashboard/">&lt;&lt; all</a>
+      <h1>Edition: {{ edition.short_name }}</h1>
+      <ul class="divisions">
+        {% for ed in edition.divisions.all %}
+        <li><a href="/division/{{ed.id}}">{{ed.division.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
+
+
+
+

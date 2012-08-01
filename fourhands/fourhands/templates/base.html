@@ -1,0 +1,31 @@
+{% load cms_tags sekizai_tags menu_tags %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>4Hands - Ultimate Frisbee Team</title>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" media="all" />
+    {% render_block "css" %}
+  </head>
+  <body>
+    <header>
+      <h1 class="wide">4Hands - Ultimate Frisbee Team</h1>
+      <h1 class="short">4Hands</h1>
+      <h2>Greatest number of hands in Ultimate</h2>
+      <nav>
+        <ul id="menu">
+          {% show_menu 0 100 100 100 %}
+        </ul>
+      </nav>
+      <div id="lang">
+        {% language_chooser %}
+      </div>
+    </header>
+    <div id="content">
+      {% placeholder base_content %}
+      {% block base_content%}{% endblock %}
+    </div>  
+    <footer>
+    </footer>
+      {% render_block "js" %}
+  </body>
+</html>

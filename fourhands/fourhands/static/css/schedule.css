@@ -1,0 +1,10 @@
+#schedule {
+  margin: 0 auto;
+}
+
+
+#schedule td,
+#schedule th {
+  border: 1px solid #ccc;
+}
+

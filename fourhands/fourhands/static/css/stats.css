@@ -1,0 +1,12 @@
+#stats {
+  margin: 0 auto;
+}
+
+
+#stats td,
+#stats th {
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+

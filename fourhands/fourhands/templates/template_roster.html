@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags fourhands_tags %}
+{% block base_content %}
+{% addtoblock "css" %}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/roster.css" media="all" />{% endaddtoblock %}
+<table id="roster">
+  <tr>
+    <th>#</th>
+    <th></th>
+    <th>Name</th>
+    <th>Height</th>
+    <th>Weight</th>
+    <th>Date of Birth</th>
+    <th>Age</th>
+    <th>Birth Place</th>
+  </tr>
+  {% roster_table %}
+</table>
+{% endblock %}
+

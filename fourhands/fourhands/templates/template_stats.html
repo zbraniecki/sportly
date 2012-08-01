@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags fourhands_tags %}
+{% block base_content %}
+{% addtoblock "css" %}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/stats.css" media="all" />{% endaddtoblock %}
+<table id="stats">
+  <tr>
+    <th>#</th>
+    <th></th>
+    <th>Name</th>
+    <th>Games</th>
+    <th>Points</th>
+    <th>Assists</th>
+    <th>Sum</th>
+  </tr>
+  {% stats_table %}
+</table>
+{% endblock %}
+
+

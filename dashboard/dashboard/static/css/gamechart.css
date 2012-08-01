@@ -1,0 +1,47 @@
+#chart {
+  border: 1px solid black;
+  width: 800px;
+  height: 800px;
+}
+#chart > .toolbox {
+  width: 100px;
+  height: 300px;
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+#chart > .toolbox > div {
+  font-size: 10px;
+}
+
+#chart .sportly-element {
+  border: 1px solid #aaa;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+}
+
+#chart .sportly-element.active {
+  border: 1px solid blue;
+}
+
+#chart .sportly-element > h1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  height: 20px;
+  background-color: #ddd;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+  transform: rotate(-90deg);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
