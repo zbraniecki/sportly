@@ -43,6 +43,7 @@
       })
       .text(buttons[i])
         .appendTo(buttonset)
+
     }
 
     buttonset.buttonset();
@@ -53,6 +54,9 @@
 
       }  
     }});
+    this.teamPool = $("<div/>");
+    this.teamPool.appendTo(this.element);
+    this.teamPool.team_pool();
     this.objects = [];
   },
   _setOption: function( key, value ) {

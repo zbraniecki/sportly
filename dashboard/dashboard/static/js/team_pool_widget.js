@@ -1,18 +1,18 @@
 
 (function( $ ) {
-  $.widget( "sportly.phase", {
+  $.widget( "sportly.team_pool", {
     options: { 
-      name: "Phase",
+      name: "Team Pool",
       num: null,
       board: null,
       parent: null,
-      type: 'group'
     },
   _create: function() {
     var self=this;
     this.objectCount = 0;
+    console.log("Team pool")
     this.element
-      .addClass("sportly-phase")
+      .addClass("sportly-team_pool")
       .addClass("sportly-element")
       .resizable({
         containment: "parent",
@@ -34,48 +34,6 @@
     this.label = $("<h1/>")
       .text(this.options.name)
       .appendTo(this.element);
-
-    this.settings = $("<div/>", {
-        'class': 'settings',
-      })
-      .on("mousedown", function(event) {
-        event.stopPropagation();
-      })
-      .appendTo(this.element);
- 
-    this.settingsType = $("<select/>", {
-        'class': 'type'
-      })
-      .on("change", function(event) {
-        this.options.type = event.target.value ;
-      })
-      .appendTo(this.settings) 
-    $("<option/>", {
-      'value': 'group',
-      'selected': 'selected',
-    })
-      .text("group")
-      .appendTo(this.settingsType)
-    $("<option/>", {
-      'value': 'bracket'
-    })
-      .text("bracket")
-      .appendTo(this.settingsType)
-   
-
-    $("<label/>", {
-      'for': 'nr'+this.objectCount
-    })
-      .text("Teams:")
-      .appendTo(this.settings);
-    $("<input/>", {
-      'type': 'text',
-      'size': '3',
-      'value': '4',
-      'name': 'nr'+this.objectCount
-    })
-      .appendTo(this.settings); 
-    this.objects = [];
   },
   _setOption: function( key, value ) {
     switch( key ) {
@@ -102,5 +60,6 @@
   }
   });
 }( jQuery ) );
+
 
 

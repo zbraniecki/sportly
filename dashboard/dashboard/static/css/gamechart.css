@@ -1,6 +1,6 @@
 #chart {
   border: 1px solid black;
-  width: 800px;
+  width: 1100px;
   height: 800px;
 }
 #chart > .toolbox {
@@ -16,10 +16,19 @@
   font-size: 10px;
 }
 
+#chart .sportly-element.sportly-team_pool {
+  border: 1px solid blue;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 30px;
+  left: 700px;
+}
+
 #chart .sportly-element {
   border: 1px solid #aaa;
-  width: 20px;
-  height: 20px;
+  width: 0px;
+  height: 0px;
   position: absolute;
   z-index: 1;
   overflow: hidden;
@@ -44,4 +53,39 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   overflow: hidden;
+}
+
+#chart .sportly-element > .settings {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #ccc;
+}
+
+
+#chart .sportly-element > .view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 9px;
+  text-align: center;
+}
+
+#chart .sportly-element > .table {
+  margin: 0 auto;
+  width: 80%;
+  margin-top: 20px;
+}
+
+#chart .sportly-element > .table td {
+  border: 1px solid #eee;
+  padding: 3px;
+}
+
+
+#chart .sportly-element > .table td.pos {
+  width: 10px;
 }
