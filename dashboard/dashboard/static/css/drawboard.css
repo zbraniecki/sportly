@@ -1,0 +1,59 @@
+
+    .edition {
+    border: 1px solid black;
+  }
+  .phase {
+    border: 1px solid black;
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+  }
+
+  .phase > .settings {
+    background-color: #ccc;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20%;
+    height: 100%;
+}
+
+.phase > .settings > .subsettings {
+  border-top: 2px solid black;
+  background-color: #aaa;
+  height: 100%;
+}
+
+.groupbox,
+.schedulebox {
+    width: 80%;
+    height: 140px;
+    display: table
+}
+
+.groupbox > .group,
+.schedulebox > .games {
+  border: 1px solid black;
+  display: table-cell;
+}
+
+.rows {
+    width: 100%;
+    height: 80%;
+}
+
+.rows td {
+    border: 1px solid black;
+}
+.schedule {
+  width: 100%;
+}
+#teams {
+    list-style-type: none; margin: 0; padding: 0;
+  border: 1px solid black;
+  padding: 10px;
+}
+	#teams li {
+    z-index: 20;
+    margin: 0 3px 3px 3px; padding: 0;  width: 50px; font-size: 0.8em; height: 18px; }
+	#teams li span { position: absolute; margin-left: -1.3em; }

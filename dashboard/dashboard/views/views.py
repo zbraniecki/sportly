@@ -17,6 +17,7 @@ def index(request):
     types = EventType.objects.filter(name__in=('League',))
     leagues = Edition.objects.filter(parent=cur_season,
                                      event__event_type__in=types)
+    print(Edition.objects.filter(parent=cur_season))
     types = EventType.objects.filter(name__in=('Sparring',))
     sparrings = Edition.objects.filter(parent=cur_season,
                                        event__event_type__in=types)
@@ -55,4 +56,4 @@ def game(request, gid):
     return render_to_response('dashboard/game.html', {'game': game,})
 
 def drawboard(request):
-    return render_to_response('dashboard/drawboard.html')
+    return render_to_response('dashboard/drawboard2.html')
