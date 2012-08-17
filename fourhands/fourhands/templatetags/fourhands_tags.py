@@ -1,8 +1,8 @@
 from django import template
 from django.conf import settings
 
-from teammanager.core.models import Team
-from teammanager.events.models import Squad, EventType, Event, Edition, Division, EditionDivision
+from tracker.models.core import Team
+from tracker.models.events import Squad, EventType, Event, Edition, Division, EditionDivision
 
 register = template.Library()
 
