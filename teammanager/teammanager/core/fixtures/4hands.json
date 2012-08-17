@@ -1,1 +1,0 @@
-[{"pk": 1, "model": "core.team", "fields": {"division": 1, "sport": 1, "name": "4Hands", "parent": null}}, {"pk": 2, "model": "core.team", "fields": {"division": 2, "sport": 1, "name": "Women", "parent": 1}}]

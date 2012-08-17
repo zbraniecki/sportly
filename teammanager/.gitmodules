@@ -1,3 +1,0 @@
-[submodule "vendor/fullcalendar"]
-	path = vendor/fullcalendar
-	url = https://github.com/arshaw/fullcalendar.git
