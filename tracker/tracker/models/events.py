@@ -54,6 +54,8 @@ class EventType(TrackerModel):
             return "%s > %s" % (self.parent.__unicode__(), self.name)
         return self.name
 
+# Event -> Series
+# Edition -> Event ?
 class Event(TrackerModel):
     """
     BBC, Sun Beam, Warzka
@@ -77,10 +79,12 @@ class Edition(TrackerModel):
     name = models.CharField(max_length=200, blank=True, null=True)
     parent = models.ForeignKey("Edition", blank=True, null=True)
     event = models.ForeignKey(Event, blank=True, null=True)
+    #event_type = models.ForeignKey(EventType, blank=True, null=True)
     start_date = models.DateField()
     start_time = models.TimeField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
+    # TextField ?
     location = models.CharField(max_length=200)
     visibility = models.ForeignKey(Visibility)
     organizer = models.ForeignKey(Team, blank=True, null=True)
@@ -90,7 +94,8 @@ class Edition(TrackerModel):
             name = self.name
         else:
             name = "(%s)" % self.start_date
-        name = "%s %s" % (self.event.__unicode__(), name)
+        if self.event:
+            name = "%s %s" % (self.event.__unicode__(), name)
         if self.parent:
             return "%s > %s" % (self.parent.__unicode__(), name)
         return name
@@ -110,8 +115,8 @@ class EditionDivision(TrackerModel):
     division = models.ForeignKey(Division)
 
     def __unicode__(self):
-        return '%s, %s' % (self.edition,
-                           self.division)
+        return '%s, %s' % (self.edition.__unicode__(),
+                           self.division.__unicode__())
 
     def squads(self):
         signups = EditionDivisionSignUp.objects.filter(edition_division=self,
@@ -212,6 +217,8 @@ class EditionDivisionSignUp(TrackerModel):
     edition_division = models.ForeignKey(EditionDivision, related_name="signups")
 
     def __unicode__(self):
+        if not self.signee:
+            return "Signup"
         return "Signup for %s for %s: %s" % (self.signee.__unicode__(),
                                              self.edition_division.__unicode__(),
                                              self.status.__unicode__())

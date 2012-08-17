@@ -37,6 +37,7 @@ class EditionDivisionAdmin(admin.ModelAdmin):
 class EditionAdmin(admin.ModelAdmin):
     list_filter = ('event__event_type', 'event__game_type', 'start_date')
     #filter_horizontal = ["players"]
+    list_display = ('name', 'start_date', 'end_date')
     date_hierarchy = 'start_date'
     inlines = [
         EditionDivisionInline,
