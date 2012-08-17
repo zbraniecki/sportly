@@ -10,6 +10,33 @@ pplmap = {
     'grayna.chlebick': ['Grażyna', 'Chlebicka'],
     'gandii': ['Zbigniew', 'Braniecki'],
     'magdalenat': ['Magdalena', 'Teperowska'],
+    'katarzyna.sawicka': ['Katarzyna', 'Sawicka'],
+    'antonen': ['Antoni', 'Moroz'],
+    'yumnick': ['Adam', 'Małek'],
+    'marcin.goss': ['Marcin', 'Goss'],
+    'agata.chojnowska': ['Agata', 'Chojnowska'],
+    'polatejro': ['Piotr', 'Polatowski'],
+    'michele.c': ['Michele', 'Corbetta'],
+    'zuzanna.cichowska': ['Zuzanna', 'Cichowska'],
+    'discjoker': ['Jan', 'Kryciński'],
+    'sylwia.wroblewska': ['Sylwia', 'Wróblewska'],
+    'marcin.gecow': ['Marcin', 'Gecow'],
+    'matylka.gasiorowska': ['Matylda', 'Gąsiorowska'],
+    'ola123': ['Olga', 'Jankowska'],
+    'ooskar': ['Oskar', 'Kozłowski'],
+    'jesiu.szatanek': ['Ewa', 'Jesionek'],
+    'ada.serafin': ['Ada', 'Serafin'],
+    'klara.p': ['Klara', 'Piechowska'],
+    'adam.kade': ['Adam', 'Kadenaci'],
+    'piotr.szejko': ['Piotr', 'Szejko'],
+    'adrian.sroka': ['Adrian', 'Sroka'],
+    'dzwiedz-11': ['Michał', 'Kryciński'],
+    'goosia': ['Małgorzata', 'Gajda'],
+    'gouomb': ['Michał', 'Gołębiowski'],
+    'justbob': ['Robert', 'Późniak'],
+    'kuba.roziewicz': ['Jakub', 'Roziewicz'],
+    'karolina.herbin': ['Karolina', 'Herbin'],
+
 }
 
 def signup_player(ed, player, status):
@@ -19,15 +46,15 @@ def signup_player(ed, player, status):
                                              lastname=pplmap[pid][1])
         if c:
             p.save()
-        
+    else: 
         (p,c) = Person.objects.get_or_create(name=pid,
                                              lastname='')
         if c:
             p.save()
-        s = EditionDivisionSignUp(edition_division=ed,
-                                  signee=p,
-                                  status=status)
-        s.save()
+    s = EditionDivisionSignUp(edition_division=ed,
+                              signee=p,
+                              status=status)
+    s.save()
 
 def load_to_tracker(event):
     vis = Visibility.objects.get(name='open')
@@ -65,14 +92,16 @@ class Command(BaseCommand):
         #login()
         #get_archive()
         mx = mixxt.Mixxt()
-        #mx.login()
-        #evlinks = mx.get_archive()
-        #events = []
-        #for link in evlinks:
-        #    events.append(mx.get_event_page(link['url']))
-        #for i in events:
+        mx.login()
+        # should be ~100 events!
+        evlinks = mx.get_archive()
+        events = []
+        for link in evlinks:
+            events.append(mx.get_event_page(link['url']))
+        #    print(link)
+        for event in events:
+            load_to_tracker(event)
         #    print(i)
-        event = mx.get_event_page('/networks/events/show_event.65239')
+        #event = mx.get_event_page('/networks/events/show_event.65239')
         #print(event)
-        load_to_tracker(event)
         self.stdout.write('Foo')
