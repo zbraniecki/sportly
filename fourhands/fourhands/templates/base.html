@@ -2,15 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>4Hands - Ultimate Frisbee Team</title>
+{% if LANGUAGE_CODE == "pl" %}
+    <title>4hands - Warszawska Drużyna Ultimate</title>
+{% else %}
+    <title>4hands - Warsaw Ultimate Team</title>
+{% endif %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" media="all" />
     {% render_block "css" %}
   </head>
   <body>
     <header>
-      <h1 class="wide">4Hands - Ultimate Frisbee Team</h1>
-      <h1 class="short">4Hands</h1>
-      <h2>Greatest number of hands in Ultimate</h2>
+{% if LANGUAGE_CODE == "pl" %}
+      <h1 class="wide">4hands - Warszawska Drużyna Ultimate</h1>
+{% else %}
+      <h1 class="wide">4hands - Warsaw Ultimate Team</h1>
+{% endif %}
+      <h1 class="short">4hands</h1>
+{% if LANGUAGE_CODE == "pl" %}
+      <h2>Największa liczba rąk w Ultimate</h2>
+{% else %}
+      <h2>The greatest number of hands in Ultimate</h2>
+{% endif %}
       <nav>
         <ul id="menu">
           {% show_menu 0 100 100 100 %}
