@@ -194,7 +194,6 @@ body > header > nav {
 #lang {
   float: right;
   margin-top: -40px;
-  display: none;
 }
 
 #lang a {
