@@ -9,21 +9,21 @@ register = template.Library()
 @register.simple_tag
 def roster_table():
     team = Team.objects.get(name="4Hands")
-    season = EventType.objects.get(name="Season")
+    season = EventType.objects.filter(name="Season")[0]
     division = Division.objects.get(name="mixed")
-    event = Event.objects.get(event_type=season)
+    event = Event.objects.filter(event_type=season)[0]
     edition = Edition.objects.get(event=event)
     ed = EditionDivision.objects.get(division=division,
                          edition=edition)
     squad = Squad.objects.get(team=team,
                               edition_division=ed)
     trs = []
-    players = squad.players_playing()
+    players = squad.players()
     for player in players:
         tr = """
   <tr>
     <td>8</td>
-    <td><img src="%s8.jpg"/></td>
+    <td><img src="%sface-placeholder.jpeg"/></td>
     <td>%s</td>
     <td>183 cm</td>
     <td>77 kg</td>
@@ -67,20 +67,20 @@ def stats_table():
     team = Team.objects.get(name="4Hands")
     season = EventType.objects.get(name="Season")
     division = Division.objects.get(name="mixed")
-    event = Event.objects.get(event_type=season)
+    event = Event.objects.filter(event_type=season)[0]
     edition = Edition.objects.get(event=event)
     ed = EditionDivision.objects.get(division=division,
                          edition=edition)
     squad = Squad.objects.get(team=team,
                               edition_division=ed)
     trs = []
-    players = squad.players_playing()
+    players = squad.players()
     for player in players:
         tr = """
   <tr>
     <td>%s</td>
     <td>%s</td>
-    <td>%s</td>
+    <td><a href="#">%s</a></td>
     <td>%s</td>
     <td>%s</td>
     <td>%s</td>
