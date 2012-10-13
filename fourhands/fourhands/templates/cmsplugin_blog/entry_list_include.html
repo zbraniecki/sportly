@@ -1,0 +1,16 @@
+{% load i18n placeholder_tags cmsplugin_blog_tags simple_translation_tags %}
+<ul class="news">
+{% for entry in object_list|annotate_with_translations %}
+  <li>
+    {% with entry|get_preferred_translation_from_request:request as title %}
+    {% with entry.placeholders|choose_placeholder:"lead" as lead %}
+    <p><a href="{{ title.get_absolute_url }}">{{ title }}</a></br>
+    <span class="date">({{ entry.pub_date|date:"d b Y" }})</span>
+       {{ entry|render_language_choices:request|safe }}
+    </p>
+    {% render_placeholder lead %}
+    {% endwith %}
+    {% endwith %}
+  </li>    
+{% endfor %}
+</ul>

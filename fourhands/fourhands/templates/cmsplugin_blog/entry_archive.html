@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load cms_tags sekizai_tags %}
+{% load i18n cmsplugin_blog_tags %}
+
+
+{% block base_content %}
+{% addtoblock "css" %}<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/news.css" media="all" />{% endaddtoblock %}
+{{ block.super }}
+
+<h1>{% trans "Latest entries" %}</h1>
+
+{% with latest as object_list %}
+{% if object_list %}
+   {% include "cmsplugin_blog/entry_list_include.html" %}
+{% else %}
+	<p>{% trans "No entries" %}</p>
+{% endif %}
+{% endwith %}
+
+{% endblock %}
