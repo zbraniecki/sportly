@@ -57,3 +57,11 @@
     z-index: 20;
     margin: 0 3px 3px 3px; padding: 0;  width: 50px; font-size: 0.8em; height: 18px; }
 	#teams li span { position: absolute; margin-left: -1.3em; }
+
+    #teams li.placed {
+      opacity: 0.5;
+    }
+
+    td > span {
+      z-index: 20;
+    }
