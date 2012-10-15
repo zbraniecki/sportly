@@ -63,15 +63,15 @@ body {
 </head>
   <body>
     <div id="page">
-      <h1>Edition: <a href="/dashboard/edition/{{ group.phase.edition_division.edition.id }}">{{ group.phase.edition_division.edition.short_name }}</a></h1>
-      <h2>Division: <a href="/dashboard/division/{{ group.phase.edition_division.id }}">{{ group.phase.edition_division.division.name }}</a></h2>
-      <h3>Phase: <a href="/dashboard/phase/{{ group.phase.id }}">{{ group.phase.name }}</a></h3>
+      <h1>Edition: <a href="/edition/{{ group.phase.edition_division.edition.id }}">{{ group.phase.edition_division.edition.short_name }}</a></h1>
+      <h2>Division: <a href="/division/{{ group.phase.edition_division.id }}">{{ group.phase.edition_division.division.name }}</a></h2>
+      <h3>Phase: <a href="/phase/{{ group.phase.id }}">{{ group.phase.name }}</a></h3>
       <div id="chart"></div> 
       <div id="chart2"></div> 
       <h3>Games:</h3>
       <ul>
         {% for game in group.games.all %}
-        <li><a href="/dashboard/game/{{game.id}}">{{game.home_display }} vs. {{ game.away_display }} [{{game.name}}]</a></li>
+        <li><a href="/game/{{game.id}}">{{game.home_display }} vs. {{ game.away_display }} [{{game.name}}]</a></li>
         {% endfor %}
     </ul>
     </div>

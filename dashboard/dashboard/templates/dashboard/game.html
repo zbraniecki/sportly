@@ -21,11 +21,11 @@ body {
 </head>
   <body>
     <div id="page">
-      <h1>Edition: <a href="/dashboard/edition/{{ game.group.phase.edition_division.edition.id }}">{{ game.group.phase.edition_division.edition.short_name }}</a></h1>
+      <h1>Edition: <a href="/edition/{{ game.group.phase.edition_division.edition.id }}">{{ game.group.phase.edition_division.edition.short_name }}</a></h1>
       <h2>Division: <a href="/dashboard/division/{{ game.group.phase.edition_division.id }}">{{ game.group.phase.edition_division.division.name }}</a></h2>
-      <h3>Phase: <a href="/dashboard/phase/{{ game.group.phase.id }}">{{ game.group.phase.name }}</a></h3>
-      <h3>Group: <a href="/dashboard/group/{{ game.group.id }}">{{game.group.name}}</a></h3>
-      <h1>Game: {{ game.squad1.team.name }} vs. {{ game.squad2.team.name }}</h1>
+      <h3>Phase: <a href="/phase/{{ game.group.phase.id }}">{{ game.group.phase.name }}</a></h3>
+      <h3>Group: <a href="/group/{{ game.group.id }}">{{game.group.name}}</a></h3>
+      <h1>Game: {{ game.squad1.name }} vs. {{ game.squad2.name }}</h1>
       <h3>Score: {{game.points1}} : {{game.points2}}</h3>
       <h3>Start: {{game.start}}</h3>
       <h3>Status: {{game.state}}</h3>
