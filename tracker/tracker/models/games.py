@@ -47,7 +47,12 @@ class Group(TrackerModel):
         if squads.count():
             s = []
             for squad in squads:
-                s.append({'id': squad.id, 'name': squad.team.name})
+                teams = squad.team.all()
+                if len(teams) == 1:
+                    name = teams[0].name
+                else:
+                    name = ', '.join(map(teams, lambda x:x.name))
+                s.append({'id': squad.id, 'name': name})
             return s
         ql = self.qualifications_from.all()
         squads = []
@@ -101,7 +106,7 @@ class Game(TrackerModel):
 
     def home_display(self):
         if self.squad1:
-            return self.squad1.team
+            return self.squad1.name
         try:
             qual = self.qualifications_from.get(position_to=1)
         except Qualification.DoesNotExist:
@@ -121,7 +126,7 @@ class Game(TrackerModel):
 
     def away_display(self):
         if self.squad2:
-            return self.squad2.team
+            return self.squad2.name
         try:
             qual = self.qualifications_from.get(position_to=2)
         except Qualification.DoesNotExist:

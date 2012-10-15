@@ -2,7 +2,7 @@ from tracker.models.events import EventGameType, Visibility, EditionDivisionInvi
 from tracker.models.events import SquadInvitation, EventType, Event, SquadPersonRole
 from tracker.models.events import Edition, SelectionType, Squad, EditionDivision
 from tracker.models.events import SignUpStatus, SquadSignUp, EditionDivisionSignUp, TeamRole
-from tracker.models.events import AcceptedStatus
+from tracker.models.events import AcceptedStatus, Bucket, BucketSquads
 
 
 from django.contrib import admin
@@ -47,6 +47,11 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'event_type', 'game_type')
     list_filter = ('event_type', 'game_type')
 
+class BucketSquadsInline(admin.TabularInline):
+    model = BucketSquads
+
+class BucketAdmin(admin.ModelAdmin):
+    inlines = (BucketSquadsInline, )
 
 admin.site.register(EventGameType)
 admin.site.register(Visibility)
@@ -62,5 +67,6 @@ admin.site.register(SignUpStatus)
 admin.site.register(AcceptedStatus)
 admin.site.register(SquadSignUp)
 admin.site.register(EditionDivisionSignUp)
+admin.site.register(Bucket, BucketAdmin)
 admin.site.register(TeamRole)
 admin.site.register(EditionDivision, EditionDivisionAdmin)

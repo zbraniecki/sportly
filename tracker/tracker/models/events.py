@@ -214,6 +214,7 @@ class EditionDivisionSignUp(TrackerModel):
     signee = generic.GenericForeignKey('content_type', 'object_id') # person or squad
     status = models.ForeignKey(SignUpStatus)
     accepted = models.ForeignKey(AcceptedStatus, blank=True, null=True)
+    # seed = models.IntegerField(blank=True, null=True)
     edition_division = models.ForeignKey(EditionDivision, related_name="signups")
 
     def __unicode__(self):
@@ -222,6 +223,38 @@ class EditionDivisionSignUp(TrackerModel):
         return "Signup for %s for %s: %s" % (self.signee.__unicode__(),
                                              self.edition_division.__unicode__(),
                                              self.status.__unicode__())
+
+# Buckets
+
+class Bucket(TrackerModel):
+    class Meta:
+        ordering = ['pos']
+        app_label = 'tracker'
+
+    name = models.CharField(max_length=200, blank=True, null=True)
+    code_name = models.CharField(max_length=200, blank=True, null=True)
+    pos = models.IntegerField(blank=True, null=True)
+    edition_division = models.ForeignKey(EditionDivision)
+    squads = models.ManyToManyField(Squad,
+                                    through="BucketSquads",
+                                    blank=True,
+                                    null=True)
+
+    def __unicode__(self):
+        return '%s (%s)' % (self.name, self.code_name)
+
+class BucketSquads(TrackerModel):
+    class Meta:
+        ordering = ['pos']
+        app_label = 'tracker'
+    
+    squad = models.ForeignKey(Squad)
+    bucket = models.ForeignKey(Bucket)
+    pos = models.IntegerField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s in bucket %s" % (self.squad,
+                                    self.bucket)
 
 ### Roles
 
