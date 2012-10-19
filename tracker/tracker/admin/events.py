@@ -1,72 +1,64 @@
-from tracker.models.events import EventGameType, Visibility, EditionDivisionInvitation
-from tracker.models.events import SquadInvitation, EventType, Event, SquadPersonRole
-from tracker.models.events import Edition, SelectionType, Squad, EditionDivision
-from tracker.models.events import SignUpStatus, SquadSignUp, EditionDivisionSignUp, TeamRole
-from tracker.models.events import AcceptedStatus, Bucket, BucketSquads
-
+from tracker.models.events import EventFieldType, EventType, EventVisibility
+from tracker.models.events import Series, Event, EventDivision
+from tracker.models.events import SquadSelectionType, Roster
+from tracker.models.events import EventDivisionInvitation, RosterInvitation
+from tracker.models.events import SignUpStatus, AcceptedStatus, RosterSignUp
+from tracker.models.events import EventDivisionSignUp, RosterPersonRole
 
 from django.contrib import admin
 from django.contrib.contenttypes import generic
 
-class SquadPersonRoleInline(admin.TabularInline):
-    model = SquadPersonRole
+class RosterPersonRoleInline(admin.TabularInline):
+    model = RosterPersonRole
 
 
-class SquadInvitationInline(admin.TabularInline):
-    model = SquadInvitation
+class RosterInvitationInline(admin.TabularInline):
+    model = RosterInvitation
 
-class SquadAdmin(admin.ModelAdmin):
-    inlines = (SquadPersonRoleInline, SquadInvitationInline)
+class RosterAdmin(admin.ModelAdmin):
+    inlines = (RosterPersonRoleInline, RosterInvitationInline)
 
 
-class EditionDivisionInvitationInline(generic.GenericTabularInline):
-    model = EditionDivisionInvitation
-    fk_name = "edition_division"
+class EventDivisionInvitationInline(generic.GenericTabularInline):
+    model = EventDivisionInvitation
+    fk_name = "event_division"
 
-class EditionDivisionInline(admin.TabularInline):
-    model = EditionDivision
+class EventDivisionInline(admin.TabularInline):
+    model = EventDivision
 
-class EditionDivisionSignUpInline(admin.TabularInline):
-    model = EditionDivisionSignUp
+class EventDivisionSignUpInline(admin.TabularInline):
+    model = EventDivisionSignUp
 
-class EditionDivisionAdmin(admin.ModelAdmin):
+class EventDivisionAdmin(admin.ModelAdmin):
     inlines = [
-        EditionDivisionSignUpInline
+        EventDivisionSignUpInline
     ]
 
-class EditionAdmin(admin.ModelAdmin):
-    list_filter = ('event__event_type', 'event__game_type', 'start_date')
+class EventAdmin(admin.ModelAdmin):
+    list_filter = ('event__event_type', 'event__field_type', 'start_date')
     #filter_horizontal = ["players"]
     list_display = ('name', 'start_date', 'end_date')
     date_hierarchy = 'start_date'
     inlines = [
-        EditionDivisionInline,
+        EventDivisionInline,
     ]
 
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'event_type', 'game_type')
-    list_filter = ('event_type', 'game_type')
+class SeriesAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'event_type', 'field_type')
+    list_filter = ('event_type', 'field_type')
 
-class BucketSquadsInline(admin.TabularInline):
-    model = BucketSquads
-
-class BucketAdmin(admin.ModelAdmin):
-    inlines = (BucketSquadsInline, )
-
-admin.site.register(EventGameType)
-admin.site.register(Visibility)
-admin.site.register(EditionDivisionInvitation)
-admin.site.register(SquadInvitation)
+admin.site.register(EventFieldType)
 admin.site.register(EventType)
+admin.site.register(EventVisibility)
+admin.site.register(Series, SeriesAdmin)
 admin.site.register(Event, EventAdmin)
-admin.site.register(SquadPersonRole)
-admin.site.register(Edition, EditionAdmin)
-admin.site.register(SelectionType)
-admin.site.register(Squad, SquadAdmin)
+admin.site.register(EventDivision, EventDivisionAdmin)
+admin.site.register(SquadSelectionType)
+admin.site.register(Roster, RosterAdmin)
+admin.site.register(EventDivisionInvitation)
+admin.site.register(RosterInvitation)
 admin.site.register(SignUpStatus)
 admin.site.register(AcceptedStatus)
-admin.site.register(SquadSignUp)
-admin.site.register(EditionDivisionSignUp)
-admin.site.register(Bucket, BucketAdmin)
-admin.site.register(TeamRole)
-admin.site.register(EditionDivision, EditionDivisionAdmin)
+admin.site.register(RosterSignUp)
+admin.site.register(EventDivisionSignUp)
+admin.site.register(RosterPersonRole)
