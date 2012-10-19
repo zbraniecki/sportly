@@ -1,5 +1,5 @@
-from tracker.models.events import EventType, Edition, EditionDivision
-from tracker.models.games import Game, Phase, Group
+from tracker.models.events import EventType, Event, EventDivision
+from tracker.models import Game, Stage, Group
 from django.shortcuts import render_to_response
 
 from dashboard import utils
@@ -54,5 +54,5 @@ def game(request, gid):
     game = Game.objects.get(id=gid)
     return render_to_response('dashboard/game.html', {'game': game,})
 
-def drawboard(request):
-    return render_to_response('dashboard/drawboard2.html')
+def planner(request):
+    return render_to_response('dashboard/planner.html')

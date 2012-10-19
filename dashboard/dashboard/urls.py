@@ -8,7 +8,7 @@ urlpatterns = patterns('dashboard.views.views',
     url(r'^phase/(?P<pid>\d+)$', 'phase'),
     url(r'^group/(?P<gid>\d+)$', 'group'),
     url(r'^game/(?P<gid>\d+)$', 'game'),
-    url(r'^drawboard/', 'drawboard'),
+    url(r'^planner/', 'planner'),
 )
 
 urlpatterns += patterns('dashboard.views.api',
