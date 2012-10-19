@@ -13,25 +13,27 @@ class LinkType(TrackerModel):
 class Link(TrackerModel):
     link_type = models.ForeignKey(LinkType)
 
-    limit = models.Q(model = 'game') | models.Q(model = 'group')
+    limit = models.Q(app_label = "tracker", model = 'game') | models.Q(app_label = "tracker", model = 'group')
     content_type_from = models.ForeignKey(ContentType,
                                           limit_choices_to = limit,
                                           related_name='+')
     object_id_from = models.PositiveIntegerField()
+    #links_from
     qualifies_from = generic.GenericForeignKey('content_type_from',
                                                'object_id_from') # game / group
-    position_from = models.PositiveIntegerField()
+    position_from = models.PositiveIntegerField(blank=True, null=True)
     content_type_to = models.ForeignKey(ContentType,
                                         limit_choices_to = limit,
                                         related_name='+')
     object_id_to = models.PositiveIntegerField()
+    #links_to
     qualifies_to = generic.GenericForeignKey('content_type_to',
                                              'object_id_to') # game / group
     position_to = models.PositiveIntegerField(blank=True, null=True)
 
     def __unicode__(self):
-        return 'Qualification from %s to %s' % (self.qualifies_from,
-                                                self.qualifies_to)
+        return 'Link from %s to %s' % (self.qualifies_from,
+                                       self.qualifies_to)
 
 class StageType(TrackerModel):
     """
@@ -52,7 +54,7 @@ class Stage(PositionalModel):
     """
     name = models.CharField(max_length=200, blank=True, null=True)
     code_name = models.CharField(max_length=200, blank=True, null=True)
-    stage_type = models.ForeignKey(StageType)
+    stage_type = models.ForeignKey(StageType, blank=True, null=True)
     parent = models.ForeignKey("Stage", blank=True, null=True)
     event_division = models.ForeignKey(EventDivision, related_name="stages")
 
@@ -64,11 +66,13 @@ class Stage(PositionalModel):
         return self.groups.filter(parent__isnull=True)
     """
 
-class Cluster(TrackerModel):
+class GroupCluster(TrackerModel):
     """
     Elite / Challenger
     """
     name = models.CharField(max_length=200)
+    parent = models.ForeignKey("GroupCluster", blank=True, null=True)
+    # stage?
     event_division = models.ForeignKey(EventDivision)
 
     def __unicode__(self):

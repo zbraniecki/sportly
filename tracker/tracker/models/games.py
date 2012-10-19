@@ -38,49 +38,51 @@ class Game(TrackerModel):
     state = models.ForeignKey(GameState)
 
     def home_display(self):
-        if self.squad1:
-            return self.squad1.name
+        if self.roster1:
+            return self.roster1.name
+        group_type = ContentType.objects.get_for_model(Group)
+        game_type = ContentType.objects.get_for_model(Game)
         try:
-            qual = self.qualifications_from.get(position_to=1)
+            qual = Link.objects.get(content_type_to=game_type,
+                                    object_id_to=self.id,
+                                    position_to=1)
         except Link.DoesNotExist:
             if self.group is None or self.pos1 is None:
                 return '?'
             else:
               return '%s%s' % (self.group.code_name,
                                self.pos1)
-        group_type = ContentType.objects.get_for_model(Group)
         if qual.content_type_from.id == group_type.id:
-            code1 = '%s%s' % (qual.qualifies_from.name,
+            code1 = '%s%s' % (qual.qualifies_from.code_name,
                               qual.position_from)
             return code1
-        game_type = ContentType.objects.get_for_model(Game)
         if qual.content_type_from.id == game_type.id:
             t = 'l' if qual.position_from == 2 else 'w'
-            code1 = '%s%s' % (qual.qualifies_from.name,
+            code1 = '%s%s' % (qual.qualifies_from.code_name,
                               t)
             return code1
         return '??'
 
     def away_display(self):
-        if self.squad2:
-            return self.squad2.name
+        if self.roster2:
+            return self.roster2.name
+        group_type = ContentType.objects.get_for_model(Group)
+        game_type = ContentType.objects.get_for_model(Game)
         try:
-            qual = self.qualifications_from.get(position_to=2)
+            qual = Link.objects.get(object_id_to=self.id, position_to=2)
         except Link.DoesNotExist:
             if self.group is None or self.pos2 is None:
                 return '?'
             else:
               return '%s%s' % (self.group.code_name,
                                self.pos2)
-        group_type = ContentType.objects.get_for_model(Group)
         if qual.content_type_from.id == group_type.id:
-            code1 = '%s%s' % (qual.qualifies_from.name,
+            code1 = '%s%s' % (qual.qualifies_from.code_name,
                               qual.position_from)
             return code1
-        game_type = ContentType.objects.get_for_model(Game)
         if qual.content_type_from.id == game_type.id:
-            t = 'l' if qual.position_from == 2 else 'w'
-            code1 = '%s%s' % (qual.qualifies_from.name,
+            t = 'L' if qual.position_from == 2 else 'W'
+            code1 = '%s%s' % (qual.qualifies_from.code_name,
                               t)
             return code1
         return '??'
