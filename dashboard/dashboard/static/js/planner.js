@@ -1,26 +1,12 @@
-var team = [
-  '4hands',
-  'B.C.'
-]
 $(function() {
   var tournament = new Tournament();
-  
+
   $("#add_stage").on('click', function() {
     tournament.addStage();
   });
-  $(".seed td").droppable({
-    hoverClass: "ui-state-active",
-    accept: ":not(.placed)",
-    drop: function(event, ui) {
-      $(this).text(ui.draggable.text())
-      ui.draggable.addClass('placed')
-    }
-  });
-  $(".advances td > span").draggable({ revert: true });
-  $( ".tabs" ).tabs();
-        $( "#teams" ).sortable({
-            placeholder: "ui-state-highlight"
-            }); 
+  $( "#teams" ).sortable({
+    placeholder: "ui-state-highlight"
+  }); 
 });
 
 
@@ -42,6 +28,7 @@ function Stage(num, t) {
   this.num = num;
   this.id = 'stage'+num;
   this.groups = [];
+  this.ladder = null;
   this.type = 'bucket';
 }
 
@@ -73,6 +60,26 @@ Stage.prototype.drawSettings = function() {
         });
       settings.append(addgroup);
       break;
+    case 'ladder':
+      var teams = $("<input/>")
+        .val(4)
+        .on('change', {'self': this}, function(e) {
+          e.data.self.ladder.tmsnr = $(this).val(); 
+        });
+      var draw = $("<button />")
+        .text("Draw")
+        .on("click", {'self': this}, function(e) {
+          if (e.data.self.ladder) {
+            e.data.self.ladder.clear();
+          } else {
+            var ladder = new Ladder(0, e.data.self);
+            e.data.self.ladder = ladder;
+          }
+          e.data.self.ladder.draw();
+        });
+      settings.append(teams);
+      settings.append(draw);
+      break;
   }
 }
 
@@ -103,11 +110,11 @@ Stage.prototype.draw = function() {
   });
   settings.append(type);
   settings.append(ts);
-  
 
-   var groupbox = $('<div/>', {
-     'class': 'groupbox'
-   });
+
+  var groupbox = $('<div/>', {
+    'class': 'groupbox'
+  });
   stage.append(settings);
   stage.append(groupbox);
   this.node = stage;
@@ -130,70 +137,137 @@ var Group = function(num, s) {
 Group.prototype.draw = function() {
   var id = this.stage.id+"-"+this.id;
   var groupbox = $('.groupbox', this.stage.node);
-   var group = $('<div/>', {
-     'class': 'group tabbable tabs-left'
-   });
-   var name = this.stage.type == 'bucket' ? 'Bucket': 'Group';
-   var span = $('<span/>').text(name+' '+this.num);
-   group.append(span);
-   var button = $('<button/>').text('clear');
-   group.append(button);
-   var ul = $('<ul/>', {
-     'class': 'nav nav-tabs'
-   });
-   var li1 = $('<li/>').addClass('active');
-   var li1a = $('<a/>', {
-     'href': '#'+id+'-seeds',
-     'data-toggle': 'tab',
-   }).text('Seeds');
-   li1.append(li1a);
-   ul.append(li1);
-   var li2 = $('<li/>');
-   var li2a = $('<a/>', {
-     'href': '#'+id+'-links',
-     'data-toggle': 'tab',
-   }).text('Links');
-   li2.append(li2a);
-   ul.append(li2);
-   group.append(ul);
-   var content = $('<div/>', {
-     'class': 'tab-content'
-   });
-   group.append(content);
-   var pane1 = $('<div/>', {
-     'class': 'tab-pane active',
-     'id': id+'-seeds',
-   });
-   content.append(pane1);
-   var table = $('<table/>').addClass('rows').attr('border', 1);
-   pane1.append(table);
-   for (var i=0;i<2;i++) {
-     switch (this.stage.type) {
-       case 'bucket':
-         var tr = $('<tr><td class="slot">&nbsp;</td></tr>');
-         break;
-       case 'group':
-         var tr = $('<tr><td>'+(i+1)+'</td><td class="slot">&nbsp;</td></tr>');
-         break;
-     }
-     group.find('table').append(tr);
-   }
-  $("td.slot", group).droppable({
-    hoverClass: "ui-state-active",
-    accept: ":not(.placed)",
+  var group = $('<div/>', {
+    'class': 'group tabbable tabs-left'
+  });
+  var name = this.stage.type == 'bucket' ? 'Bucket': 'Group';
+  var span = $('<span/>').text(name+' '+this.num);
+  group.append(span);
+  var button = $('<button/>').text('clear');
+  group.append(button);
+  var ul = $('<ul/>', {
+    'class': 'nav nav-tabs'
+  });
+  var li1 = $('<li/>').addClass('active');
+  var li1a = $('<a/>', {
+    'href': '#'+id+'-seeds',
+      'data-toggle': 'tab',
+  }).text('Seeds');
+  li1.append(li1a);
+  ul.append(li1);
+  var li2 = $('<li/>');
+  var li2a = $('<a/>', {
+    'href': '#'+id+'-links',
+      'data-toggle': 'tab',
+  }).text('Links');
+  li2.append(li2a);
+  ul.append(li2);
+  group.append(ul);
+  var content = $('<div/>', {
+    'class': 'tab-content'
+  });
+  group.append(content);
+  var pane1 = $('<div/>', {
+    'class': 'tab-pane active',
+      'id': id+'-seeds',
+  });
+  content.append(pane1);
+  var table = $('<table/>').addClass('rows').attr('border', 1);
+  pane1.append(table);
+  for (var i=0;i<2;i++) {
+    switch (this.stage.type) {
+      case 'bucket':
+        var tr = $('<tr><td class="slot">&nbsp;</td></tr>');
+        break;
+      case 'group':
+        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot">&nbsp;</td></tr>');
+        break;
+    }
+    pane1.find('table').append(tr);
+  }
+  $("td.slot", table).droppable({
+    //hoverClass: "ui-state-active",
+    //accept: ":not(.placed)",
     drop: function(event, ui) {
-      $(this).text(ui.draggable.text())
-      ui.draggable.addClass('placed')
+      $(this).text(ui.draggable.text());
+      ui.draggable.addClass('placed');
     }
   });
-   var pane2 = $('<div/>', {
-     'class': 'tab-pane',
-     'id': id+'-links',
-   });
-   pane2.text('foo')
-   content.append(pane2);
-   groupbox.append(group);
+  var pane2 = $('<div/>', {
+    'class': 'tab-pane',
+      'id': id+'-links',
+  });
+  content.append(pane2);
+  var table = $('<table/>').addClass('rows').attr('border', 1);
+  pane2.append(table);
+  for (var i=0;i<2;i++) {
+    switch (this.stage.type) {
+      case 'bucket':
+        var tr = $('<tr><td class="link"><div>B'+this.num+''+i+'</div></td></tr>');
+        break;
+      case 'group':
+        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot">G'+this.num+''+i+'</td></tr>');
+        break;
+    }
+    pane2.find('table').append(tr);
+  }
+  //$("td.link > div", pane2).draggable({ revert: true });
+  if (this.stage.type == 'bucket') {
+    $( "tbody", table).sortable({
+      placeholder: "ui-state-highlight"
+    }); 
+  }
+  groupbox.append(group);
 }
+
+
+var Ladder = function(num, s) {
+  this.node = null;
+  this.num = num;
+  this.id = 'ladder'+num;
+  this.stage = s;
+  this.tmsnr = 4;
+}
+
+Ladder.prototype.draw = function() {
+  var table = $("<table />").addClass('ladder');
+  this.stage.node.append(table);
+  var tr = $("<tr />");
+  table.append(tr);
+  console.log(this.tmsnr);
+  while (this.tmsnr != 0.5) {
+    var td = $("<td />");
+    tr.append(td);
+    var gtb = $("<table />");
+    for (var i=0;i<this.tmsnr;i++) {
+      var gtr = $("<tr />");
+      var gtd = $("<td />").addClass('game');
+      gtr.append(gtd);
+      gtb.append(gtr);
+      gtd.text('match')
+    }
+    td.append(gtb);
+    this.tmsnr /= 2;
+  }
+  $("td.game", table).droppable({
+    //hoverClass: "ui-state-active",
+    //accept: ":not(.placed)",
+    drop: function(event, ui) {
+      $(this).text(ui.draggable.text());
+      ui.draggable.addClass('placed');
+    }
+  });
+  this.node = table;
+}
+
+Ladder.prototype.clear = function() {
+  $("table", this.stage.node).remove();
+}
+
+/*
+ Old
+ */
+
 
 function setstageSchedule(stage) {
   var settings = {
@@ -203,16 +277,16 @@ function setstageSchedule(stage) {
   var schedulebox = $('<div/>').addClass('schedulebox');
   for (var n=0;n<settings['fields'];n++) {
     var field = $('<div><span/><table/></div>')
-    field.addClass('games')
-    field.find('span').text('Field 1')
-    var table = $('table', field);
+      field.addClass('games')
+      field.find('span').text('Field 1')
+      var table = $('table', field);
     table.attr('border', 1);
     for (var i=0;i<4;i++) {
       var tr = $('<tr/>');
       tr.append($('<td/>').text('round1'))
-      tr.append($('<td/>').text('HH:MM'))
-      tr.append($('<td/>').text('?? vs. ??'))
-      table.append(tr);
+        tr.append($('<td/>').text('HH:MM'))
+        tr.append($('<td/>').text('?? vs. ??'))
+        table.append(tr);
     }
     schedulebox.append(field)
   }
@@ -220,33 +294,33 @@ function setstageSchedule(stage) {
 }
 
 function setAdvances(stage) {
-   var settings = {
-     'groups': 2,
-   }
-   var advances = $('.advances', stage);
-   var groupbox = $('<div/>', {
-     'class': 'groupbox'
-   });
-   for(var n=0;n<settings['groups'];n++) {
-   var group = $('<div><span/><button/><table/></div>');
-   group.addClass('group');
-   group.find('button').text('clear');
-   group.find('span').text('Group '+n);
-   group.find('table').addClass('rows').attr('border', 1);
-   for (var i=0;i<4;i++) {
-     var tr = $('<tr><td><span/></td></tr>');
-     tr.find('span').text('A1')
-     group.find('table').append(tr);
-   }
-   groupbox.append(group);
-   }
+  var settings = {
+    'groups': 2,
+  }
+  var advances = $('.advances', stage);
+  var groupbox = $('<div/>', {
+    'class': 'groupbox'
+  });
+  for(var n=0;n<settings['groups'];n++) {
+    var group = $('<div><span/><button/><table/></div>');
+    group.addClass('group');
+    group.find('button').text('clear');
+    group.find('span').text('Group '+n);
+    group.find('table').addClass('rows').attr('border', 1);
+    for (var i=0;i<4;i++) {
+      var tr = $('<tr><td><span/></td></tr>');
+      tr.find('span').text('A1')
+        group.find('table').append(tr);
+    }
+    groupbox.append(group);
+  }
 
   $("td", groupbox).droppable({
     hoverClass: "ui-state-active",
     accept: ":not(.placed)",
     drop: function(event, ui) {
       $(this).text(ui.draggable.text())
-      ui.draggable.addClass('placed')
+    ui.draggable.addClass('placed')
     }
   });
   advances.append(groupbox);
