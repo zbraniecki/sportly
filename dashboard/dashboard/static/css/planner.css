@@ -93,12 +93,19 @@ td.link > div {
   z-index: 100;
 }
 
-table.ladder {
+table.bracket {
   border: 1px solid black;
 }
 
-table.ladder table.game {
+table.bracket table.game {
   border: 1px solid black;
+}
+
+#standings td {
+  border: 1px solid black;
+}
+#standings td.slot {
+  width: 80px;
 }
 
 .link.ui-draggable {

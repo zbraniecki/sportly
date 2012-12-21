@@ -1,5 +1,6 @@
 $(function() {
   var tournament = new Tournament();
+  tournament.drawStandings();
 
   $("#add_stage").on('click', function() {
     tournament.addStage();
@@ -13,7 +14,23 @@ $(function() {
 
 function Tournament() {
   this.stages = [];
+  this.size = 8; // number of teams
   this.node = $('#tournament tr');
+}
+
+Tournament.prototype.drawStandings = function() {
+  var node = $("#standings");
+  for (var i=0;i<this.size;i++) {
+    var tr = $("<tr><td>"+(i+1)+"</td><td class='slot'></td></tr>");
+    node.append(tr);
+  }
+  $('.slot', node).droppable({
+    accept: ".team:not(.placed), .link",
+    drop: function(event, ui) {
+      $(this).text(ui.draggable.text());
+      ui.draggable.addClass('placed');
+    } 
+  });
 }
 
 Tournament.prototype.addStage = function() {
@@ -62,6 +79,14 @@ Stage.prototype.drawSettings = function() {
       settings.append(addgroup);
       break;
     case 'ladder':
+      var addgroup = $("<button/>")
+        .text("Add Bracket")
+        .on('click', {'self': this}, function(e) {
+          e.data.self.addGroup();
+        });
+      settings.append(addgroup);
+      break;
+/*    case 'ladder2':
       var teams = $("<input/>")
         .val(4)
         .on('change', {'self': this}, function(e) {
@@ -80,7 +105,7 @@ Stage.prototype.drawSettings = function() {
         });
       settings.append(teams);
       settings.append(draw);
-      break;
+      break;*/
   }
 }
 
@@ -133,16 +158,35 @@ var Group = function(num, s) {
   this.num = num;
   this.id = 'group'+num;
   this.stage = s;
+  this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
+  this.struct = null;
 }
 
 Group.prototype.draw = function() {
-  var id = this.stage.id+"-"+this.id;
-  var groupbox = $('.groupbox', this.stage.node);
+  switch (this.type) {
+    case 'group':
+      this.struct = new Table(this);
+      this.struct.draw();
+      break;
+    case 'bracket':
+      this.struct = new Bracket(this);
+      this.struct.draw();
+      break;
+  }
+}
+
+var Table = function(group) {
+  this.group = group;
+}
+
+Table.prototype.draw = function() {
+  var id = this.group.stage.id+"-"+this.group.id;
+  var groupbox = $('.groupbox', this.group.stage.node);
   var group = $('<div/>', {
     'class': 'group tabbable tabs-left'
   });
-  var name = this.stage.type == 'bucket' ? 'Bucket': 'Group';
-  var span = $('<span/>').text(name+' '+this.num);
+  var name = this.group.stage.type == 'bucket' ? 'Bucket': 'Group';
+  var span = $('<span/>').text(name+' '+this.group.num);
   group.append(span);
   var button = $('<button/>').text('clear');
   group.append(button);
@@ -176,7 +220,7 @@ Group.prototype.draw = function() {
   var table = $('<table/>').addClass('rows').attr('border', 1);
   pane1.append(table);
   for (var i=0;i<2;i++) {
-    switch (this.stage.type) {
+    switch (this.group.stage.type) {
       case 'bucket':
         var tr = $('<tr><td class="slot">&nbsp;</td></tr>');
         break;
@@ -198,7 +242,7 @@ Group.prototype.draw = function() {
     'class': 'tab-pane',
       'id': id+'-links',
   });
-  if (this.stage.type == 'bucket') {
+  if (this.group.stage.type == 'bucket') {
     $( "tbody", table).sortable({
       placeholder: "ui-state-highlight"
     }); 
@@ -207,12 +251,12 @@ Group.prototype.draw = function() {
   var table = $('<table/>').addClass('rows').attr('border', 1);
   pane2.append(table);
   for (var i=0;i<2;i++) {
-    switch (this.stage.type) {
+    switch (this.group.stage.type) {
       case 'bucket':
-        var tr = $('<tr><td><div class="link">B'+this.num+''+i+'</div></td></tr>');
+        var tr = $('<tr><td><div class="link">B'+this.group.num+''+i+'</div></td></tr>');
         break;
       case 'group':
-        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot"><div class="link">G'+this.num+''+i+'</div></td></tr>');
+        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot"><div class="link">G'+this.group.num+''+i+'</div></td></tr>');
         break;
     }
     pane2.find('table').append(tr);
@@ -221,18 +265,14 @@ Group.prototype.draw = function() {
   groupbox.append(group);
 }
 
-
-var Ladder = function(num, s) {
-  this.node = null;
-  this.num = num;
-  this.id = 'ladder'+num;
-  this.stage = s;
+var Bracket = function(group) {
+  this.group = group;
   this.tmsnr = 8;
 }
 
-Ladder.prototype.draw = function() {
-  var table = $("<table />").addClass('ladder');
-  this.stage.node.append(table);
+Bracket.prototype.draw = function() {
+  var table = $("<table />").addClass('bracket');
+  this.group.stage.node.append(table);
   var tr = $("<tr />");
   var rounds = Math.log(this.tmsnr)/Math.log(2);
   var round = 0;
@@ -268,9 +308,9 @@ Ladder.prototype.draw = function() {
       ui.draggable.addClass('placed');
     }
   });
-  this.node = table;
+  this.group.node = table;
 }
 
-Ladder.prototype.clear = function() {
+Bracket.prototype.clear = function() {
   $("table", this.stage.node).remove();
 }
