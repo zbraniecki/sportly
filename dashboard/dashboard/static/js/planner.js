@@ -186,7 +186,8 @@ Stage.prototype.draw = function() {
   stage.append(settings);
   stage.append(groupbox);
   this.node = stage;
-  this.tournament.node.append(stage);
+  var standings = $("#standings").parent();
+  standings.before(stage);
 }
 
 Stage.prototype.addGroup = function() {
