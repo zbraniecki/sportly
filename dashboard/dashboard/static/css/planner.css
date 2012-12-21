@@ -1,24 +1,41 @@
+body {
+  overflow: scroll;
+}
+
 
 .tournament {
   border: 1px solid black;
 }
+#tournament td {
+  vertical-align: top;
+}
+
 .stage {
   border: 1px solid black;
   overflow: hidden;
   min-height: 140px;
+  min-width: 350px;
 }
 
 .stage > .settings {
   background-color: #ccc;
-  float: right;
-  width: 20%;
-  height: 100px;
+  top: 0;
+  width: 100%;
+  height: 40px;
 }
 
 .stage > .settings > .subsettings {
   border-top: 2px solid black;
   background-color: #aaa;
   height: 100%;
+}
+
+.stage > .settings > .type_settings {
+  display: inline-block;
+}
+
+.stage > .settings > .type_settings input {
+  width: 50px;
 }
 
 .groupbox,
@@ -31,7 +48,6 @@
 .groupbox > .group,
 .schedulebox > .games {
   border: 1px solid black;
-  display: table-cell;
 }
 
 .rows {
@@ -57,7 +73,6 @@
   width: 50px;
   font-size: 0.8em;
   height: 18px;
-  display: inline-block;
   text-align: center;
 }
 #teams li span { position: absolute; margin-left: -1.3em; }
@@ -82,6 +97,10 @@ table.ladder {
   border: 1px solid black;
 }
 
-table.ladder td {
+table.ladder table.game {
   border: 1px solid black;
+}
+
+.link.ui-draggable {
+  z-index: 100;
 }
