@@ -130,7 +130,7 @@ class Round(PositionalModel):
     """
     name = models.CharField(max_length=200, blank=True, null=True)
     code_name = models.CharField(max_length=200, blank=True, null=True)
-    group = models.ForeignKey(Round, blank=True, null=True)
+    group = models.ForeignKey(Group, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
