@@ -1,6 +1,7 @@
 $(function() {
   var tournament = new Tournament();
   tournament.drawTeams();
+  tournament.drawSeeding();
   tournament.drawStandings();
 
   $("#add_stage").on('click', function() {
@@ -30,6 +31,35 @@ Tournament.prototype.drawTeams = function() {
   });
 }
 
+Tournament.prototype.drawSeeding = function() {
+  var node = $("#seeding");
+  var tabs = $("<div><ul><li><a href='#seed-in'>in</a></li><li><a href='#seed-out'>out</a></li></ul><div id='seed-in'/><div id='seed-out'/></div>");
+  var sintable = $("<table/>");
+  for (var i=0;i<this.size;i++) {
+    var tr = $("<tr><td>"+(i+1)+"</td><td class='slot'></td></tr>");
+    sintable.append(tr);
+  }
+  $("#seed-in", tabs).append(sintable);
+  var souttable = $("<table/>");
+  for (var i=0;i<this.size;i++) {
+    var tr = $("<tr><td>"+(i+1)+"</td><td><div class='link'>S"+i+"</div></td></tr>");
+    souttable.append(tr);
+  }
+  $("#seed-out", tabs).append(souttable);
+  node.append(tabs);
+  tabs.tabs();
+  $('.slot', node).droppable({
+    accept: ".team:not(.placed), .link",
+    drop: function(event, ui) {
+      $(this).append(ui.draggable);
+      $(this).droppable("option", "disabled", true);
+    } 
+  });
+  $('.link', node).draggable({
+    helper: 'clone',
+  });
+}
+
 Tournament.prototype.drawStandings = function() {
   var node = $("#standings");
   for (var i=0;i<this.size;i++) {
@@ -40,6 +70,7 @@ Tournament.prototype.drawStandings = function() {
     accept: ".team:not(.placed), .link",
     drop: function(event, ui) {
       $(this).append(ui.draggable);
+      $(this).droppable("option", "disabled", true);
     } 
   });
 }

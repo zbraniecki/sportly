@@ -89,7 +89,7 @@ td > span {
   overflow: hidden;
 }
 
-td.link > div {
+.team, .link {
   z-index: 100;
 }
 
@@ -101,10 +101,10 @@ table.bracket table.game {
   border: 1px solid black;
 }
 
-#standings td {
+td {
   border: 1px solid black;
 }
-#standings td.slot {
+.slot, .link {
   width: 80px;
 }
 
