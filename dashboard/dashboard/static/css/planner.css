@@ -77,7 +77,7 @@ body {
 }
 #teams li span { position: absolute; margin-left: -1.3em; }
 
-#teams li.placed {
+.team.placed {
   opacity: 0.5;
 }
 

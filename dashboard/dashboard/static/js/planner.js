@@ -1,13 +1,12 @@
 $(function() {
   var tournament = new Tournament();
+  tournament.drawTeams();
   tournament.drawStandings();
 
   $("#add_stage").on('click', function() {
     tournament.addStage();
   });
-  $( "#teams" ).sortable({
-    placeholder: "ui-state-highlight"
-  }); 
+
   $( "#teams li" ).addClass('team');
 });
 
@@ -16,6 +15,19 @@ function Tournament() {
   this.stages = [];
   this.size = 8; // number of teams
   this.node = $('#tournament tr');
+}
+
+// Teams / Standings should be its own classes same as other stages
+
+Tournament.prototype.drawTeams = function() {
+  var node = $("#teams");
+  for (var i=0;i<this.size;i++) {
+    var li = $("<li><div class='team'>Team "+i+"</div></li>");
+    node.append(li);
+  }
+  $('.team', node).draggable({
+    helper: 'clone',
+  });
 }
 
 Tournament.prototype.drawStandings = function() {
@@ -27,8 +39,7 @@ Tournament.prototype.drawStandings = function() {
   $('.slot', node).droppable({
     accept: ".team:not(.placed), .link",
     drop: function(event, ui) {
-      $(this).text(ui.draggable.text());
-      ui.draggable.addClass('placed');
+      $(this).append(ui.draggable);
     } 
   });
 }
