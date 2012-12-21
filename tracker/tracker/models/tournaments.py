@@ -35,6 +35,19 @@ class Link(TrackerModel):
         return 'Link from %s to %s' % (self.qualifies_from,
                                        self.qualifies_to)
 
+# this should be more generic. Stage may exist only in one cluster
+class Cluster(TrackerModel):
+    """
+    Elite / Challenger
+    """
+    name = models.CharField(max_length=200)
+    parent = models.ForeignKey("Cluster", blank=True, null=True)
+    # stage?
+    event_division = models.ForeignKey(EventDivision)
+
+    def __unicode__(self):
+        return self.name
+
 class StageType(TrackerModel):
     """
     Group
@@ -57,6 +70,7 @@ class Stage(PositionalModel):
     stage_type = models.ForeignKey(StageType, blank=True, null=True)
     parent = models.ForeignKey("Stage", blank=True, null=True)
     event_division = models.ForeignKey(EventDivision, related_name="stages")
+    cluster = models.ForeignKey(Cluster, blank=True, null=True)
 
     def __unicode__(self):
         return 'Stage: %s of %s' % (self.name, self.event_division)
@@ -66,24 +80,13 @@ class Stage(PositionalModel):
         return self.groups.filter(parent__isnull=True)
     """
 
-class GroupCluster(TrackerModel):
-    """
-    Elite / Challenger
-    """
-    name = models.CharField(max_length=200)
-    parent = models.ForeignKey("GroupCluster", blank=True, null=True)
-    # stage?
-    event_division = models.ForeignKey(EventDivision)
-
-    def __unicode__(self):
-        return self.name
 
 class Group(PositionalModel):
     name = models.CharField(max_length=200, blank=True, null=True)
     code_name = models.CharField(max_length=200, blank=True, null=True)
     parent = models.ForeignKey("Group", blank=True, null=True)
     stage = models.ForeignKey(Stage, related_name="groups")
-    #cluster = models.ForeignKey(Cluster, blank=True, null=True)
+    cluster = models.ForeignKey(Cluster, blank=True, null=True)
  
     """
     def squads_display(self):
@@ -120,6 +123,17 @@ class GroupRoster(PositionalModel):
                                          self.group,
                                          self.pos)
 
+
+class Round(PositionalModel):
+    """
+    In Group/Ladder: round 1 games, round 2
+    """
+    name = models.CharField(max_length=200, blank=True, null=True)
+    code_name = models.CharField(max_length=200, blank=True, null=True)
+    group = models.ForeignKey(Round, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
 
 class FieldType(TrackerModel):
     """
