@@ -13,8 +13,6 @@ body {
 .stage {
   border: 1px solid black;
   overflow: hidden;
-  min-height: 140px;
-  min-width: 350px;
 }
 
 .stage > .settings {
@@ -110,4 +108,12 @@ td {
 
 .link.ui-draggable {
   z-index: 100;
+}
+
+.stage > h1 {
+  font-size: 1.2em;
+  line-height: 1.4em;
+  padding: 0;
+  margin: 0;
+  background-color: #eee;
 }

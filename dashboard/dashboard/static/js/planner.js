@@ -161,6 +161,8 @@ Stage.prototype.draw = function() {
   var stage = $("<td/>", {
     'class': 'stage'
   });
+  var name = $("<h1/>").text("Stage");
+  stage.append(name);
   var settings = $("<div/>", {
     'class': 'settings'
   });
