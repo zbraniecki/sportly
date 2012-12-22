@@ -8,14 +8,27 @@ var Group = function(num, s, name) {
   this.stage = s;
   this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
   this.struct = null;
+  if (!name) {
+    name = 'Group '+num;
+  }
   this.name = name;
   this.size = 4;
+  this.elements = {
+    'in': [],
+    'results': [],
+    'out': [],
+  };
   this.settings = {
     positional: true,
     incoming: true,
     resolvable: true,
     outgoing: true,
-  }
+  };
+}
+
+
+Group.prototype.setElement = function(type, pos, elem) {
+  this.elements[type][pos] = elem;
 }
 
 Group.prototype.draw = function() {
@@ -36,7 +49,14 @@ var Table = function(group) {
 }
 
 Table.prototype.draw = function() {
-  var tabs = ['in', 'result'];
+  var tabs = [];
+  var activeTab = 0;
+  if (this.group.settings.incoming) {
+    tabs.push('in');
+  }
+  if (this.group.settings.resolvable) {
+    tabs.push('results');
+  }
   if (this.group.settings.outgoing) {
     tabs.push('out');
   }
@@ -52,18 +72,20 @@ Table.prototype.draw = function() {
   var ul = $('<ul/>', {
     'class': 'nav nav-tabs'
   });
-  tabs.reverse().forEach(function(title, idx) {
-    var li = $('<li/>');
-    if (idx == 2) {
-      li.addClass('active');
-    }
-    var a = $('<a/>', {
-      'href': '#'+id+'-'+title,
-      'data-toggle': 'tab',
-    }).text(title);
-    li.append(a);
-    ul.append(li);
-  });
+  if (tabs.length > 1) {
+    tabs.reverse().forEach(function(title, idx) {
+      var li = $('<li/>');
+      if (idx == (tabs.length-1+activeTab)) {
+        li.addClass('active');
+      }
+      var a = $('<a/>', {
+        'href': '#'+id+'-'+title,
+          'data-toggle': 'tab',
+      }).text(title);
+      li.append(a);
+      ul.append(li);
+    });
+  }
   ul.append($('<li class="name">'+this.group.name+'</li>'));
   group.append(ul);
 
@@ -86,7 +108,9 @@ Table.prototype.draw = function() {
         var td = $('<td class="pos">'+(i+1)+'</td>');
         tr.append(td);
       }
+      var elem = this.group.elements[title][i] || null;
       var td = $('<td class="main"></td>');
+      td.html(elem);
       tr.append(td);
       table.append(tr);
     }
@@ -104,12 +128,15 @@ Table.prototype.draw = function() {
         break;
       case 'out':
         var mains = $('td.main', table);
+        var gr = this.group;
         mains.each(function(idx, main) {
-          var link = $('<div class="link">G0'+idx+'</div>');
-          link.draggable({
-            helper: 'clone',
-          });
-          $(main).append(link);
+          if (!gr.elements[title][idx]) {
+            var link = $('<div class="link">G0'+idx+'</div>');
+            link.draggable({
+              helper: 'clone',
+            });
+            $(main).append(link);
+          }
         });
         break;
     }

@@ -16,11 +16,30 @@ body {
   min-width: 250px;
 }
 
+.stage > header {
+  height: 30px;
+  background-color: #eee;
+  width: 100%;
+}
+
+.stage > header > h1 {
+  font-size: 1.2em;
+  line-height: 1.4em;
+  padding: 5px;
+  margin: 0;
+}
+
+.stage > header > .toolbar {
+  float: right;
+  top: 0;
+  height: 40px;
+  margin-top: -33px;
+}
+
 .stage > .settings {
   background-color: #ccc;
-  top: 0;
-  width: 100%;
   height: 40px;
+  float: right;
 }
 
 .stage > .settings > .subsettings {
@@ -99,13 +118,6 @@ td {
   z-index: 100;
 }
 
-.stage > h1 {
-  font-size: 1.2em;
-  line-height: 1.4em;
-  padding: 0;
-  margin: 0;
-  background-color: #eee;
-}
 
 
 .group {
@@ -148,6 +160,7 @@ td {
 
 .group .tab-content td.main {
   width: 100%;
+  height: 20px;
 }
 
 .group .tab-content td {
