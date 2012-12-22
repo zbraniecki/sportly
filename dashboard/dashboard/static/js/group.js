@@ -62,7 +62,7 @@ Table.prototype.draw = function() {
   }
 
   var id = this.group.stage.id+"-"+this.group.id;
-  var groupbox = $('.groupbox', this.group.stage.node);
+  var groupbox = $('.groupbox', this.group.stage.nodes.stage);
   var group = $('<div/>', {
     'class': 'group tabbable'
   });

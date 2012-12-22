@@ -2,12 +2,8 @@ body {
   overflow: scroll;
 }
 
-
 .tournament {
   border: 1px solid black;
-}
-#tournament td {
-  vertical-align: top;
 }
 
 #tournament > .stages {
@@ -35,6 +31,7 @@ body {
   background-color: #eee;
   width: 100%;
 }
+
 .editable-click {
   cursor: text;
   border: 0;
@@ -48,38 +45,35 @@ header > h1 {
   display: inline;
 }
 
+.stage > .settings {
+  height: 50px;
+  background-color: #ddd;
+  width: 100%;
+}
+
+.stage > .settings label {
+  display: inline;
+}
+
+.stage > .settings select {
+  width: auto;
+}
+
 .stage > header > .toolbar {
   float: right;
   top: 0;
   height: 40px;
 }
 
-.stage > .settings {
-  background-color: #ccc;
-  height: 40px;
+.stage > header > .settings_trigger {
   float: right;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: 1.4em;
+  padding-top: 10px;
 }
 
-.stage > .settings > .subsettings {
-  border-top: 2px solid black;
-  background-color: #aaa;
-  height: 100%;
-}
-
-.stage > .settings > .type_settings {
-  display: inline-block;
-}
-
-.groupbox,
-.schedulebox {
-  width: 80%;
-  height: 140px;
-  display: table
-}
-
-.schedule {
-  width: 100%;
-}
 #teams {
   list-style-type: none; margin: 0; padding: 0;
   border: 1px solid black;
