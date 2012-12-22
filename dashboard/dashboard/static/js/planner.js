@@ -1,13 +1,12 @@
 $(function() {
   var tournament = null;
   $("#add_stage").on('click', function() {
-    tournament.addStage();
+    var stage = tournament.addStage();
+    stage.draw(false);
   });
   $("#create_tournament").on('click', function() {
     tournament = new Tournament();
-    tournament.drawTeams();
-    tournament.drawSeeding();
-    tournament.drawStandings();
+    tournament.draw();
   });
 });
 
@@ -15,13 +14,33 @@ $(function() {
 function Tournament() {
   this.stages = [];
   this.size = 8; // number of teams
-  this.node = $('#tournament table#stages > tbody > tr');
 }
 
 // Teams / Standings should be its own classes same as other stages
 
+Tournament.prototype.draw = function() {
+  this.node = $('<div id="tournament"/>');
+  var header = $('<header/>');
+  var title = $('<h1>Tournament 0</h1>');
+  title.editable({
+    title: "Tournament name",
+    placement: 'right',
+    send: 'never',
+    toggle: 'click', 
+  });
+  header.append(title);
+  this.node.append(header);
+  this.stagesNode = $('<ul class="stages"/>');
+  this.node.append(this.stagesNode);
+  $(document.documentElement).append(this.node);
+  this.drawTeams();
+  this.drawSeeding();
+  this.drawStandings();
+}
+
 Tournament.prototype.drawTeams = function() {
   var stage = this.addStage('Teams', true);
+  stage.settings.modifygroups = false;
   var group = stage.addGroup('Teams 0');
   group.settings.positional = false;
   group.settings.resolvable = false;
@@ -32,7 +51,7 @@ Tournament.prototype.drawTeams = function() {
     team.draggable({helper: 'clone'});
     group.setElement('out', i, team);
   }
-  group.draw();
+  stage.draw(true);
 }
 
 Tournament.prototype.drawSeeding = function() {
@@ -40,7 +59,7 @@ Tournament.prototype.drawSeeding = function() {
   var group = stage.addGroup('Seeding 0');
   group.settings.resolvable = false;
   group.size = this.size;
-  group.draw();
+  stage.draw(true);
 }
 
 Tournament.prototype.drawStandings = function() {
@@ -48,14 +67,13 @@ Tournament.prototype.drawStandings = function() {
   var group = stage.addGroup('Standings 0');
   group.settings.outgoing = false;
   group.size = this.size;
-  group.draw();
+  stage.draw(true);
 }
 
-Tournament.prototype.addStage = function(name, append) {
+Tournament.prototype.addStage = function(name) {
   var stage = new Stage(this.stages.length, this, name);
   this.stages.push(stage);
-  stage.draw(append);
-  stage.setType('group');
+  //stage.setType('group');
   return stage;
 }
 
@@ -66,33 +84,31 @@ function Stage(num, t, name) {
   this.id = 'stage'+num;
   this.groups = [];
   this.ladder = null;
-  this.type = 'bucket';
+  this.type = 'group';
   if (!name) {
     name = 'Stage '+num;
-  }
+  };
+  this.settings = {
+    'modifygroups': true,
+  };
   this.name = name;
 }
 
-Stage.prototype.setType = function(type) {
-  this.type = type;
-  $('.groupbox', this.node).empty();
-  this.groups = [];
-  this.drawSettings();
-  this.drawGroups();
-}
-
-Stage.prototype.drawSettings = function() {
+Stage.prototype.extendToolbar = function() {
   var settings = $('.toolbar', this.node);
   settings.empty();
   switch(this.type) {
     case 'group':
-      var addgroup = $("<button/>")
-        .text("Add Group")
-        .on('click', {'self': this}, function(e) {
-          var group = e.data.self.addGroup();
-          group.draw();
-        });
-      settings.append(addgroup);
+      console.log(this.settings.modifygroups);
+      if (this.settings.modifygroups) {
+        var addgroup = $("<button/>")
+          .text("Add Group")
+          .on('click', {'self': this}, function(e) {
+            var group = e.data.self.addGroup();
+            group.draw();
+          });
+        settings.append(addgroup);
+      }
       break;
     case 'ladder':
       var addgroup = $("<button/>")
@@ -112,30 +128,21 @@ Stage.prototype.drawGroups = function() {
 }
 
 Stage.prototype.draw = function(append) {
-  var stage = $("<td/>", {
+  var stage = $("<li/>", {
     'class': 'stage'
   });
   var header = $('<header/>');
   var name = $("<h1/>").text(this.name);
+  name.editable({
+    title: "Stage name",
+    placement: 'bottom',
+    send: 'never',
+    toggle: 'click',
+  });
   header.append(name);
   var toolbar = $("<div/>", {
     'class': 'toolbar'
   });
-  /*var type = $("<select/>").on('change', {'self': this}, function(e) {
-    e.data.self.setType($(this).val());
-  });
-  var option1 = $("<option/>").text("bucket");
-  var option2 = $("<option/>").text("group");
-  var option3 = $("<option/>").text("ladder");
-  type.append(option1);
-  type.append(option2);
-  type.append(option3);
-  var ts = $('<div/>', {
-    'class': 'type_settings'
-  });
-  settings.append(type);
-  settings.append(ts);*/
-
 
   var groupbox = $('<div/>', {
     'class': 'groupbox'
@@ -144,18 +151,20 @@ Stage.prototype.draw = function(append) {
   stage.append(header);
   stage.append(groupbox);
   this.node = stage;
+  this.groups.forEach(function(group) {
+    group.draw();
+  });
+  this.extendToolbar();
   if (append) {
-    this.tournament.node.append(stage);
+    this.tournament.stagesNode.append(stage);
   } else {
     $('.stage:last', this.tournament.node).before(stage);
   }
 }
 
 Stage.prototype.addGroup = function(name) {
-  console.log('add group');
   var group = new Group(this.groups.length, this, name);
   this.groups.push(group);
-  console.log(group);
   return group;
 }
 

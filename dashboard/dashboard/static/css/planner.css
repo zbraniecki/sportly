@@ -10,10 +10,24 @@ body {
   vertical-align: top;
 }
 
+#tournament > .stages {
+  padding: 0;
+  margin: 0;
+}
+
+#tournament.dragging .slot {
+  background-color: #ffffcc;
+}
+
 .stage {
-  border: 1px solid black;
+  border: 1px solid #aaa;
   overflow: hidden;
-  min-width: 250px;
+  width: 330px;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  min-height: 300px;
+  vertical-align: top;
 }
 
 .stage > header {
@@ -21,19 +35,23 @@ body {
   background-color: #eee;
   width: 100%;
 }
+.editable-click {
+  cursor: text;
+  border: 0;
+}
 
-.stage > header > h1 {
+header > h1 {
   font-size: 1.2em;
   line-height: 1.4em;
   padding: 5px;
   margin: 0;
+  display: inline;
 }
 
 .stage > header > .toolbar {
   float: right;
   top: 0;
   height: 40px;
-  margin-top: -33px;
 }
 
 .stage > .settings {
@@ -50,11 +68,6 @@ body {
 
 .stage > .settings > .type_settings {
   display: inline-block;
-}
-
-.stage > .settings > .type_settings input, 
-.stage > .settings > select {
-  width: 100px;
 }
 
 .groupbox,
@@ -165,4 +178,8 @@ td {
 
 .group .tab-content td {
   border: 1px solid #bbb;
+}
+
+input[type=text] {
+  height: auto;
 }

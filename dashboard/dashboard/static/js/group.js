@@ -66,9 +66,6 @@ Table.prototype.draw = function() {
   var group = $('<div/>', {
     'class': 'group tabbable'
   });
-  //var name = this.group.stage.type == 'bucket' ? 'Bucket': 'Group';
-  //var button = $('<button/>').text('clear');
-  //group.append(button);
   var ul = $('<ul/>', {
     'class': 'nav nav-tabs'
   });
@@ -86,7 +83,14 @@ Table.prototype.draw = function() {
       ul.append(li);
     });
   }
-  ul.append($('<li class="name">'+this.group.name+'</li>'));
+  var title = $('<li class="name">'+this.group.name+'</li>');
+  title.editable({
+    title: "Group name",
+    placement: 'right',
+    send: 'never',
+    toggle: 'click', 
+  });
+  ul.append(title);
   group.append(ul);
 
   var content = $('<div/>', {
@@ -134,6 +138,12 @@ Table.prototype.draw = function() {
             var link = $('<div class="link">G0'+idx+'</div>');
             link.draggable({
               helper: 'clone',
+              start: function( event, ui ) {
+                $('#tournament').addClass('dragging');
+              },
+              stop: function( event, ui ) {
+                $('#tournament').removeClass('dragging');
+              },
             });
             $(main).append(link);
           }
