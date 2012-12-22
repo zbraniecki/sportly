@@ -32,57 +32,27 @@ Tournament.prototype.drawTeams = function() {
 }
 
 Tournament.prototype.drawSeeding = function() {
-  var node = $("#seeding");
-  var tabs = $("<div><ul><li><a href='#seed-in'>in</a></li><li><a href='#seed-out'>out</a></li></ul><div id='seed-in'/><div id='seed-out'/></div>");
-  var sintable = $("<table/>");
-  for (var i=0;i<this.size;i++) {
-    var tr = $("<tr><td>"+(i+1)+"</td><td class='slot'></td></tr>");
-    sintable.append(tr);
-  }
-  $("#seed-in", tabs).append(sintable);
-  var souttable = $("<table/>");
-  for (var i=0;i<this.size;i++) {
-    var tr = $("<tr><td>"+(i+1)+"</td><td><div class='link'>S"+i+"</div></td></tr>");
-    souttable.append(tr);
-  }
-  $("#seed-out", tabs).append(souttable);
-  node.append(tabs);
-  tabs.tabs();
-  $('.slot', node).droppable({
-    accept: ".team:not(.placed), .link",
-    drop: function(event, ui) {
-      $(this).append(ui.draggable);
-      $(this).droppable("option", "disabled", true);
-    } 
-  });
-  $('.link', node).draggable({
-    helper: 'clone',
-  });
+  var stage = this.addStage('Seeding');
+  var group = stage.addGroup('Seeding 0');
+  group.draw();
 }
 
 Tournament.prototype.drawStandings = function() {
-  var node = $("#standings");
-  for (var i=0;i<this.size;i++) {
-    var tr = $("<tr><td>"+(i+1)+"</td><td class='slot'></td></tr>");
-    node.append(tr);
-  }
-  $('.slot', node).droppable({
-    accept: ".team:not(.placed), .link",
-    drop: function(event, ui) {
-      $(this).append(ui.draggable);
-      $(this).droppable("option", "disabled", true);
-    } 
-  });
+  var stage = this.addStage('Standings');
+  var group = stage.addGroup('Standings 0');
+  group.settings.outgoing = false;
+  group.draw();
 }
 
-Tournament.prototype.addStage = function() {
-  var stage = new Stage(this.stages.length, this);
+Tournament.prototype.addStage = function(name) {
+  var stage = new Stage(this.stages.length, this, name);
   this.stages.push(stage);
   stage.draw();
   stage.setType('bucket');
+  return stage;
 }
 
-function Stage(num, t) {
+function Stage(num, t, name) {
   this.tournament = t;
   this.node = null;
   this.num = num;
@@ -90,6 +60,7 @@ function Stage(num, t) {
   this.groups = [];
   this.ladder = null;
   this.type = 'bucket';
+  this.name = name
 }
 
 Stage.prototype.setType = function(type) {
@@ -128,26 +99,6 @@ Stage.prototype.drawSettings = function() {
         });
       settings.append(addgroup);
       break;
-/*    case 'ladder2':
-      var teams = $("<input/>")
-        .val(4)
-        .on('change', {'self': this}, function(e) {
-          e.data.self.ladder.tmsnr = $(this).val(); 
-        });
-      var draw = $("<button />")
-        .text("Draw")
-        .on("click", {'self': this}, function(e) {
-          if (e.data.self.ladder) {
-            e.data.self.ladder.clear();
-          } else {
-            var ladder = new Ladder(0, e.data.self);
-            e.data.self.ladder = ladder;
-          }
-          e.data.self.ladder.draw();
-        });
-      settings.append(teams);
-      settings.append(draw);
-      break;*/
   }
 }
 
@@ -161,9 +112,9 @@ Stage.prototype.draw = function() {
   var stage = $("<td/>", {
     'class': 'stage'
   });
-  var name = $("<h1/>").text("Stage");
+  var name = $("<h1/>").text(this.name);
   stage.append(name);
-  var settings = $("<div/>", {
+  /*var settings = $("<div/>", {
     'class': 'settings'
   });
   var type = $("<select/>").on('change', {'self': this}, function(e) {
@@ -179,183 +130,21 @@ Stage.prototype.draw = function() {
     'class': 'type_settings'
   });
   settings.append(type);
-  settings.append(ts);
+  settings.append(ts);*/
 
 
   var groupbox = $('<div/>', {
     'class': 'groupbox'
   });
-  stage.append(settings);
+  //stage.append(settings);
   stage.append(groupbox);
   this.node = stage;
-  var standings = $("#standings").parent();
-  standings.before(stage);
+  this.tournament.node.append(stage);
 }
 
-Stage.prototype.addGroup = function() {
-  var group = new Group(this.groups.length, this);
+Stage.prototype.addGroup = function(name) {
+  var group = new Group(this.groups.length, this, name);
   this.groups.push(group);
-  group.draw(); 
+  return group;
 }
 
-var Group = function(num, s) {
-  this.node = null;
-  this.num = num;
-  this.id = 'group'+num;
-  this.stage = s;
-  this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
-  this.struct = null;
-}
-
-Group.prototype.draw = function() {
-  switch (this.type) {
-    case 'group':
-      this.struct = new Table(this);
-      this.struct.draw();
-      break;
-    case 'bracket':
-      this.struct = new Bracket(this);
-      this.struct.draw();
-      break;
-  }
-}
-
-var Table = function(group) {
-  this.group = group;
-}
-
-Table.prototype.draw = function() {
-  var id = this.group.stage.id+"-"+this.group.id;
-  var groupbox = $('.groupbox', this.group.stage.node);
-  var group = $('<div/>', {
-    'class': 'group tabbable tabs-left'
-  });
-  var name = this.group.stage.type == 'bucket' ? 'Bucket': 'Group';
-  var span = $('<span/>').text(name+' '+this.group.num);
-  group.append(span);
-  var button = $('<button/>').text('clear');
-  group.append(button);
-  var ul = $('<ul/>', {
-    'class': 'nav nav-tabs'
-  });
-  var li1 = $('<li/>').addClass('active');
-  var li1a = $('<a/>', {
-    'href': '#'+id+'-seeds',
-      'data-toggle': 'tab',
-  }).text('Seeds');
-  li1.append(li1a);
-  ul.append(li1);
-  var li2 = $('<li/>');
-  var li2a = $('<a/>', {
-    'href': '#'+id+'-links',
-      'data-toggle': 'tab',
-  }).text('Links');
-  li2.append(li2a);
-  ul.append(li2);
-  group.append(ul);
-  var content = $('<div/>', {
-    'class': 'tab-content'
-  });
-  group.append(content);
-  var pane1 = $('<div/>', {
-    'class': 'tab-pane active',
-      'id': id+'-seeds',
-  });
-  content.append(pane1);
-  var table = $('<table/>').addClass('rows').attr('border', 1);
-  pane1.append(table);
-  for (var i=0;i<2;i++) {
-    switch (this.group.stage.type) {
-      case 'bucket':
-        var tr = $('<tr><td class="slot">&nbsp;</td></tr>');
-        break;
-      case 'group':
-        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot">&nbsp;</td></tr>');
-        break;
-    }
-    pane1.find('table').append(tr);
-  }
-  $("td.slot", table).droppable({
-    //hoverClass: "ui-state-active",
-    accept: ".team:not(.placed), .link",
-    drop: function(event, ui) {
-      $(this).text(ui.draggable.text());
-      ui.draggable.addClass('placed');
-    }
-  });
-  var pane2 = $('<div/>', {
-    'class': 'tab-pane',
-      'id': id+'-links',
-  });
-  if (this.group.stage.type == 'bucket') {
-    $( "tbody", table).sortable({
-      placeholder: "ui-state-highlight"
-    }); 
-  }
-  content.append(pane2);
-  var table = $('<table/>').addClass('rows').attr('border', 1);
-  pane2.append(table);
-  for (var i=0;i<2;i++) {
-    switch (this.group.stage.type) {
-      case 'bucket':
-        var tr = $('<tr><td><div class="link">B'+this.group.num+''+i+'</div></td></tr>');
-        break;
-      case 'group':
-        var tr = $('<tr><td>'+(i+1)+'</td><td class="slot"><div class="link">G'+this.group.num+''+i+'</div></td></tr>');
-        break;
-    }
-    pane2.find('table').append(tr);
-  }
-  $("td > div.link", pane2).draggable({ helper: "clone" });
-  groupbox.append(group);
-}
-
-var Bracket = function(group) {
-  this.group = group;
-  this.tmsnr = 8;
-}
-
-Bracket.prototype.draw = function() {
-  var table = $("<table />").addClass('bracket');
-  this.group.stage.node.append(table);
-  var tr = $("<tr />");
-  var rounds = Math.log(this.tmsnr)/Math.log(2);
-  var round = 0;
-  table.append(tr);
-  while (round < rounds) {
-    var td = $("<td />");
-    tr.append(td);
-    var gtb = $("<table />");
-    for (var i=0;i<this.tmsnr/2;i++) {
-      var gtr = $("<tr />");
-      var gtd = $("<td />");
-      var t1 = "t1";
-      var t2 = "t2";
-      if (round > 0) {
-        t1 = "G"+(round-1)+(i*2)+"W";
-        t2 = "G"+(round-1)+(i*2+1)+"W";
-      }
-      var gtable = $("<table><tr><td>"+t1+"</td></tr><tr><td>G"+round+i+"</td></tr><tr><td>"+t2+"</td></tr></table>");
-      gtable.addClass('game');
-      gtd.append(gtable);
-      gtr.append(gtd);
-      gtb.append(gtr);
-    }
-    td.append(gtb);
-    this.tmsnr /= 2;
-    round++;
-  }
-  $("td.game", table).droppable({
-    //hoverClass: "ui-state-active",
-    accept: ".team:not(.placed), .link",
-    drop: function(event, ui) {
-      $(this).text(ui.draggable.text());
-      ui.draggable.addClass('placed');
-    }
-  });
-  this.group.node = table;
-}
-
-Bracket.prototype.clear = function() {
-  $("table", this.stage.node).remove();
-}
