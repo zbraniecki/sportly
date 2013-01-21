@@ -42,7 +42,7 @@ Tournament.prototype.drawTeams = function() {
   var stage = this.addStage('Teams', true);
   stage.settings.modifygroups = false;
   stage.settings.settings = false;
-  var group = stage.addGroup('Teams 0');
+  var group = stage.addGroup('Teams 0', this.size);
   group.settings.positional = false;
   group.settings.resolvable = false;
   group.settings.incoming = false;
@@ -58,7 +58,7 @@ Tournament.prototype.drawTeams = function() {
 Tournament.prototype.drawSeeding = function() {
   var stage = this.addStage('Seeding', true);
   stage.settings.settings = false;
-  var group = stage.addGroup('Seeding 0');
+  var group = stage.addGroup('Seeding 0', this.size);
   group.settings.resolvable = false;
   group.size = this.size;
   stage.draw(true);
@@ -67,7 +67,7 @@ Tournament.prototype.drawSeeding = function() {
 Tournament.prototype.drawStandings = function() {
   var stage = this.addStage('Standings', true);
   stage.settings.settings = false;
-  var group = stage.addGroup('Standings 0');
+  var group = stage.addGroup('Standings 0', this.size);
   group.settings.outgoing = false;
   group.size = this.size;
   stage.draw(true);

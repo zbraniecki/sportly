@@ -1,18 +1,25 @@
 
 
 
-var Group = function(num, s, name) {
+var Group = function(num, s, name, size) {
   this.node = null;
   this.num = num;
   this.id = 'group'+num;
   this.stage = s;
+  this.links = [];
   this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
   this.struct = null;
   if (!name) {
     name = 'Group '+num;
   }
   this.name = name;
-  this.size = 4;
+  if (size === undefined) {
+    size = 4;
+  }
+  this.size = size;
+  for (var i=0;i<this.size;i++) {
+    this.links.push(new Link(this, i));
+  }
   this.elements = {
     'in': [],
     'results': [],
@@ -24,6 +31,10 @@ var Group = function(num, s, name) {
     resolvable: true,
     outgoing: true,
   };
+}
+
+Group.prototype.getCodeName = function() {
+  return 'S'+this.stage.num+'G'+this.num;
 }
 
 
@@ -123,9 +134,11 @@ Table.prototype.draw = function() {
         var main = $('td.main', table);
         main.addClass('slot');
         main.droppable({
-          accept: ".team:not(.placed), .link",
+          accept: ".team, .link",
           drop: function(event, ui) {
             $(this).append(ui.draggable);
+            var link = ui.draggable[0].sportlyGetLink();
+            link.to = this.sportlyGetGroup();
             ui.draggable.addClass('placed');
           }
         });
@@ -135,7 +148,8 @@ Table.prototype.draw = function() {
         var gr = this.group;
         mains.each(function(idx, main) {
           if (!gr.elements[title][idx]) {
-            var link = $('<div class="link">G0'+idx+'</div>');
+            var link = $('<div class="link">'+gr.getCodeName()+idx+'</div>');
+            gr.links[idx].bindNode(link[0]);
             link.draggable({
               helper: 'clone',
               start: function( event, ui ) {
