@@ -1,6 +1,11 @@
 var Table = function(group) {
   this.group = group;
   this.node = null;
+  this.cells = {
+    'in': [],
+    'out': [],
+    'results': [],
+  };
 }
 
 Table.prototype.draw = function() {
@@ -68,59 +73,20 @@ Table.prototype.draw = function() {
         var td = $('<td class="pos">'+(i+1)+'</td>');
         tr.append(td);
       }
-      var cell = new Cell();
-      cell.parent = this;
-      var elem = this.group.elements[title][i] || null;
-      var td = $('<td class="main"></td>');
-      if (elem) {
-        elem.draw(td);
+      var cell = new Cell(this, i);
+      if (title === 'in') {
+        cell.settings.droppable = true;
       }
-      cell.node = td[0];
-      cell.pos = i;
-      tr.append(td);
+      cell.draw(tr[0]);
+      this.cells[title][i] = cell;
       table.append(tr);
     }
     switch (title) {
-      case 'in':
-        var main = $('td.main', table);
-        var group = this.group;
-        main.addClass('cell');
-        main.droppable({
-          accept: ".team, .link",
-          drop: function(event, ui) {
-            $(this).append(ui.draggable);
-            var linkName = $(ui.draggable).attr('id');
-            var link = UI.draggedLinks[linkName];
-            link.to = group;
-            link.toPos = parseInt($(this).prev().text())-1;
-
-            console.log(link.from.struct.node);
-            ui.draggable.addClass('placed');
-          }
-        });
-        break;
       case 'out':
-        var mains = $('td.main', table);
         var gr = this.group;
-        mains.each(function(idx, main) {
-          if (!gr.elements[title][idx]) {
-            var linkName = gr.getCodeName() + idx;
-            var link = $('<div class="link">'+linkName+'</div>');
-            link.attr('id', linkName);
-            link.draggable({
-              helper: 'clone',
-              start: function( event, ui ) {
-                $('#tournament').addClass('dragging');
-                var linkName = $(this).attr('id');
-                UI.draggedLinks[linkName] = gr.links[idx];
-              },
-              stop: function( event, ui ) {
-                $('#tournament').removeClass('dragging');
-                var linkName = $(this).attr('id');
-                delete UI.draggedLinks[linkName];
-              },
-            });
-            $(main).append(link);
+        this.cells[title].forEach(function(cell, idx) {
+          if (gr.elements[title][idx]) {
+            gr.elements[title][idx].draw(cell.node);
           }
         });
         break;

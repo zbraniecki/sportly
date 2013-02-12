@@ -3,7 +3,6 @@ var Group = function(num, s, name, size) {
   this.num = num;
   this.id = 'group'+num;
   this.stage = s;
-  this.links = [];
   this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
   this.struct = null;
   if (!name) {
@@ -14,9 +13,6 @@ var Group = function(num, s, name, size) {
     size = 4;
   }
   this.size = size;
-  for (var i=0;i<this.size;i++) {
-    this.links.push(new Link(this, i));
-  }
   this.elements = {
     'in': [],
     'results': [],
@@ -28,6 +24,15 @@ var Group = function(num, s, name, size) {
     resolvable: true,
     outgoing: true,
   };
+}
+
+Group.prototype.init = function() {
+  var link;
+  for (var i = 0; i < this.size; i++) {
+    link = new Link();
+    link.init(this, i);
+    this.elements.out.push(link);
+  }
 }
 
 Group.prototype.getCodeName = function() {

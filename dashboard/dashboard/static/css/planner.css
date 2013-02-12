@@ -90,10 +90,6 @@ header > h1 {
 }
 #teams li span { position: absolute; margin-left: -1.3em; }
 
-.team.placed {
-  opacity: 0.5;
-}
-
 td > span {
   z-index: 20;
 }
@@ -176,4 +172,18 @@ td {
 
 input[type=text] {
   height: auto;
+}
+
+.source > .name {
+  color: #999;
+  display: inline-block;
+}
+
+.source > .target {
+  background-color: #eee;
+  display: inline-block;
+}
+
+.source > .actions {
+  display: inline-block;
 }

@@ -1,5 +1,7 @@
+
+var tournament = null;
+
 $(function() {
-  var tournament = null;
   $("#add_stage").on('click', function() {
     var stage = tournament.addStage();
     stage.draw(false);

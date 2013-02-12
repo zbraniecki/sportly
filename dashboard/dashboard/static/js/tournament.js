@@ -1,13 +1,13 @@
 function Tournament() {
   this.stages = [];
-  this.size = 8; // number of teams
+  this.size = 4; // number of teams
   this.nodes = [];
 }
 
 Tournament.prototype.init = function() {
   this.addTeamsStage();
-  //this.addSeedingStage();
-  //this.addStandingsStage();
+  this.addSeedingStage();
+  this.addStandingsStage();
 }
 
 Tournament.prototype.addTeamsStage = function() {
@@ -21,6 +21,7 @@ Tournament.prototype.addTeamsStage = function() {
   group.size = this.size;
   for (var i=0;i<this.size;i++) {
     var team = new Team('Team '+(i+1));
+    team.init(group, i);
     group.setElement('out', i, team);
   }
 }
@@ -31,6 +32,7 @@ Tournament.prototype.addSeedingStage = function() {
   var group = stage.addGroup('Seeding 0', this.size);
   group.settings.resolvable = false;
   group.size = this.size;
+  group.init();
 }
 
 Tournament.prototype.addStandingsStage = function() {
@@ -39,6 +41,7 @@ Tournament.prototype.addStandingsStage = function() {
   var group = stage.addGroup('Standings 0', this.size);
   group.settings.outgoing = false;
   group.size = this.size;
+  group.init();
 }
 
 // Teams / Standings should be its own classes same as other stages
