@@ -16,7 +16,7 @@ class GameState(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Game(TrackerModel):
@@ -88,7 +88,7 @@ class Game(TrackerModel):
         return '??'
         return code1
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Game %s vs %s at %s' % (self.home_display(),
                                         self.away_display(),
                                         self.group)
@@ -97,7 +97,7 @@ class Game(TrackerModel):
 class GameMomentType(TrackerModel):
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class GameMoment(TrackerModel):

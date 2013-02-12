@@ -44,7 +44,7 @@ class EventAdmin(admin.ModelAdmin):
     ]
 
 class SeriesAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'event_type', 'field_type')
+    list_display = ('__str__', 'event_type', 'field_type')
     list_filter = ('event_type', 'field_type')
 
 admin.site.register(EventFieldType)

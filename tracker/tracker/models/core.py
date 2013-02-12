@@ -20,25 +20,25 @@ class Person(TrackerModel):
     lastname = models.CharField(max_length=200)
     user = models.ForeignKey(User, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.name, self.lastname)
 
 class Sport(TrackerModel):
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Division(TrackerModel):
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Unit(TrackerModel):
     name = models.CharField(max_length=200)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Body(Unit):
@@ -53,13 +53,13 @@ class Team(TrackerModel):
     sport = models.ForeignKey(Sport)
     division = models.ForeignKey(Division, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class RoleType(TrackerModel):
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Role(TrackerModel):
@@ -72,5 +72,5 @@ class Role(TrackerModel):
     name = models.CharField(max_length=200)
     role_type = models.ForeignKey(RoleType)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

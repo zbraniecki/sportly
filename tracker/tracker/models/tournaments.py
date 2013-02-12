@@ -7,7 +7,7 @@ from tracker.models.events import Roster, EventDivision, Event
 class LinkType(TrackerModel):
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Link(TrackerModel):
@@ -31,7 +31,7 @@ class Link(TrackerModel):
                                              'object_id_to') # game / group
     position_to = models.PositiveIntegerField(blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Link from %s to %s' % (self.qualifies_from,
                                        self.qualifies_to)
 
@@ -45,7 +45,7 @@ class Cluster(TrackerModel):
     # stage?
     event_division = models.ForeignKey(EventDivision)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class StageType(TrackerModel):
@@ -56,7 +56,7 @@ class StageType(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -72,7 +72,7 @@ class Stage(PositionalModel):
     event_division = models.ForeignKey(EventDivision, related_name="stages")
     cluster = models.ForeignKey(Cluster, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Stage: %s of %s' % (self.name, self.event_division)
 
     """
@@ -111,14 +111,14 @@ class Group(PositionalModel):
         return squads
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Group: %s of %s' % (self.name, self.stage)
 
 class GroupRoster(PositionalModel):
     squad = models.ForeignKey(Roster)
     group = models.ForeignKey(Group, related_name="rosters")
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s in group %s (#%s)" % (self.squad,
                                          self.group,
                                          self.pos)
@@ -132,7 +132,7 @@ class Round(PositionalModel):
     code_name = models.CharField(max_length=200, blank=True, null=True)
     group = models.ForeignKey(Group, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class FieldType(TrackerModel):
@@ -141,7 +141,7 @@ class FieldType(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Field(TrackerModel):
@@ -149,5 +149,5 @@ class Field(TrackerModel):
     field_type = models.ForeignKey(FieldType)
     event = models.ForeignKey(Event)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

@@ -10,7 +10,7 @@ class EventFieldType(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class EventType(TrackerModel):
@@ -20,9 +20,9 @@ class EventType(TrackerModel):
     name = models.CharField(max_length=200)
     parent = models.ForeignKey("EventType", blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.parent:
-            return "%s > %s" % (self.parent.__unicode__(), self.name)
+            return "%s > %s" % (self.parent.__str__(), self.name)
         return self.name
 
 class EventVisibility(TrackerModel):
@@ -32,7 +32,7 @@ class EventVisibility(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Series(TrackerModel):
@@ -47,7 +47,7 @@ class Series(TrackerModel):
     visibility = models.ForeignKey(EventVisibility)
     organizer = models.ForeignKey(Unit, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Event(TrackerModel):
@@ -68,15 +68,15 @@ class Event(TrackerModel):
     visibility = models.ForeignKey(EventVisibility)
     organizer = models.ForeignKey(Unit, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
             name = self.name
         else:
             name = "(%s)" % self.start_date
         if self.series:
-            name = "%s %s" % (self.series.__unicode__(), name)
+            name = "%s %s" % (self.series.__str__(), name)
         if self.parent:
-            return "%s > %s" % (self.parent.__unicode__(), name)
+            return "%s > %s" % (self.parent.__str__(), name)
         return name
 
     def short_name(self):
@@ -92,9 +92,9 @@ class EventDivision(TrackerModel):
     event = models.ForeignKey(Event, related_name="divisions")
     division = models.ForeignKey(Division)
 
-    def __unicode__(self):
-        return '%s, %s' % (self.event.__unicode__(),
-                           self.division.__unicode__())
+    def __str__(self):
+        return '%s, %s' % (self.event.__str__(),
+                           self.division.__str__())
 
     def squads(self):
         signups = EventDivisionSignUp.objects.filter(event_division=self,
@@ -111,7 +111,7 @@ class SquadSelectionType(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class Roster(TrackerModel):
@@ -120,16 +120,16 @@ class Roster(TrackerModel):
     team = models.ManyToManyField(Team)
     selection_type = models.ForeignKey(SquadSelectionType)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
-            return "%s (%s)" % (self.name, self.event_division.__unicode__())
-        return "%s (%s)" % (self.team.get().__unicode__(),
-                            self.event_division.__unicode__())
+            return "%s (%s)" % (self.name, self.event_division.__str__())
+        return "%s (%s)" % (self.team.get().__str__(),
+                            self.event_division.__str__())
 
     def team_name(self):
         if self.name:
             return self.name
-        return self.team.get().__unicode__()
+        return self.team.get().__str__()
 
     def players(self):
         if self.selection_type.name == 'selective':
@@ -162,18 +162,18 @@ class EventDivisionInvitation(TrackerModel):
     object_id = models.PositiveIntegerField()
     invitee = generic.GenericForeignKey('content_type', 'object_id') # person or team
 
-    def __unicode__(self):
-        return "Invitation for %s to %s" % (self.invitee.__unicode__(),
-                                            self.edition_division.__unicode__())
+    def __str__(self):
+        return "Invitation for %s to %s" % (self.invitee.__str__(),
+                                            self.edition_division.__str__())
 
 class RosterInvitation(TrackerModel):
     # You may invite people to roster
     squad = models.ForeignKey(Roster)
     invitee = models.ForeignKey(Person)
 
-    def __unicode__(self):
-        return "Invitation for %s to %s" % (self.invitee.__unicode__(),
-                                            self.squad.__unicode__())
+    def __str__(self):
+        return "Invitation for %s to %s" % (self.invitee.__str__(),
+                                            self.squad.__str__())
 
 class SignUpStatus(TrackerModel):
     # This is a status of someone or a team signing up for something
@@ -184,7 +184,7 @@ class SignUpStatus(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class AcceptedStatus(TrackerModel):
@@ -196,7 +196,7 @@ class AcceptedStatus(TrackerModel):
     """
     name = models.CharField(max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 class RosterSignUp(TrackerModel):
@@ -205,10 +205,10 @@ class RosterSignUp(TrackerModel):
     status = models.ForeignKey(SignUpStatus)
     squad = models.ForeignKey(Roster, related_name="signups")
 
-    def __unicode__(self):
-        return "Signup for %s for %s: %s" % (self.person.__unicode__(),
-                                             self.squad.__unicode__(),
-                                             self.status.__unicode__())
+    def __str__(self):
+        return "Signup for %s for %s: %s" % (self.person.__str__(),
+                                             self.squad.__str__(),
+                                             self.status.__str__())
 
 class EventDivisionSignUp(TrackerModel):
     # This is a status of a person or a squad signing up for an event
@@ -221,12 +221,12 @@ class EventDivisionSignUp(TrackerModel):
     seed = models.IntegerField(blank=True, null=True)
     event_division = models.ForeignKey(EventDivision, related_name="signups")
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.signee:
             return "Signup"
-        return "Signup for %s for %s: %s" % (self.signee.__unicode__(),
-                                             self.event_division.__unicode__(),
-                                             self.status.__unicode__())
+        return "Signup for %s for %s: %s" % (self.signee.__str__(),
+                                             self.event_division.__str__(),
+                                             self.status.__str__())
 ### Roles
 
 class RosterPersonRole(TrackerModel):
@@ -234,9 +234,9 @@ class RosterPersonRole(TrackerModel):
     roster = models.ForeignKey(Roster, related_name="roles")
     roles = models.ManyToManyField(Role)
 
-    def __unicode__(self):
-        return "%s at %s: %s" % (self.person.__unicode__(),
-                                 self.roster.__unicode__(),
-                                 ", ".join([i.__unicode__() for i in self.roles.all()]))
+    def __str__(self):
+        return "%s at %s: %s" % (self.person.__str__(),
+                                 self.roster.__str__(),
+                                 ", ".join([i.__str__() for i in self.roles.all()]))
 
 
