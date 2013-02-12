@@ -11,7 +11,7 @@ body {
   margin: 0;
 }
 
-#tournament.dragging .slot {
+#tournament.dragging .cell {
   background-color: #ffffcc;
 }
 
@@ -117,7 +117,7 @@ table.bracket table.game {
 td {
   border: 1px solid black;
 }
-.slot, .link {
+.cell, .link {
   width: 80px;
 }
 

@@ -102,7 +102,7 @@ Stage.prototype.draw = function(append) {
     this.drawSettings();
   }
   if (append) {
-    this.tournament.stagesNode.append(stage);
+    $(this.tournament.nodes.stages).append(stage);
   } else {
     $('.stage:last', this.tournament.node).before(stage);
   }
