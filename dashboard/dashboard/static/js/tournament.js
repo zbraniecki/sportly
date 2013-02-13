@@ -1,16 +1,22 @@
 function Tournament() {
   this.stages = [];
-  this.size = 4; // number of teams
+  this.size = 8; // number of teams
   this.nodes = [];
+  this.name = null;
 }
 
-Tournament.prototype.init = function() {
-  this.addTeamsStage();
+Tournament.prototype.init = function(name, teams) {
+  if (name) {
+    this.name = name;
+  } else {
+    this.name = 'Tournament 0';
+  }
+  this.addTeamsStage(teams);
   this.addSeedingStage();
   this.addStandingsStage();
 }
 
-Tournament.prototype.addTeamsStage = function() {
+Tournament.prototype.addTeamsStage = function(teams) {
   var stage = this.addStage('Teams', true);
   stage.settings.modifygroups = false;
   stage.settings.settings = false;
@@ -20,7 +26,11 @@ Tournament.prototype.addTeamsStage = function() {
   group.settings.incoming = false;
   group.size = this.size;
   for (var i=0;i<this.size;i++) {
-    var team = new Team('Team '+(i+1));
+    if (!teams) {
+      var team = new Team('Team '+(i+1));
+    } else {
+      team = new Team(teams[i]);
+    }
     team.init(group, i);
     group.setElement('out', i, team);
   }
@@ -49,7 +59,7 @@ Tournament.prototype.addStandingsStage = function() {
 Tournament.prototype.draw = function() {
   var node = $('<div id="tournament"/>');
   var header = $('<header/>');
-  var title = $('<h1>Tournament 0</h1>');
+  var title = $('<h1>'+this.name+'</h1>');
   title.editable({
     title: "Tournament name",
     placement: 'right',

@@ -20,24 +20,26 @@ Link.prototype.setTo = function(to, pos) {
 }
 
 Link.prototype.updateSourceCell = function() {
-  var source = $('<div class="source"><div class="name"/><div class="target"/><div class="actions"/></div>');
   var link = this;
-  this.nodes.source = source[0];
-  $('.name', source).text(this.name);
-  $('.target', source).text(this.to.group.name + '#' + (this.to.pos+1));
-  $('.actions', source).html($('<button class="cancel">cancel</button>'));
-  $('button.cancel', source).on('click', function() {
-    var fromCell = link.from.group.struct.cells['out'][link.from.pos].node;
-    $(fromCell).empty();
-    link.nodes.source = null;
-    delete link.to.group.elements['in'][link.from.pos];
+  if (!this.nodes.source) {
+    var source = $('<div class="source"><div class="name"/><div class="target"/><div class="actions"/></div>');
+    this.nodes.source = source[0];
+    $('.actions', this.nodes.source).html($('<button class="cancel">cancel</button>'));
+    $('button.cancel', source).on('click', function() {
+      var fromCell = link.from.group.struct.cells['out'][link.from.pos].node;
+      $(fromCell).empty();
+      link.nodes.source = null;
+      delete link.to.group.elements['in'][link.from.pos];
 
-    $(link.to.group.struct.cells['in'][link.to.pos].node).empty();
-    fromCell.appendChild(link.nodes.main);
-    link.to.group = null;
-    link.to.pos = null;
-  });
-  this.from.group.struct.cells['out'][this.from.pos].node.appendChild(source[0]);
+      //$(link.to.group.struct.cells['in'][link.to.pos].node).empty();
+      fromCell.appendChild(link.nodes.main);
+      link.to.group = null;
+      link.to.pos = null;
+    });
+    $(this.from.group.struct.cells['out'][this.from.pos].node).empty().append(this.nodes.source);
+  }
+  $('.name', this.nodes.source).text(this.name);
+  $('.target', this.nodes.source).text(this.to.group.name + '#' + (this.to.pos+1));
 }
 
 Link.prototype.draw = function(parent) {
@@ -46,13 +48,11 @@ Link.prototype.draw = function(parent) {
   node.attr('id', this.name);
   node.draggable({
     helper: 'clone',
+    scope: "links",
     start: function( event, ui ) {
-      $('#tournament').addClass('dragging');
       UI.draggedLinks[link.name] = link;
     },
     stop: function( event, ui ) {
-      $('#tournament').removeClass('dragging');
-      var linkName = this.getAttribute('id');
       delete UI.draggedLinks[link.name];
     },
   });

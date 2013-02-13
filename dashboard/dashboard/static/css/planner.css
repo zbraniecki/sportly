@@ -11,7 +11,7 @@ body {
   margin: 0;
 }
 
-#tournament.dragging .cell {
+.activeTarget {
   background-color: #ffffcc;
 }
 

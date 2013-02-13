@@ -1,4 +1,16 @@
 from django.http import HttpResponse
+from tracker.models.events import EventDivision
+import json
+
+
+def event(request, eid):
+    ed = EventDivision.objects.get(pk=eid)
+    ret = {}
+    ret['name'] = ed.__str__()
+    ret['teams'] = [];
+    for squad in ed.squads():
+        ret['teams'].append(squad.team_name())
+    return HttpResponse(json.dumps(ret))
 
 def bracket(request, gid):
     d = """

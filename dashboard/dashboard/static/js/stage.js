@@ -30,6 +30,7 @@ Stage.prototype.extendToolbar = function() {
           .text("Add Group")
           .on('click', {'self': this}, function(e) {
             var group = e.data.self.addGroup();
+            group.init();
             group.draw();
           });
         settings.append(addgroup);

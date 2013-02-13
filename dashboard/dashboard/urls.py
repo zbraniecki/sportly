@@ -13,6 +13,7 @@ urlpatterns = patterns('dashboard.views.views',
 
 urlpatterns += patterns('dashboard.views.api',
     url(r'^api/bracket/(?P<gid>\d+)$', 'bracket'),
+    url(r'^api/planner/event/(?P<eid>\d+)$', 'event'),
 )
 
 if settings.DEBUG:

@@ -15,16 +15,22 @@ Cell.prototype.draw = function(parent) {
  this.node = td[0];
  if (this.settings.droppable) {
    td.droppable({
-     accept: ".team, .link",
+     scope: "links",
      drop: function(event, ui) {
        var linkName = $(ui.draggable).attr('id');
        var link = UI.draggedLinks[linkName];
        cell.table.group.elements['in'][cell.pos] = link;
        $(this).append(ui.draggable);
        link.setTo(cell.table.group, cell.pos);
-       ui.draggable.addClass('placed');
-     }
+     },
+     activate: function(event, ui) {
+      $(this).addClass('activeTarget');
+     },
+     deactivate: function(event, ui) {
+      $(this).removeClass('activeTarget');
+     },
    });
  }
  parent.appendChild(td[0]);
 }
+
