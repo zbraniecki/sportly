@@ -6,14 +6,24 @@ function Tournament() {
 }
 
 Tournament.prototype.init = function(name, teams) {
-  if (name) {
-    this.name = name;
-  } else {
+
+  this.addTeamsStage(teams);
+  this.addSeedingStage(teams);
+  this.addStandingsStage();
+}
+
+
+Tournament.prototype.feedData = function() {
+  if (!this.name) {
     this.name = 'Tournament 0';
   }
-  this.addTeamsStage(teams);
-  this.addSeedingStage();
-  this.addStandingsStage();
+  for (var i=0;i<this.size;i++) {
+    if (!this.stages[0].groups[0].elements['out'][i]) {
+      var team = new Team('Team '+(i+1));
+      team.init(this.stages[0].groups[0], i);
+      this.stages[0].groups[0].setElement('out', i, team);
+    } 
+  }
 }
 
 Tournament.prototype.addTeamsStage = function(teams) {
@@ -25,18 +35,10 @@ Tournament.prototype.addTeamsStage = function(teams) {
   group.settings.resolvable = false;
   group.settings.incoming = false;
   group.size = this.size;
-  for (var i=0;i<this.size;i++) {
-    if (!teams) {
-      var team = new Team('Team '+(i+1));
-    } else {
-      team = new Team(teams[i]);
-    }
-    team.init(group, i);
-    group.setElement('out', i, team);
-  }
+
 }
 
-Tournament.prototype.addSeedingStage = function() {
+Tournament.prototype.addSeedingStage = function(teams) {
   var stage = this.addStage('Seeding', true);
   stage.settings.settings = false;
   var group = stage.addGroup('Seeding 0', this.size);

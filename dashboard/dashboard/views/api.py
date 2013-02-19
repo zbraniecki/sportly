@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from tracker.models.events import EventDivision
+from tracker.models.events import EventDivision, EventDivisionSignUp, Roster
 import json
 
 
@@ -8,9 +8,21 @@ def event(request, eid):
     ret = {}
     ret['name'] = ed.__str__()
     ret['teams'] = [];
-    for squad in ed.squads():
-        ret['teams'].append(squad.team_name())
+    signups = EventDivisionSignUp.objects.filter(event_division=ed,
+                                                 status__name="yes")
+    for signup in signups:
+        squad = signup.signee
+        ret['teams'].append({'name': squad.team_name(), 'id': squad.pk, 'seed': signup.seed})
     return HttpResponse(json.dumps(ret))
+
+def setseeding(request, eid, tid, pos):
+    ed = EventDivision.objects.get(pk=eid)
+    roster = Roster.objects.get(pk=tid)
+
+    eds = ed.signups.get(object_id=roster.pk)
+    eds.seed = pos
+    eds.save()
+    return HttpResponse('OK')
 
 def bracket(request, gid):
     d = """

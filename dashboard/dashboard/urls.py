@@ -14,6 +14,7 @@ urlpatterns = patterns('dashboard.views.views',
 urlpatterns += patterns('dashboard.views.api',
     url(r'^api/bracket/(?P<gid>\d+)$', 'bracket'),
     url(r'^api/planner/event/(?P<eid>\d+)$', 'event'),
+    url(r'^api/planner/event/(?P<eid>\d+)/setseeding/(?P<tid>\d+)/(?P<pos>\d+)$', 'setseeding'),
 )
 
 if settings.DEBUG:

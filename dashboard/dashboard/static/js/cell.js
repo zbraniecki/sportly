@@ -19,9 +19,8 @@ Cell.prototype.draw = function(parent) {
      drop: function(event, ui) {
        var linkName = $(ui.draggable).attr('id');
        var link = UI.draggedLinks[linkName];
-       cell.table.group.elements['in'][cell.pos] = link;
-       $(this).append(ui.draggable);
-       link.setTo(cell.table.group, cell.pos);
+       //$(this).append(ui.draggable);
+       link.onToChange(cell.table.group, cell.pos);
      },
      activate: function(event, ui) {
       $(this).addClass('activeTarget');
