@@ -6,16 +6,30 @@ var tid = 1;
 function feedTournamentData(data) {
   tournament.name = data.name;
   for (var i=0;i<tournament.size;i++) {
-    if (!tournament.stages[0].groups[0].elements['out'][i]) {
-      var team = new Team(data.teams[i]['name'], data.teams[i]['id']);
-      team.init(tournament.stages[0].groups[0], i);
-      tournament.stages[0].groups[0].setElement('out', i, team);
-      if (data.teams[i]['seed'] !== undefined) {
-        var to = tournament.stages[1].groups[0];
-        team.setTo(to, data.teams[i]['seed']);
-        tournament.stages[1].groups[0].setElement('in', data.teams[i]['seed'], team);
+    var team = new Team(data.teams[i]['name'], data.teams[i]['id']);
+    team.init(tournament.stages[0].groups[0], i);
+    tournament.teams[team.id] = team;
+    tournament.stages[0].groups[0].setElement('out', i, team);
+  }
+
+  for (i=0;i<data.stages.length;i++) {
+    var dtStage = data.stages[i];
+
+    var stage = tournament.addStage(dtStage.name, true);
+    stage.settings.settings = false;
+    for (j=0;j<dtStage.groups.length;j++) {
+      var dtGroup = dtStage.groups[j];
+      var group = stage.addGroup(dtGroup.name, tournament.size);
+      group.settings.resolvable = false;
+      group.size = tournament.size;
+      group.init();
+      for (k=0;k<dtGroup.roster.length;k++) {
+        var dtTeam = dtGroup.roster[k];
+        var team = tournament.teams[dtTeam.id];
+        team.setTo(tournament.stages[1].groups[0], dtTeam.pos);
+        tournament.stages[1].groups[0].setElement('in', dtTeam.pos, team);
       }
-    } 
+    }
   }
 }
 
@@ -37,6 +51,7 @@ function saveSeeding() {
   var seedStage = tournament.stages[1];
   var seedGroup = seedStage.groups[0];
   var elems = seedGroup.elements['in'];
+  console.log(elems);
   for (var i in elems) {
     var elem = elems[i];
     $.ajax({

@@ -84,9 +84,7 @@ Table.prototype.draw = function() {
     var gr = this.group;
     this.cells[title].forEach(function(cell, idx) {
       if (gr.elements[title][idx]) {
-        // should draw() draw just the element in this cell or both cells?
-        // if so, when should it happen?
-        //gr.elements[title][idx].draw(cell.node);
+        gr.elements[title][idx].draw(title);
       }
     });
     pane.append(table);

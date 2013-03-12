@@ -3,13 +3,14 @@ function Tournament() {
   this.size = 8; // number of teams
   this.nodes = [];
   this.name = null;
+  this.teams = {};
 }
 
 Tournament.prototype.init = function(name, teams) {
 
   this.addTeamsStage(teams);
-  this.addSeedingStage(teams);
-  this.addStandingsStage();
+  //this.addSeedingStage(teams);
+  //this.addStandingsStage();
 }
 
 
