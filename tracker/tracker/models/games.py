@@ -22,6 +22,7 @@ class GameState(TrackerModel):
 class Game(TrackerModel):
     code_name = models.CharField(max_length=200, blank=True, null=True)
     desc = models.CharField(max_length=200, blank=True, null=True)
+    # round instead of group
     group = models.ForeignKey(Group, related_name='games', blank=True, null=True)
     field = models.ForeignKey(Field)
     roster1 = models.ForeignKey(Roster, blank=True, null=True, related_name='+')

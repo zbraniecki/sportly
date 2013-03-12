@@ -218,7 +218,7 @@ class EventDivisionSignUp(TrackerModel):
     signee = generic.GenericForeignKey('content_type', 'object_id') # person or squad
     status = models.ForeignKey(SignUpStatus)
     accepted = models.ForeignKey(AcceptedStatus, blank=True, null=True)
-    seed = models.IntegerField(blank=True, null=True)
+    #seed = models.IntegerField(blank=True, null=True)
     event_division = models.ForeignKey(EventDivision, related_name="signups")
 
     def __str__(self):
