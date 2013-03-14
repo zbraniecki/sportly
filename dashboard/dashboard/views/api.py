@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from tracker.models.events import EventDivision, EventDivisionSignUp, Roster
-from tracker.models.tournaments import Stage, Group, Link
+from tracker.models.tournaments import Stage, Group, Link, LinkType
 import json
 
 
@@ -71,8 +71,16 @@ def setlink(request):
     to_object = Group.objects.get(id=to_id)
     to_ctype = ContentType.objects.db_manager('tracker').get_for_model(Group)
     
-    link = Link.objects.using('tracker').get(content_type_from=from_ctype,
-                                             object_id_from=from_object.id)
+    try:
+        link = Link.objects.using('tracker').get(content_type_from=from_ctype,
+                                                 object_id_from=from_object.id,
+                                                 position_from=from_pos)
+    except Link.DoesNotExist:
+        link_type = LinkType.objects.get(name="qualifies")
+        link = Link(content_type_from=from_ctype,
+                    object_id_from=from_object.id,
+                    position_from=from_pos,
+                    link_type=link_type)
     link.object_id_to = to_object.id
     link.content_type_to = to_ctype
     link.position_to = to_pos
