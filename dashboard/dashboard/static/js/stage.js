@@ -109,8 +109,8 @@ Stage.prototype.draw = function(append) {
   }
 }
 
-Stage.prototype.addGroup = function(name, size) {
-  var group = new Group(this.groups.length, this, name, size);
+Stage.prototype.addGroup = function(name, id, size) {
+  var group = new Group(this.groups.length, this, name, id, size);
   switch (this.type) {
     case 'bracket':
       group.settings.positional = false;

@@ -28,7 +28,6 @@ Link.prototype.updateTournamentData = function(to, pos) {
   if (this.to.group) {
     delete this.to.group.elements['in'][this.to.pos];
   }
-  console.log(to);
   to.elements['in'][pos] = this;
 }
 

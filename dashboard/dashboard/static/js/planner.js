@@ -4,6 +4,8 @@ var tid = 1;
 
 
 function feedTournamentData(data) {
+  var groups = {};
+
   tournament.name = data.name;
   for (var i=0;i<tournament.size;i++) {
     var team = new Team(data.teams[i]['name'], data.teams[i]['id']);
@@ -19,16 +21,25 @@ function feedTournamentData(data) {
     stage.settings.settings = false;
     for (j=0;j<dtStage.groups.length;j++) {
       var dtGroup = dtStage.groups[j];
-      var group = stage.addGroup(dtGroup.name, tournament.size);
+      var group = stage.addGroup(dtGroup.name, dtGroup.id, tournament.size);
+      groups[dtGroup.id] = group;
       group.settings.resolvable = false;
-      group.size = tournament.size;
+      group.size = tournament.size / dtStage.groups.length;
       group.init();
-      for (k=0;k<dtGroup.roster.length;k++) {
-        var dtTeam = dtGroup.roster[k];
-        var team = tournament.teams[dtTeam.id];
-        team.setTo(tournament.stages[1].groups[0], dtTeam.pos);
-        tournament.stages[1].groups[0].setElement('in', dtTeam.pos, team);
-      }
+    }
+  }
+
+  for (i=0;i<data.links.length;i++) {
+    var dtLink = data.links[i];
+
+    if (dtLink.from.type == 'Roster') {
+      var team = tournament.teams[dtLink.from.id];
+      team.setTo(groups[dtLink.to.id], dtLink.to.pos);
+      groups[dtLink.to.id].setElement('in', dtLink.to.pos, team);
+    } else if (dtLink.from.type == 'Group') {
+      var link = groups[dtLink.from.id].elements['out'][dtLink.from.pos];
+      link.setTo(groups[dtLink.to.id], dtLink.to.pos);
+      groups[dtLink.to.id].setElement('in', dtLink.to.pos, link);
     }
   }
 }
@@ -47,16 +58,28 @@ function loadTournament() {
 }
 
 
-function saveSeeding() {
-  var seedStage = tournament.stages[1];
-  var seedGroup = seedStage.groups[0];
-  var elems = seedGroup.elements['in'];
-  console.log(elems);
-  for (var i in elems) {
-    var elem = elems[i];
-    $.ajax({
-      url: '/api/planner/event/'+tid+'/setseeding/'+elem.id+'/'+i,
-    });
+function saveLinks() {
+  for (var i=0;i<tournament.stages.length;i++) {
+    var stage = tournament.stages[i];
+    for (var j=0;j<stage.groups.length;j++) {
+      var group = stage.groups[j];
+      var links = group.elements['in'];
+      for (var l in links) {
+        var link = links[l];
+        $.ajax({
+          url: '/api/planner/setlink',
+          data: {
+            edid: tid,
+            from_type: link instanceof Team ? 'roster' : 'group',
+            from_id: link instanceof Team ? link.id : link.from.group.id,
+            from_pos: link.from.pos,
+            to_type: 'group',
+            to_id: link.to.group.id,
+            to_pos: link.to.pos
+          },
+        });
+      }
+    }
   }
 }
 
@@ -76,7 +99,7 @@ $(function() {
     }
   });
   $("#save_tournament").on('click', function() {
-    saveSeeding();
+    saveLinks();
   });
 });
 

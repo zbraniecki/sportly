@@ -1,7 +1,7 @@
-var Group = function(num, s, name, size) {
+var Group = function(num, s, name, id, size) {
   this.node = null;
   this.num = num;
-  this.id = 'group'+num;
+  this.id = id || 'group'+num;
   this.stage = s;
   this.type = this.stage.type == 'ladder' ? 'bracket' : 'group';
   this.struct = null;
