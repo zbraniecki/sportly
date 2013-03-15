@@ -1,5 +1,5 @@
-var Cell = function(table, pos) {
-  this.table = table;
+var Cell = function(parent, pos) {
+  this.parent = parent;
   this.node = null;
   this.id = null;
   this.pos = pos;
@@ -19,8 +19,11 @@ Cell.prototype.draw = function(parent) {
      drop: function(event, ui) {
        var linkName = $(ui.draggable).attr('id');
        var link = UI.draggedLinks[linkName];
-       //$(this).append(ui.draggable);
-       link.onToChange(cell.table.group, cell.pos);
+       if (cell.parent instanceof Game) {
+         link.onToChange(cell.parent, cell.pos);
+       } else {
+         link.onToChange(cell.parent.group, cell.pos);
+       }
      },
      activate: function(event, ui) {
       $(this).addClass('activeTarget');

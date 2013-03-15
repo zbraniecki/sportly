@@ -17,7 +17,7 @@ function feedTournamentData(data) {
   for (i=0;i<data.stages.length;i++) {
     var dtStage = data.stages[i];
 
-    var stage = tournament.addStage(dtStage.name, true);
+    var stage = tournament.addStage(dtStage.name, dtStage.type);
     stage.settings.settings = false;
     for (j=0;j<dtStage.groups.length;j++) {
       var dtGroup = dtStage.groups[j];

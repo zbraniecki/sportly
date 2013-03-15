@@ -95,32 +95,32 @@ Table.prototype.draw = function() {
 
 var Bracket = function(group) {
   this.group = group;
+  this.node = null;
   this.tmsnr = 8;
+  this.games = [];
+
+  for (var i=0;i<this.tmsnr/2;i++) {
+    var game = new Game('G0'+i);
+    this.games.push(game);
+  }
 }
 
 Bracket.prototype.draw = function() {
   var table = $("<table />").addClass('bracket');
-  this.group.stage.node.append(table);
+  this.group.stage.nodes.stage.append(table);
   var tr = $("<tr />");
   var rounds = Math.log(this.tmsnr)/Math.log(2);
   var round = 0;
   table.append(tr);
-  while (round < rounds) {
+  while (round < 1) {
     var td = $("<td />");
     tr.append(td);
     var gtb = $("<table />");
-    for (var i=0;i<this.tmsnr/2;i++) {
+    for (var i=0;i<this.games.length;i++) {
+      var game = this.games[i];
       var gtr = $("<tr />");
       var gtd = $("<td />");
-      var t1 = "t1";
-      var t2 = "t2";
-      if (round > 0) {
-        t1 = "G"+(round-1)+(i*2)+"W";
-        t2 = "G"+(round-1)+(i*2+1)+"W";
-      }
-      var gtable = $("<table><tr><td>"+t1+"</td></tr><tr><td>G"+round+i+"</td></tr><tr><td>"+t2+"</td></tr></table>");
-      gtable.addClass('game');
-      gtd.append(gtable);
+      game.draw(gtd[0]);
       gtr.append(gtd);
       gtb.append(gtr);
     }
@@ -128,14 +128,6 @@ Bracket.prototype.draw = function() {
     this.tmsnr /= 2;
     round++;
   }
-  $("td.game", table).droppable({
-    //hoverClass: "ui-state-active",
-    accept: ".team:not(.placed), .link",
-    drop: function(event, ui) {
-      $(this).text(ui.draggable.text());
-      ui.draggable.addClass('placed');
-    }
-  });
   this.group.node = table;
 }
 

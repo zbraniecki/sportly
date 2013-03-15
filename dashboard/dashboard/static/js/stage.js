@@ -9,7 +9,7 @@ function Stage(num, t, name) {
   this.id = 'stage'+num;
   this.groups = [];
   this.ladder = null;
-  this.type = 'group';
+  this.type = 'bracket';
   if (!name) {
     name = 'Stage '+num;
   };
@@ -24,7 +24,7 @@ Stage.prototype.extendToolbar = function() {
   var settings = $('.toolbar', this.nodes.stage);
   settings.empty();
   switch(this.type) {
-    case 'group':
+    case 'bracket':
       if (this.settings.modifygroups) {
         var addgroup = $("<button/>")
           .text("Add Group")

@@ -1,15 +1,15 @@
 var Link = function() {
-  this.from = {'group': null, 'pos': null};
-  this.to = {'group': null, 'pos': null};
+  this.from = {'object': null, 'pos': null};
+  this.to = {'object': null, 'pos': null};
   this.nodes = {'link': null, 'source': null};
   this.name = null;
 }
 
 Link.prototype.init = function(from, pos) {
-  this.from.group = from;
+  this.from.object = from;
   this.from.pos = pos;
   if (!this.name) {
-    this.name = this.from.group.getCodeName() + this.from.pos;
+    this.name = this.from.object.getCodeName() + this.from.pos;
   }
 }
 
@@ -20,13 +20,13 @@ Link.prototype.onToChange = function(to, pos) {
 }
 
 Link.prototype.setTo = function(to, pos) {
-  this.to.group = to;
+  this.to.object = to;
   this.to.pos = pos;
 }
 
 Link.prototype.updateTournamentData = function(to, pos) {
-  if (this.to.group) {
-    delete this.to.group.elements['in'][this.to.pos];
+  if (this.to.object) {
+    delete this.to.object.elements['in'][this.to.pos];
   }
   to.elements['in'][pos] = this;
 }
@@ -37,7 +37,7 @@ Link.prototype.getSourceNode = function() {
     var source = $('<div class="source"><div class="name"/><div class="target"/><div class="actions"/></div>');
     $('.actions', source).html($('<button class="cancel">cancel</button>'));
     $('button.cancel', source).on('click', function() {
-      var fromCell = link.from.group.struct.cells['out'][link.from.pos].node;
+      var fromCell = link.from.object.struct.cells['out'][link.from.pos].node;
       $(fromCell).empty();
       link.nodes.source = null;
 
@@ -48,7 +48,7 @@ Link.prototype.getSourceNode = function() {
     this.nodes.source = source[0];
   }
   $('.name', this.nodes.source).text(this.name);
-  $('.target', this.nodes.source).text(this.to.group.name + '#' + (this.to.pos+1));
+  $('.target', this.nodes.source).text(this.to.object.name + '#' + (this.to.pos+1));
   return this.nodes.source;
 }
 
@@ -80,8 +80,8 @@ Link.prototype.draw = function(type) {
   var node;
 
   if (type == 'out' || type == 'both') {
-    cell = this.from.group.struct.cells['out'][this.from.pos];
-    if (!this.to.group) {
+    cell = this.from.object.struct.cells['out'][this.from.pos];
+    if (!this.to.object) {
       node = this.getLinkNode();
     } else {
       node = this.getSourceNode();
@@ -90,7 +90,11 @@ Link.prototype.draw = function(type) {
   }
 
   if (type == 'in' || type == 'both') {
-    cell = this.to.group.struct.cells['in'][this.to.pos];
+    if (this.to.object instanceof Game) {
+      cell = this.to.object.cells['in'][this.to.pos];
+    } else {
+      cell = this.to.object.struct.cells['in'][this.to.pos];
+    }
     cell.node.appendChild(this.getLinkNode());
   }
 }
