@@ -4,7 +4,7 @@ var Table = function(group) {
   this.cells = {
     'in': [],
     'out': [],
-    'results': [],
+    'status': [],
   };
 }
 
@@ -15,7 +15,7 @@ Table.prototype.draw = function() {
     tabs.push('in');
   }
   if (this.group.settings.resolvable) {
-    tabs.push('results');
+    tabs.push('status');
   }
   if (this.group.settings.outgoing) {
     tabs.push('out');
@@ -74,11 +74,15 @@ Table.prototype.draw = function() {
         tr.append(td);
       }
       var cell = new Cell(this, i);
+      cell.link = this.group.elements[title][i];
       if (title === 'in') {
         cell.settings.droppable = true;
       }
       cell.draw(tr[0]);
       this.cells[title][i] = cell;
+      if (title === 'status' && this.group.elements['in'][i]) {
+        this.group.elements['in'][i].resolveName();
+      }
       table.append(tr);
     }
     var gr = this.group;

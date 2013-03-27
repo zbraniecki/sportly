@@ -15,7 +15,7 @@ var Group = function(num, s, name, id, size) {
   this.size = size;
   this.elements = {
     'in': [],
-    'results': [],
+    'status': [],
     'out': [],
   };
   this.settings = {
@@ -32,6 +32,9 @@ Group.prototype.init = function() {
     link = new Link();
     link.init(this, i);
     this.elements.out.push(link);
+    if (this.struct) {
+      this.struct.cells.out[i].link = link;
+    }
   }
 }
 
@@ -42,6 +45,9 @@ Group.prototype.getCodeName = function() {
 
 Group.prototype.setElement = function(type, pos, elem) {
   this.elements[type][pos] = elem;
+  if (this.struct) {
+    this.struct.cells[type][pos].link = elem;
+  }
 }
 
 Group.prototype.draw = function() {
