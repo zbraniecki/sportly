@@ -53,6 +53,8 @@ class StageType(TrackerModel):
     Group
     Elimination
     Bucket
+    Seeding
+    Standings
     """
     name = models.CharField(max_length=200)
 
