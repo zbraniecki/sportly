@@ -114,7 +114,11 @@ td {
   border: 1px solid black;
 }
 .cell, .link {
-  width: 80px;
+  min-width: 80px;
+  height: 20px;
+}
+tr > .cell {
+  width: 100%;
 }
 
 .link.ui-draggable {

@@ -82,8 +82,9 @@ Tournament.prototype.draw = function() {
 }
 
 
-Tournament.prototype.addStage = function(name) {
+Tournament.prototype.addStage = function(name, type) {
   var stage = new Stage(this.stages.length, this, name);
+  stage.type = type;
   this.stages.push(stage);
   return stage;
 }

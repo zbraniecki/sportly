@@ -15,7 +15,7 @@ class Link(TrackerModel):
 
     limit = models.Q(app_label = "tracker", model = 'game') | models.Q(app_label = "tracker", model = 'group')
     content_type_from = models.ForeignKey(ContentType,
-                                          limit_choices_to = limit,
+                                          limit_choices_to = limit | models.Q(app_label = 'tracker', model = 'roster'),
                                           related_name='+')
     object_id_from = models.PositiveIntegerField()
     #links_from
