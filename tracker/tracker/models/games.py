@@ -24,7 +24,7 @@ class Game(TrackerModel):
     desc = models.CharField(max_length=200, blank=True, null=True)
     # round instead of group
     group = models.ForeignKey(Group, related_name='games', blank=True, null=True)
-    field = models.ForeignKey(Field)
+    field = models.ForeignKey(Field, null=True, blank=True)
     roster1 = models.ForeignKey(Roster, blank=True, null=True, related_name='+')
     roster2 = models.ForeignKey(Roster, blank=True, null=True, related_name='+')
 
@@ -103,6 +103,7 @@ class GameMomentType(TrackerModel):
 
 class GameMoment(TrackerModel):
     game = models.ForeignKey(Game, related_name='moments')
+    # type
     moment_type = models.ForeignKey(GameMomentType)
     player1 = models.ForeignKey(Person, blank=True, null=True, related_name='+')
     player2 = models.ForeignKey(Person, blank=True, null=True, related_name='+')

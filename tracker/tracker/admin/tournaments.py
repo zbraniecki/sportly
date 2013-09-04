@@ -1,4 +1,4 @@
-from tracker.models.tournaments import LinkType, Link, StageType, Stage
+from tracker.models.tournaments import LinkType, Link, StageType, Stage, Cluster
 from tracker.models.tournaments import Group, GroupRoster, FieldType, Field
 
 from django.contrib import admin
@@ -13,6 +13,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.register(LinkType)
 admin.site.register(Link)
+admin.site.register(Cluster)
 admin.site.register(StageType)
 admin.site.register(Stage, StageAdmin)
 admin.site.register(Group, GroupAdmin)
