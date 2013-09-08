@@ -18,13 +18,13 @@
   <body>
 
     
-<nav class="navbar navbar-inverse" role="navigation">
-  <p class="navbar-text">Starts: Sat, 09:00am</p>
-  <p class="navbar-text">Game to: 15</p>
-  <p class="navbar-text">Point cap: 17</p>
-  <p class="navbar-text">Soft cap: 90 min, +2</p>
-  <p class="navbar-text">Hard cap: 110 min</p>
-  <p class="navbar-text">Time-outs: 2 / half</p>
+<nav class="navbar navbar-inverse game-settings" role="navigation">
+  <p class="navbar-text starts"></p>
+  <p class="navbar-text regular-cap"></p>
+  <p class="navbar-text point-cap"></p>
+  <p class="navbar-text soft-cap"></p>
+  <p class="navbar-text hard-cap"></p>
+  <p class="navbar-text timeouts"></p>
 
   <p class="navbar-text navbar-right">Starts in 20 min</p>
   <div class="progress progress-striped navbar-right">
@@ -47,8 +47,10 @@
           <div class="panel-heading"></div>
           <div class="panel-body">
             <span class="goals"></span>
-            <button type="button" class="btn btn-success btn-lg btn-block goal-btn">+1</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn">pull</button>
+            <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+            <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
           </div>
         </div>
       </div>
@@ -57,12 +59,15 @@
           <div class="panel-heading"></div>
           <div class="panel-body">
             <span class="goals"></span>
-            <button type="button" class="btn btn-success btn-lg btn-block goal-btn">+1</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn">pull</button>
+            <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+            <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
           </div>
         </div>
       </div>
     </div>
+    <button type="button" class="btn btn-primary btn-lg btn-block period-end-btn hidden"></button>
   </div>
   <div class="tab-pane" id="logs">
     <div class="panel panel-default">

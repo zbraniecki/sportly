@@ -5,13 +5,92 @@ LocalData.prototype = {
   team1: {
     name: null,
     goals: null,
+    timeouts: 0,
   },
   team2: {
     name: null,
     goals: null,
+    timeouts: 0,
   },
   events: [],
+  settings: {
+    starts: 1378628005935,
+    caps: {
+      regular: {
+        type: 'point',
+        value: 15,
+      },
+      point: {
+        value: 17,
+      },
+      time: null,
+      soft: {
+        type: 'time',
+        value: 90,
+        diff: 2,
+      },
+      hard: {
+        type: 'time',
+        value: 110,
+      },
+    },
+    timeouts: {
+      number: 2,
+      per: 'half',
+    },
+  },
+  stage: 'not-started',
 
+  addPeriodEnd: function(type, cb, eb) {
+    var evt = {
+      'time': new Date().getTime(),
+      'type': 'half-time',
+    };
+    var self = this;
+    db.addEvent(evt, function (eid, evt) {
+      if (cb) {
+        cb();
+      }
+    }.bind(this, evt), function errback(evt) {
+    }.bind(this, evt));
+    self.events.push(evt);
+  },
+  addTimeout: function(tpos, cb, eb) {
+    var team = 'team' + tpos;
+
+    var evt = {
+      'time': new Date().getTime(),
+      'type': 'timeout',
+      'team': team
+    };
+    var self = this;
+    db.addEvent(evt, function (eid, evt) {
+      if (cb) {
+        cb();
+      }
+    }.bind(this, evt), function errback(team, evt) {
+    }.bind(this, team, evt));
+    self.events.push(evt);
+    self[team].timeouts += 1;
+  },
+  addPull: function(tpos, cb, eb) {
+    var team = 'team'+tpos;
+
+    var evt = {
+      'time': new Date().getTime(),
+      'type': 'pull',
+      'team': team
+    };
+    var self = this;
+    db.addEvent(evt, function (eid, evt) {
+      if (cb) {
+        cb();
+      }
+    }.bind(this, evt), function errback(team, evt) {
+    }.bind(this, team, evt));
+    self.events.push(evt);
+    self.stage = 'first half';
+  },
   addGoal: function(tpos, cb, eb) {
     var team = 'team'+tpos;
     /*var oper1 = {
@@ -52,11 +131,11 @@ LocalData.prototype = {
     }
   },
   deleteEvent: function(eid, cb) {
-    this.events.forEach(function (evt) {
+    this.events.forEach(function (evt, k) {
       if (evt.eid === eid) {
         this.events.splice(k, 1);
       }
-    });
+    }.bind(this));
     db.deleteEvent(eid, cb);
   },
   loadData: function(cb) {
