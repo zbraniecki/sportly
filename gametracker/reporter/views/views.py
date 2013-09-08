@@ -1,12 +1,11 @@
 from django.shortcuts import render
 
-from tracker.models.games import Game, GameMoment
+from tracker.models.games import Game
 
 def index(request):
-
-    game = Game.objects.get(pk=1)
+    gid = request.REQUEST.get('gid')
+    game = Game.objects.get(pk=gid)
     logs = game.moments.all()
-    print(logs)
     context = {
         'team_home': {
             'name': game.roster1.name,

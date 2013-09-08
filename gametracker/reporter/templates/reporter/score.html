@@ -6,91 +6,13 @@
     <meta charset="utf-8">
     <title>{{team_home.name}} vs. {{team_away.name}}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'reporter/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/css/score.css' %}" />
 
     <script src="{% static 'reporter/jquery.js' %}"></script>
     <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
-
-    <style type="text/css">
-html {
-   height: 100%;
-} 
-
-body {
-   margin: 0;
-   height: 100%;
-   width: 100%;
-} 
-
-.container {
-   height: 50%;
-   width: 50%;
-   top: 25%;
-   left: 25%;
-   position: absolute;
-}
-
-.row {
-  font-size: 3vw;
-}
-
-.panel-default {
-  width: 100%;
-}
-
-.panel-body {
-  text-align: center;
-}
-
-.start {
-  font-size: 3vw;
-}
-
-.progress {
-  width: 10%;
-  margin-top: 1.2%;
-}
-
-.main-nav {
-  width: 20%;
-  font-size: 2vw;
-}
-
-.row .btn {
-  font-size: 3vw;
-}
-
-.table {
-  text-align: left;
-}
-    </style>
-<script>
-  $(document).ready(function() {
-    $('#myTab a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    })
-    $('.team1 .pull-btn').click(function () {
-      $.ajax({
-        url: '/reporter/api',
-        data: {
-          'moment_type': 2,
-          'team': 1,
-        },
-        type: 'GET',
-      });
-    });
-    $('.team2 .pull-btn').click(function () {
-      $.ajax({
-        url: '/reporter/api',
-        data: {
-          'moment_type': 2,
-          'team': 2,
-        },
-        type: 'GET',
-      });
-    });
-  });
-</script>
+<script src="{% static 'reporter/js/score.js' %}"></script>
+<script src="{% static 'reporter/js/actions.js' %}"></script>
+<script src="{% static 'reporter/js/db.js' %}"></script>
   </head>
 
   <body>
@@ -122,20 +44,20 @@ body {
     <div class="row">
       <div class="col-xs-6 team1">
         <div class="panel panel-default">
-          <div class="panel-heading">{{team_home.name}}</div>
+          <div class="panel-heading"></div>
           <div class="panel-body">
-            {{ team_home.score }}
-            <button type="button" class="btn btn-success btn-lg btn-block disabled">+1</button>
+            <span class="goals"></span>
+            <button type="button" class="btn btn-success btn-lg btn-block goal-btn">+1</button>
             <button type="button" class="btn btn-primary btn-lg btn-block pull-btn">pull</button>
           </div>
         </div>
       </div>
       <div class="col-xs-6 team2">
         <div class="panel panel-default">
-          <div class="panel-heading">{{team_away.name}}</div>
+          <div class="panel-heading"></div>
           <div class="panel-body">
-            {{ team_away.score }}
-            <button type="button" class="btn btn-success btn-lg btn-block disabled">+1</button>
+            <span class="goals"></span>
+            <button type="button" class="btn btn-success btn-lg btn-block goal-btn">+1</button>
             <button type="button" class="btn btn-primary btn-lg btn-block pull-btn">pull</button>
           </div>
         </div>
@@ -147,7 +69,7 @@ body {
       <div class="panel-heading">
         <h3 class="panel-title">Logs</h3>
       </div>
-    <table class="panel-body table table-bordered">
+    <table class="panel-body table table-bordered logs">
       <thead>
         <tr>
           <th>Time</th>
@@ -161,7 +83,7 @@ body {
       </thead>
       <tbody>
         {% for moment in logs %}
-        <tr>
+        <tr data-moment-id="{{moment.pk}}">
           <td>{{moment.time}}</td>
           <td>{{moment.moment_type}}</td>
           <td>{{moment.player1|default:""}}</td>
@@ -176,7 +98,7 @@ body {
             <button type="button" class="btn btn-default btn-lg">
               <span class="glyphicon glyphicon-edit"></span>
             </button>
-            <button type="button" class="btn btn-default btn-lg">
+            <button type="button" class="btn btn-default btn-lg remove-btn">
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </td>
