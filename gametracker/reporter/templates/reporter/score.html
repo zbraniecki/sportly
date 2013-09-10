@@ -10,110 +10,157 @@
 
     <script src="{% static 'reporter/jquery.js' %}"></script>
     <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
-<script src="{% static 'reporter/js/score.js' %}"></script>
+<script src="{% static 'reporter/js/gamelist.js' %}"></script>
+<script src="{% static 'reporter/js/score2.js' %}"></script>
 <script src="{% static 'reporter/js/actions.js' %}"></script>
 <script src="{% static 'reporter/js/db.js' %}"></script>
   </head>
 
   <body>
+    <div id="games" class="view view-games current">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Games</h3>
+            </div>
+            <table class="panel-body table table-bordered game-list">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Home</th>
+                  <th>Away</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for moment in logs %}
+                <tr data-game-id="{{moment.pk}}">
+                  <td>{{moment.time}}</td>
+                  <td>{{moment.moment_type}}</td>
+                  <td>{{moment.player1|default:""}}</td>
+                  <td>{{moment.player2|default:""}}</td>
+                  <td>{{moment.team|default:""}}</td>
+                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-sort"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg remove-btn">
+                      <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+    </div>
+    <div id="score" class="view view-score">
+    
+      <nav class="navbar navbar-inverse game-settings" role="navigation">
+        <p class="navbar-text starts"></p>
+        <p class="navbar-text regular-cap"></p>
+        <p class="navbar-text point-cap"></p>
+        <p class="navbar-text soft-cap"></p>
+        <p class="navbar-text hard-cap"></p>
+        <p class="navbar-text timeouts"></p>
+
+        <p class="navbar-text navbar-right">Starts in 20 min</p>
+        <div class="progress progress-striped navbar-right">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            <span class="sr-only">0% Complete</span>
+          </div>
+        </div>
+      </nav>
+      <ul class="nav nav-pills nav-stacked main-nav" id="myTab">
+        <li class="active"><a href="#score">Score</a></li>
+        <li><a href="#logs">Logs</a></li>
+      </ul>
+
+
+      <div class="tab-content container">
+        <div class="tab-pane active" id="score">
+          <div class="row">
+            <div class="col-xs-6 team1">
+              <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                  <span class="goals"></span>
+                  <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+                  <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6 team2">
+              <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                  <span class="goals"></span>
+                  <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+                  <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg btn-block period-end-btn hidden"></button>
+        </div>
+        <div class="tab-pane" id="logs">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Logs</h3>
+            </div>
+            <table class="panel-body table table-bordered logs">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Team</th>
+                  <th>Note</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for moment in logs %}
+                <tr data-moment-id="{{moment.pk}}">
+                  <td>{{moment.time}}</td>
+                  <td>{{moment.moment_type}}</td>
+                  <td>{{moment.player1|default:""}}</td>
+                  <td>{{moment.player2|default:""}}</td>
+                  <td>{{moment.team|default:""}}</td>
+                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-sort"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg remove-btn">
+                      <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
     
-<nav class="navbar navbar-inverse game-settings" role="navigation">
-  <p class="navbar-text starts"></p>
-  <p class="navbar-text regular-cap"></p>
-  <p class="navbar-text point-cap"></p>
-  <p class="navbar-text soft-cap"></p>
-  <p class="navbar-text hard-cap"></p>
-  <p class="navbar-text timeouts"></p>
-
-  <p class="navbar-text navbar-right">Starts in 20 min</p>
-  <div class="progress progress-striped navbar-right">
-    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-      <span class="sr-only">0% Complete</span>
-    </div>
-  </div>
-</nav>
-<ul class="nav nav-pills nav-stacked main-nav" id="myTab">
-  <li class="active"><a href="#score">Score</a></li>
-  <li><a href="#logs">Logs</a></li>
-</ul>
-
-
-<div class="tab-content container">
-  <div class="tab-pane active" id="score">
-    <div class="row">
-      <div class="col-xs-6 team1">
-        <div class="panel panel-default">
-          <div class="panel-heading"></div>
-          <div class="panel-body">
-            <span class="goals"></span>
-            <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
-            <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-6 team2">
-        <div class="panel panel-default">
-          <div class="panel-heading"></div>
-          <div class="panel-body">
-            <span class="goals"></span>
-            <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
-            <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary btn-lg btn-block period-end-btn hidden"></button>
-  </div>
-  <div class="tab-pane" id="logs">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Logs</h3>
-      </div>
-    <table class="panel-body table table-bordered logs">
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Type</th>
-          <th>Player 1</th>
-          <th>Player 2</th>
-          <th>Team</th>
-          <th>Note</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for moment in logs %}
-        <tr data-moment-id="{{moment.pk}}">
-          <td>{{moment.time}}</td>
-          <td>{{moment.moment_type}}</td>
-          <td>{{moment.player1|default:""}}</td>
-          <td>{{moment.player2|default:""}}</td>
-          <td>{{moment.team|default:""}}</td>
-          <td></td>
-          <td>
-            <button type="button" class="btn btn-default btn-lg">
-              <span class="glyphicon glyphicon-sort"></span>
-            </button>
-
-            <button type="button" class="btn btn-default btn-lg">
-              <span class="glyphicon glyphicon-edit"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-lg remove-btn">
-              <span class="glyphicon glyphicon-remove"></span>
-            </button>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-</table>
-    </div>
-  </div>
-</div>
 
 
  </body>

@@ -2,6 +2,23 @@ function LocalData () {
 }
 
 LocalData.prototype = {
+  games: [
+    {
+      id: 1,
+      team1: {
+        name: 'BAB',
+        goals: 0,
+      },
+      team2: {
+        name: 'OSC',
+        goals: 0,
+      },
+      settings: {
+        starts: 1378628005935
+      },
+      stage: 'not-started',
+    }
+  ],
   team1: {
     name: null,
     goals: null,
@@ -44,7 +61,7 @@ LocalData.prototype = {
   addPeriodEnd: function(type, cb, eb) {
     var evt = {
       'time': new Date().getTime(),
-      'type': 'half-time',
+      'type': type,
     };
     var self = this;
     db.addEvent(evt, function (eid, evt) {

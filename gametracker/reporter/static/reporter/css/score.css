@@ -50,3 +50,11 @@ body {
   text-align: left;
 }
 
+
+.view {
+  display: none;
+}
+
+.view.current {
+  display: block;
+}
