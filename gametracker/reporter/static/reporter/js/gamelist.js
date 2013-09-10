@@ -5,7 +5,13 @@ function GameListPanel() {
 GameListPanel.prototype = Object.create(Panel.prototype);
 GameListPanel.prototype.construtor = GameListPanel;
 
-panels['games'].class = GameListPanel;
+panels['gamelist'].class = GameListPanel;
+
+GameListPanel.prototype.bindAPI = function() {
+  $('.view-gamelist .btn-add').click(function() {
+    loadPanel('gamesettings');
+  });
+}
 
 GameListPanel.prototype.draw = function() {
   var tbody = $('.game-list tbody');
@@ -15,12 +21,15 @@ GameListPanel.prototype.draw = function() {
 
     var td = $('<td/>');
     td.text(new Date(game.settings.starts));
+    td.click(function() {
+      loadPanel('score');
+    });
     tr.append(td);
     var td = $('<td/>');
-    td.text(game.team1.name);
+    td.text(teams[game.team1.id].name);
     tr.append(td);
     var td = $('<td/>');
-    td.text(game.team2.name);
+    td.text(teams[game.team2.id].name);
     tr.append(td);
     var td = $('<td/>');
     td.text(game.team1.goals + ' : ' + game.team2.goals);
@@ -28,16 +37,16 @@ GameListPanel.prototype.draw = function() {
     var td = $('<td/>');
     td.text(game.stage);
     tr.append(td);
-    var td = $('<td><button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-sort"></span></button><button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-edit"></span></button><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
-    $('.remove-btn', td).click(function() {
+    var td = $('<td><button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-edit"></span></button><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
+    $('.remove-btn', td).click(function(e) {
+      e.preventDefault();
+      var id = $(this).parent().parent().attr('data-game-id');
+      gameData.removeGame(id);
+      $(this).parent().parent().fadeOut();
     });
     tr.append(td);
     tr.attr('data-game-id', game.id);
 
-    tr.click(function() {
-      loadPanel('score');
-    });
     tbody.append(tr);
   });
-  
 }

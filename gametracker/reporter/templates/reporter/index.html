@@ -19,7 +19,7 @@
   </head>
 
   <body>
-    <div id="view-games" class="view view-games">
+    <div id="view-gamelist" class="view view-gamelist">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Games</h3>
@@ -39,8 +39,10 @@
           </tbody>
         </table>
       </div>
+      <button class="btn-add">Add game</button>
     </div>
     <div id="view-gamesettings" class="view view-gamesettings">
+      <button class="btn-back">Back</button>
       <div class="container">
         <div class="panel panel-default">
           <div class="panel-heading">Add new game</div>
@@ -50,9 +52,9 @@
                 <label for="inputTeam1" class="col-lg-2 control-label">Team 1</label>
                 <div class="col-lg-10">
                   <select class="form-control" id="inputTeam1">
-                    <option>BAB</option>
-                    <option>OSC</option>
-                    <option>Fluffer</option>
+                    <option value="1">BAB</option>
+                    <option value="2">OSC</option>
+                    <option value="3">Fluffer</option>
                   </select>
                 </div>
               </div>
@@ -60,36 +62,36 @@
                 <label for="inputTeam2" class="col-lg-2 control-label">Team 2</label>
                 <div class="col-lg-10">
                   <select class="form-control" id="inputTeam2">
-                    <option>BAB</option>
-                    <option>OSC</option>
-                    <option>Fluffer</option>
+                    <option value="1">BAB</option>
+                    <option value="2">OSC</option>
+                    <option value="3">Fluffer</option>
                   </select>
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputStarts" class="col-lg-2 control-label">Starts</label>
                 <div class="col-lg-10">
-                  <input type="datetime" class="form-control" placeholder="2013-08-13 12:00">
+                  <input type="datetime" id="inputStarts" class="form-control" placeholder="2013-08-13 12:00">
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Cap</label>
+                <label for="inputCap" class="col-lg-2 control-label">Cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" class="form-control" placeholder="15">
+                    <input type="text" id="inputCap" class="form-control" placeholder="15">
                   </div>
                   <div class="col-lg-3">
-                    <select class="form-control" id="inputTeam2">
-                      <option>points</option>
-                      <option>min</option>
+                    <select class="form-control" id="inputCapType">
+                      <option value="points">points</option>
+                      <option value="min">min</option>
                     </select>
                   </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Point cap</label>
+                <label for="inputPointCap" class="col-lg-2 control-label">Point cap</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="15">
+                    <input type="text" id="inputPointCap" class="form-control" placeholder="15">
                 </div>
               </div>
               <div class="form-group">
@@ -145,7 +147,7 @@
               </div>
               <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                  <button type="submit" class="btn btn-default">Add</button>
+                  <button type="submit" class="btn btn-default btn-add">Add</button>
                 </div>
               </div>
             </form>

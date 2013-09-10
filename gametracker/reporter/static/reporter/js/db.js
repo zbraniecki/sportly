@@ -1,19 +1,4 @@
 
-var game = {
-  'gid': 1,
-  'team1': {
-    'tid': 1,
-    'name': 'BAB',
-    'goals': 0,
-  },
-  'team2': {
-    'tid': 2,
-    'name': 'OSC',
-    'goals': 0,
-  },
-}
-
-
 function DB() {
 }
 
@@ -32,7 +17,7 @@ DB.prototype = {
       return;
     }
     console.log("openDb ...");
-    var req = indexedDB.open(this.dbName, 10);
+    var req = indexedDB.open(this.dbName, 11);
     var self = this;
     req.onsuccess = function (evt) {
       self.db = this.result;
@@ -50,11 +35,10 @@ DB.prototype = {
       evt.currentTarget.result.deleteObjectStore(self.dbGameStoreName);
       evt.currentTarget.result.deleteObjectStore(self.dbTransactionStoreName);
       evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
-      var gameStore = evt.currentTarget.result.createObjectStore(self.dbGameStoreName, {keyPath: 'gid'});
+      var gameStore = evt.currentTarget.result.createObjectStore(self.dbGameStoreName, {keyPath: 'id'});
       evt.currentTarget.result.createObjectStore(self.dbTransactionStoreName, {keyPath: 'tid', 'autoIncrement': true});
       evt.currentTarget.result.createObjectStore(self.dbEventStoreName, {keyPath: 'eid', 'autoIncrement': true});
 
-      gameStore.add(game);
       console.log('created');
     };
   },
@@ -73,7 +57,25 @@ DB.prototype = {
       }
     });
   },
-  getGame: function(cb) {
+  getGames: function(cb) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbGameStoreName, 'readonly');
+      var games = [];
+      store.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          cursor.value.id = cursor.key;
+          games.push(cursor.value);
+          cursor.continue();
+        }
+        else {
+          cb(games);
+        }
+      };
+    });
+  },
+  getGame: function(id, cb) {
     var self = this;
     this.openDb(function() {
       var store = self.getObjectStore(self.dbGameStoreName, 'readonly');

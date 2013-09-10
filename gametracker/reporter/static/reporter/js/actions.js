@@ -2,77 +2,21 @@ function LocalData () {
 }
 
 LocalData.prototype = {
-  games: [
-    {
-      id: 1,
-      team1: {
-        name: 'BAB',
-        goals: 0,
-      },
-      team2: {
-        name: 'OSC',
-        goals: 0,
-      },
-      settings: {
-        starts: 1378628005935
-      },
-      stage: 'not-started',
-    },
-    {
-      id: 2,
-      team1: {
-        name: 'BAB',
-        goals: 0,
-      },
-      team2: {
-        name: 'Fluffer',
-        goals: 0,
-      },
-      settings: {
-        starts: 1378629125935
-      },
-      stage: 'not-started',
-    }
-  ],
-  team1: {
-    name: null,
-    goals: null,
-    timeouts: 0,
-  },
-  team2: {
-    name: null,
-    goals: null,
-    timeouts: 0,
-  },
-  events: [],
-  settings: {
-    starts: 1378628005935,
-    caps: {
-      regular: {
-        type: 'point',
-        value: 15,
-      },
-      point: {
-        value: 17,
-      },
-      time: null,
-      soft: {
-        type: 'time',
-        value: 90,
-        diff: 2,
-      },
-      hard: {
-        type: 'time',
-        value: 110,
-      },
-    },
-    timeouts: {
-      number: 2,
-      per: 'half',
-    },
-  },
-  stage: 'not-started',
+  games: [],
 
+  removeGame: function(gid, cb, eb) {
+    this.games.forEach(function (game, k) {
+      if (game.id == gid) {
+        this.games.splice(k, 1);
+      }
+    }.bind(this));
+    if (cb) {
+      cb();
+    }
+  },
+  addGame: function(game, cb, eb) {
+    this.games.push(game);
+  },
   addPeriodEnd: function(type, cb, eb) {
     var evt = {
       'time': new Date().getTime(),
@@ -172,6 +116,11 @@ LocalData.prototype = {
   },
   loadData: function(cb) {
     var self = this;
+    db.getGames(function(games) {
+      self.games = games;
+      cb();
+    });
+    return;
     db.getGame(function(game) {
       self.team1.name = game.team1.name;
       self.team2.name = game.team2.name;

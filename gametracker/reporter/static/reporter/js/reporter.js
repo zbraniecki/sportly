@@ -1,7 +1,13 @@
 var panels = {
-  'games': {'class': null, 'instance': null},
+  'gamelist': {'class': null, 'instance': null},
   'gamesettings': {'class': null, 'instance': null},
   'score': {'class': null, 'instance': null},
+};
+
+var teams = {
+  1: {name: 'BAB'},
+  2: {name: 'OSC'},
+  3: {name: 'Fluffer'},
 };
 
 var gameData = {};
@@ -27,6 +33,7 @@ function loadPanel(id) {
 
   if (!panels[id].instance) {
     panels[id].instance = new pc();
+    panels[id].instance.bindAPI();
   }
   $('.view').removeClass('current');
   $('.view-'+id).addClass('current');
