@@ -1,17 +1,8 @@
+function ScorePanel() {
+}
 
-var gameData = {};
-var db = null
-
-$(document).ready(function() {
-  $(document.body).hide();
-  db = new DB();
-  gameData = new LocalData();
-
-  bindAPI();
-  db.openDb(function() {
-    gameData.loadData(drawData);
-  });
-});
+ScorePanel.prototype = Object.create(Panel.prototype);
+ScorePanel.prototype.construtor = ScorePanel;
 
 var stages = [
 'not started',
@@ -21,8 +12,7 @@ var stages = [
   'end',
   ];
 
-
-function drawData() {
+ScorePanel.prototype.draw = function() {
   $('.game-settings .starts').text('Starts: ' + new Date(gameData.settings.starts));
   $('.game-settings .regular-cap').text('Game to: ' + gameData.settings.caps.regular.value);
   $('.game-settings .point-cap').text('Point cap: ' + gameData.settings.caps.point.value);
@@ -76,7 +66,7 @@ function drawData() {
     tr.attr('data-event-id', evt.eid);
     tbody.append(tr);
   });
-  $(document.body).show();
+  bindAPI();
 }
 
 function bindAPI() {

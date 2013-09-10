@@ -50,6 +50,13 @@ body {
   text-align: left;
 }
 
+.table.game-list {
+  cursor: pointer;
+}
+
+.table.game-list tr:hover {
+  background-color: #eee;
+}
 
 .view {
   display: none;
@@ -58,3 +65,4 @@ body {
 .view.current {
   display: block;
 }
+

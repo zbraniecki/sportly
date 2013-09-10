@@ -10,14 +10,15 @@
 
     <script src="{% static 'reporter/jquery.js' %}"></script>
     <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
+<script src="{% static 'reporter/js/reporter.js' %}"></script>
 <script src="{% static 'reporter/js/gamelist.js' %}"></script>
-<script src="{% static 'reporter/js/score2.js' %}"></script>
+<script src="{% static 'reporter/js/score.js' %}"></script>
 <script src="{% static 'reporter/js/actions.js' %}"></script>
 <script src="{% static 'reporter/js/db.js' %}"></script>
   </head>
 
   <body>
-    <div id="games" class="view view-games current">
+    <div id="view-games" class="view view-games">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Games</h3>
@@ -34,33 +35,11 @@
                 </tr>
               </thead>
               <tbody>
-                {% for moment in logs %}
-                <tr data-game-id="{{moment.pk}}">
-                  <td>{{moment.time}}</td>
-                  <td>{{moment.moment_type}}</td>
-                  <td>{{moment.player1|default:""}}</td>
-                  <td>{{moment.player2|default:""}}</td>
-                  <td>{{moment.team|default:""}}</td>
-                  <td></td>
-                  <td>
-                    <button type="button" class="btn btn-default btn-lg">
-                      <span class="glyphicon glyphicon-sort"></span>
-                    </button>
-
-                    <button type="button" class="btn btn-default btn-lg">
-                      <span class="glyphicon glyphicon-edit"></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-lg remove-btn">
-                      <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                  </td>
-                </tr>
-                {% endfor %}
               </tbody>
             </table>
           </div>
     </div>
-    <div id="score" class="view view-score">
+    <div id="view-score" class="view view-score">
     
       <nav class="navbar navbar-inverse game-settings" role="navigation">
         <p class="navbar-text starts"></p>

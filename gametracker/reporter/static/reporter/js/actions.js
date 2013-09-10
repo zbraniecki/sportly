@@ -17,6 +17,21 @@ LocalData.prototype = {
         starts: 1378628005935
       },
       stage: 'not-started',
+    },
+    {
+      id: 2,
+      team1: {
+        name: 'BAB',
+        goals: 0,
+      },
+      team2: {
+        name: 'Fluffer',
+        goals: 0,
+      },
+      settings: {
+        starts: 1378629125935
+      },
+      stage: 'not-started',
     }
   ],
   team1: {

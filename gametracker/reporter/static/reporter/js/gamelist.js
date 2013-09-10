@@ -1,16 +1,12 @@
-$(document).ready(function() {
-  $(document.body).hide();
-  db = new DB();
-  gameData = new LocalData();
 
-  //bindAPI();
-  db.openDb(function() {
-    gameData.loadData(drawData);
-  });
-});
+function GameListPanel() {
+}
+
+GameListPanel.prototype = Object.create(Panel.prototype);
+GameListPanel.prototype.construtor = GameListPanel;
 
 
-function drawData() {
+GameListPanel.prototype.draw = function() {
   var tbody = $('.game-list tbody');
   tbody.empty();
   gameData.games.forEach(function(game) {
@@ -38,10 +34,9 @@ function drawData() {
     tr.attr('data-game-id', game.id);
 
     tr.click(function() {
-      $('.view-games').toggleClass('current');
-      $('.view-score').toggleClass('current');
+      loadPanel('score');
     });
     tbody.append(tr);
   });
-  $(document.body).show();
+  
 }

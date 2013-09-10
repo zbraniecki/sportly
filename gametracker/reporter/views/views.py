@@ -20,4 +20,4 @@ def index(request):
         },
         'logs': logs,
     }
-    return render(request, 'reporter/score.html', context)
+    return render(request, 'reporter/index.html', context)
