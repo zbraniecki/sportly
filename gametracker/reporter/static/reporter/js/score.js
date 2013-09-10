@@ -17,14 +17,21 @@ var stages = [
 ScorePanel.prototype.draw = function() {
   var game = gameData.games[0];
 
+
+  var team1Name = teams[game.team1.id].name;
+  var team2Name = teams[game.team2.id].name;
+  
+  var title = team1Name + " vs. " + team2Name + ' ('+game.team1.goals+':'+game.team2.goals+')';
+  document.head.getElementsByTagName('title')[0].textContent = title;
+
   $('.game-settings .starts').text('Starts: ' + new Date(game.settings.starts));
   $('.game-settings .regular-cap').text('Game to: ' + game.settings.caps.regular.value);
   $('.game-settings .point-cap').text('Point cap: ' + game.settings.caps.point.value);
   $('.game-settings .soft-cap').text('Soft cap: ' + game.settings.caps.soft.value + ' min, +' + game.settings.caps.soft.diff);
   $('.game-settings .hard-cap').text('Hard cap: ' + game.settings.caps.hard.value + ' min');
   $('.game-settings .timeouts').text('Time-outs: ' + game.settings.timeouts.number + ' / ' + game.settings.timeouts.per);
-  $('.team1 .panel-heading').text(teams[game.team1.id].name);
-  $('.team2 .panel-heading').text(teams[game.team2.id].name);
+  $('.team1 .panel-heading').text(team1Name);
+  $('.team2 .panel-heading').text(team2Name);
   $('.team1 .goals').text(game.team1.goals);
   $('.team2 .goals').text(game.team2.goals);
   $('.team1 .timeout-btn').text('Time-out ('+game.team1.timeouts+'/'+game.settings.timeouts.number+')');
