@@ -4,6 +4,8 @@ function ScorePanel() {
 ScorePanel.prototype = Object.create(Panel.prototype);
 ScorePanel.prototype.construtor = ScorePanel;
 
+panels['score'].class = ScorePanel;
+
 var stages = [
 'not started',
   'first half',

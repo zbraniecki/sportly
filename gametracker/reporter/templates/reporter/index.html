@@ -12,6 +12,7 @@
     <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
 <script src="{% static 'reporter/js/reporter.js' %}"></script>
 <script src="{% static 'reporter/js/gamelist.js' %}"></script>
+<script src="{% static 'reporter/js/gamesettings.js' %}"></script>
 <script src="{% static 'reporter/js/score.js' %}"></script>
 <script src="{% static 'reporter/js/actions.js' %}"></script>
 <script src="{% static 'reporter/js/db.js' %}"></script>
@@ -19,25 +20,139 @@
 
   <body>
     <div id="view-games" class="view view-games">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Games</h3>
-            </div>
-            <table class="panel-body table table-bordered game-list">
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>Home</th>
-                  <th>Away</th>
-                  <th>Score</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Games</h3>
+        </div>
+        <table class="panel-body table table-bordered game-list">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Home</th>
+              <th>Away</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="view-gamesettings" class="view view-gamesettings">
+      <div class="container">
+        <div class="panel panel-default">
+          <div class="panel-heading">Add new game</div>
+          <div class="panel-body">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label for="inputTeam1" class="col-lg-2 control-label">Team 1</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam1">
+                    <option>BAB</option>
+                    <option>OSC</option>
+                    <option>Fluffer</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTeam2" class="col-lg-2 control-label">Team 2</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam2">
+                    <option>BAB</option>
+                    <option>OSC</option>
+                    <option>Fluffer</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Starts</label>
+                <div class="col-lg-10">
+                  <input type="datetime" class="form-control" placeholder="2013-08-13 12:00">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="text" class="form-control" placeholder="15">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputTeam2">
+                      <option>points</option>
+                      <option>min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Point cap</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="15">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Time cap</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="75">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Soft cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="text" class="form-control" placeholder="17">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputTeam2">
+                      <option>points</option>
+                      <option>min</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-2">
+                    <input type="text" class="form-control" placeholder="+2">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Hard cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="text" class="form-control" placeholder="110">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputTeam2">
+                      <option>points</option>
+                      <option selected>min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Timeouts</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="text" class="form-control" placeholder="2">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputTeam2">
+                      <option>half</option>
+                      <option>game</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                  <button type="submit" class="btn btn-default">Add</button>
+                </div>
+              </div>
+            </form>
           </div>
+        </div>
+
+    </div>
     </div>
     <div id="view-score" class="view view-score">
     

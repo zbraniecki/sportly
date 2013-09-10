@@ -5,6 +5,7 @@ function GameListPanel() {
 GameListPanel.prototype = Object.create(Panel.prototype);
 GameListPanel.prototype.construtor = GameListPanel;
 
+panels['games'].class = GameListPanel;
 
 GameListPanel.prototype.draw = function() {
   var tbody = $('.game-list tbody');

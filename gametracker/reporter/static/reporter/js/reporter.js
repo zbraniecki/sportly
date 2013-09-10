@@ -1,6 +1,7 @@
 var panels = {
-  'games': null,
-  'score': null,
+  'games': {'class': null, 'instance': null},
+  'gamesettings': {'class': null, 'instance': null},
+  'score': {'class': null, 'instance': null},
 };
 
 var gameData = {};
@@ -19,20 +20,18 @@ $(document).ready(function() {
 
 
 function loadPanel(id) {
-  var pc;
   if (!id) {
-    id = 'games';
-    pc = GameListPanel;
-  } else {
-    pc = ScorePanel;
+    id = 'gamesettings';
   }
-  if (!panels[id]) {
-    panels[id] = new pc();
+  var pc = panels[id].class;
+
+  if (!panels[id].instance) {
+    panels[id].instance = new pc();
   }
   $('.view').removeClass('current');
   $('.view-'+id).addClass('current');
 
-  panels[id].draw();
+  panels[id].instance.draw();
   $(document.body).show();
 }
 
