@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 function loadPanel(id) {
   if (!id) {
-    id = 'gamesettings';
+    id = 'gamelist';
   }
   var pc = panels[id].class;
 

@@ -52,6 +52,7 @@ GameSettingsPanel.prototype.bindAPI = function() {
         },
       },
       stage: 'not-started',
+      events: [],
     };
     gameData.addGame(game);
   });

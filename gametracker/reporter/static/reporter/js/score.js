@@ -15,25 +15,27 @@ var stages = [
   ];
 
 ScorePanel.prototype.draw = function() {
-  $('.game-settings .starts').text('Starts: ' + new Date(gameData.settings.starts));
-  $('.game-settings .regular-cap').text('Game to: ' + gameData.settings.caps.regular.value);
-  $('.game-settings .point-cap').text('Point cap: ' + gameData.settings.caps.point.value);
-  $('.game-settings .soft-cap').text('Soft cap: ' + gameData.settings.caps.soft.value + ' min, +' + gameData.settings.caps.soft.diff);
-  $('.game-settings .hard-cap').text('Hard cap: ' + gameData.settings.caps.hard.value + ' min');
-  $('.game-settings .timeouts').text('Time-outs: ' + gameData.settings.timeouts.number + ' / ' + gameData.settings.timeouts.per);
-  $('.team1 .panel-heading').text(gameData.team1.name);
-  $('.team2 .panel-heading').text(gameData.team2.name);
-  $('.team1 .goals').text(gameData.team1.goals);
-  $('.team2 .goals').text(gameData.team2.goals);
-  $('.team1 .timeout-btn').text('Time-out ('+gameData.team1.timeouts+'/'+gameData.settings.timeouts.number+')');
-  $('.team2 .timeout-btn').text('Time-out ('+gameData.team2.timeouts+'/'+gameData.settings.timeouts.number+')');
+  var game = gameData.games[0];
 
-  var nextStage = stages[stages.indexOf(gameData.stage)+1];
+  $('.game-settings .starts').text('Starts: ' + new Date(game.settings.starts));
+  $('.game-settings .regular-cap').text('Game to: ' + game.settings.caps.regular.value);
+  $('.game-settings .point-cap').text('Point cap: ' + game.settings.caps.point.value);
+  $('.game-settings .soft-cap').text('Soft cap: ' + game.settings.caps.soft.value + ' min, +' + game.settings.caps.soft.diff);
+  $('.game-settings .hard-cap').text('Hard cap: ' + game.settings.caps.hard.value + ' min');
+  $('.game-settings .timeouts').text('Time-outs: ' + game.settings.timeouts.number + ' / ' + game.settings.timeouts.per);
+  $('.team1 .panel-heading').text(teams[game.team1.id].name);
+  $('.team2 .panel-heading').text(teams[game.team2.id].name);
+  $('.team1 .goals').text(game.team1.goals);
+  $('.team2 .goals').text(game.team2.goals);
+  $('.team1 .timeout-btn').text('Time-out ('+game.team1.timeouts+'/'+game.settings.timeouts.number+')');
+  $('.team2 .timeout-btn').text('Time-out ('+game.team2.timeouts+'/'+game.settings.timeouts.number+')');
+
+  var nextStage = stages[stages.indexOf(game.stage)+1];
   $('.period-end-btn').text(nextStage);
 
   var tbody = $('.logs tbody');
   tbody.empty();
-  gameData.events.forEach(function(evt) {
+  game.events.forEach(function(evt) {
     var tr = $('<tr/>'); 
 
     var td = $('<td/>');
@@ -68,10 +70,12 @@ ScorePanel.prototype.draw = function() {
     tr.attr('data-event-id', evt.eid);
     tbody.append(tr);
   });
-  bindAPI();
 }
 
-function bindAPI() {
+ScorePanel.prototype.bindAPI = function() {
+  $('.game-settings .btn-back').click(function() {
+    loadPanel('gamelist');
+  });
   $('#myTab a').click(function (e) {
     e.preventDefault()
     $(this).tab('show')
