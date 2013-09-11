@@ -17,7 +17,7 @@ DB.prototype = {
       return;
     }
     console.log("openDb ...");
-    var req = indexedDB.open(this.dbName, 11);
+    var req = indexedDB.open(this.dbName, 13);
     var self = this;
     req.onsuccess = function (evt) {
       self.db = this.result;
@@ -37,23 +37,64 @@ DB.prototype = {
       evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
       var gameStore = evt.currentTarget.result.createObjectStore(self.dbGameStoreName, {keyPath: 'id'});
       evt.currentTarget.result.createObjectStore(self.dbTransactionStoreName, {keyPath: 'tid', 'autoIncrement': true});
-      evt.currentTarget.result.createObjectStore(self.dbEventStoreName, {keyPath: 'eid', 'autoIncrement': true});
+      var eventStore = evt.currentTarget.result.createObjectStore(self.dbEventStoreName, {keyPath: 'eid', 'autoIncrement': true});
+
+
+      eventStore.createIndex("gid", "gid", { unique: false });
 
       console.log('created');
     };
+  },
+
+  clear: function() {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbGameStoreName, 'readwrite');
+      store.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          var request = store.delete(cursor.key);
+          cursor.continue();
+        }
+      };
+      var store2 = self.getObjectStore(self.dbEventStoreName, 'readwrite');
+      store2.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          var request = store2.delete(cursor.key);
+          cursor.continue();
+        }
+      };
+    });
   },
 
   getObjectStore: function(store_name, mode) {
     var tx = this.db.transaction(store_name, mode);
     return tx.objectStore(store_name);
   },
-  addGame: function() {
+  addGame: function(game) {
     var self = this;
     this.openDb(function() {
       var store = self.getObjectStore(self.dbGameStoreName, 'readwrite');
       var request = store.add(game);
       request.onsuccess = function(event) {
         console.log('added game');
+      }
+    });
+  },
+  removeGame: function(gid, cb, eb) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbGameStoreName, 'readwrite');
+      var request = store.delete(parseInt(gid));
+      request.onerror = function() {
+        console.log('error');
+      }
+      request.onsuccess = function(evt) {
+        console.log('success');
+        if (cb) {
+          cb();
+        }
       }
     });
   },
@@ -105,15 +146,15 @@ DB.prototype = {
       }
     });
   },
-  getEvents: function(cb) {
+  getEvents: function(gid, cb) {
     var self = this;
     this.openDb(function() {
       var store = self.getObjectStore(self.dbEventStoreName, 'readonly');
       var events = [];
-      store.openCursor().onsuccess = function(event) {
+      var index = store.index('gid');
+      index.openCursor(IDBKeyRange.only(parseInt(gid))).onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {
-          cursor.value.eid = cursor.key;
           events.push(cursor.value);
           cursor.continue();
         }

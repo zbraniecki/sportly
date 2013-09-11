@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{team_home.name}} vs. {{team_away.name}}</title>
+    <title>Game reporter</title>
     <link rel="stylesheet" type="text/css" href="{% static 'reporter/bootstrap/css/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'reporter/css/score.css' %}" />
 
@@ -40,6 +40,7 @@
         </table>
       </div>
       <button class="btn-add">Add game</button>
+      <button class="btn-clear">Clear data</button>
     </div>
     <div id="view-gamesettings" class="view view-gamesettings">
       <button class="btn-back">Back</button>
@@ -190,8 +191,8 @@
                   <span class="goals"></span>
                   <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
                   <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
-                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
-                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                  <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
                 </div>
               </div>
             </div>
@@ -202,8 +203,8 @@
                   <span class="goals"></span>
                   <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
                   <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
-                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
-                  <button type="button" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                  <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
                 </div>
               </div>
             </div>

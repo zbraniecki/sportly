@@ -11,28 +11,35 @@ GameListPanel.prototype.bindAPI = function() {
   $('.view-gamelist .btn-add').click(function() {
     loadPanel('gamesettings');
   });
+  $('.view-gamelist .btn-clear').click(function() {
+    db.clear();
+  });
 }
 
 GameListPanel.prototype.draw = function() {
   var tbody = $('.game-list tbody');
   tbody.empty();
-  gameData.games.forEach(function(game) {
+  var game;
+  for (var i in gameData.games) {
+    game = gameData.games[i];
+    var data = game.data;
     var tr = $('<tr/>'); 
 
     var td = $('<td/>');
-    td.text(new Date(game.settings.starts));
+    td.text(new Date(data.settings.starts));
     td.click(function() {
+      currentGame = $(this).parent().attr('data-game-id'); 
       loadPanel('score');
     });
     tr.append(td);
     var td = $('<td/>');
-    td.text(teams[game.team1.id].name);
+    td.text(gameData.teams[data.team1.id].name);
     tr.append(td);
     var td = $('<td/>');
-    td.text(teams[game.team2.id].name);
+    td.text(gameData.teams[data.team2.id].name);
     tr.append(td);
     var td = $('<td/>');
-    td.text(game.team1.goals + ' : ' + game.team2.goals);
+    td.text(data.team1.goals + ' : ' + data.team2.goals);
     tr.append(td);
     var td = $('<td/>');
     td.text(game.stage);
@@ -45,8 +52,8 @@ GameListPanel.prototype.draw = function() {
       $(this).parent().parent().fadeOut();
     });
     tr.append(td);
-    tr.attr('data-game-id', game.id);
+    tr.attr('data-game-id', data.id);
 
     tbody.append(tr);
-  });
+  };
 }

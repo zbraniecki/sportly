@@ -4,14 +4,9 @@ var panels = {
   'score': {'class': null, 'instance': null},
 };
 
-var teams = {
-  1: {name: 'BAB'},
-  2: {name: 'OSC'},
-  3: {name: 'Fluffer'},
-};
-
 var gameData = {};
-var db = null
+var db = null;
+var currentGame = null;
 
 $(document).ready(function() {
   $(document.body).hide();
