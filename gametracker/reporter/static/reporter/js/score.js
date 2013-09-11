@@ -6,13 +6,103 @@ ScorePanel.prototype.construtor = ScorePanel;
 
 panels['score'].class = ScorePanel;
 
-var stages = [
-  'not started',
-  'first half',
-  'half time',
-  'second half',
-  'end',
-  ];
+ScorePanel.prototype._setOffense = function () {
+  var game = gameData.games[currentGame];
+
+  var offsense = game.offense;
+
+  var defense = offense == 'team1'?'team2':'team1';
+
+  $('.panel', $('.'+offense)).removeClass('panel-default');
+  $('.panel', $('.'+offense)).addClass('panel-primary');
+  $('.panel', $('.'+defense)).addClass('panel-default');
+  $('.panel', $('.'+defense)).removeClass('panel-primary');
+  $('.panel', $('.'+offense)).removeClass('panel-danger');
+  $('.panel', $('.'+offense)).removeClass('panel-success');
+  $('.panel', $('.'+defense)).removeClass('panel-danger');
+  $('.panel', $('.'+defense)).removeClass('panel-success');
+}
+ScorePanel.prototype._setWinner = function () {
+  var game = gameData.games[currentGame];
+
+  var winner = null
+  if (game.data.team1.goals > game.data.team2.goals) {
+    winner = 'team1';
+  }
+  if (game.data.team1.goals < game.data.team2.goals) {
+    winner = 'team2';
+  }
+
+  if (!winner) {
+    $('.panel', $('.'+winner)).addClass('panel-default');
+    $('.panel', $('.'+looser)).addClass('panel-default');
+    $('.panel', $('.'+winner)).removeClass('panel-primary');
+    $('.panel', $('.'+looser)).removeClass('panel-primary');
+    $('.panel', $('.'+looser)).removeClass('panel-danger');
+    $('.panel', $('.'+winner)).removeClass('panel-success');
+    return;
+  }
+
+  var looser = winner == 'team1'?'team2':'team1';
+
+  $('.panel', $('.'+winner)).removeClass('panel-default');
+  $('.panel', $('.'+looser)).removeClass('panel-default');
+  $('.panel', $('.'+winner)).removeClass('panel-primary');
+  $('.panel', $('.'+looser)).removeClass('panel-primary');
+  $('.panel', $('.'+looser)).addClass('panel-danger');
+  $('.panel', $('.'+winner)).addClass('panel-success');
+}
+
+ScorePanel.prototype.drawButtons = function() {
+  var game = gameData.games[currentGame];
+  var nextStage = Game.stages[Game.stages.indexOf(game.stage)+1];
+  $('.period-end-btn').text(nextStage);
+
+
+  switch (game.stage) {
+    case 'not started':
+      $('.pull-btn').removeClass('hidden');
+      $('.goal-btn').addClass('hidden');
+      $('.timeout-btn').addClass('hidden');
+      $('.period-end-btn').addClass('hidden');
+      $('.goal-btn').addClass('disabled');
+      $('.timeout-btn').addClass('disabled');
+      break;
+    case 'first half':
+      $('.pull-btn').addClass('hidden');
+      $('.goal-btn').removeClass('hidden');
+      $('.timeout-btn').removeClass('hidden');
+      this._setOffense();
+      $('.period-end-btn').removeClass('hidden');
+      $('.goal-btn').removeClass('disabled');
+      $('.timeout-btn').removeClass('disabled');
+      break;
+    case 'half time':
+      $('.pull-btn').addClass('hidden');
+      $('.goal-btn').removeClass('hidden');
+      $('.timeout-btn').removeClass('hidden');
+      $('.period-end-btn').removeClass('hidden');
+      $('.goal-btn').addClass('disabled');
+      $('.timeout-btn').addClass('disabled');
+      break;
+    case 'second half':
+      $('.pull-btn').addClass('hidden');
+      $('.goal-btn').removeClass('hidden');
+      $('.timeout-btn').removeClass('hidden');
+      this._setOffense();
+      $('.period-end-btn').removeClass('hidden');
+      $('.goal-btn').removeClass('disabled');
+      $('.timeout-btn').removeClass('disabled');
+      break;
+    case 'end':
+      $('.pull-btn').addClass('hidden');
+      $('.goal-btn').addClass('hidden');
+      $('.timeout-btn').addClass('hidden');
+      this._setWinner();
+      $('.period-end-btn').addClass('hidden');
+      break;
+  }
+}
 
 ScorePanel.prototype.draw = function() {
   var self = this;
@@ -36,59 +126,12 @@ ScorePanel.prototype.draw = function() {
   $('.team2 .panel-heading').text(team2Name);
   $('.team1 .goals').text(game.data.team1.goals);
   $('.team2 .goals').text(game.data.team2.goals);
-  $('.team1 .timeout-btn').text('Time-out ('+game.data.team1.timeouts+'/'+game.data.settings.timeouts.number+')');
-  $('.team2 .timeout-btn').text('Time-out ('+game.data.team2.timeouts+'/'+game.data.settings.timeouts.number+')');
-
-  var nextStage = stages[stages.indexOf(game.stage)+1];
-  $('.period-end-btn').text(nextStage);
 
 
-  switch (game.stage) {
-    case 'not started':
-      $('.pull-btn').removeClass('hidden');
-      $('.goal-btn').addClass('hidden');
-      $('.timeout-btn').addClass('hidden');
-      $('.period-end-btn').addClass('hidden');
-      $('.goal-btn').addClass('disabled');
-      $('.timeout-btn').addClass('disabled');
-      break;
-    case 'first half':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
-      //$('.panel', $('.team2')).removeClass('panel-default');
-      //$('.panel', $('.team2')).addClass('panel-primary');
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').removeClass('disabled');
-      $('.timeout-btn').removeClass('disabled');
-      break;
-    case 'half time':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').addClass('disabled');
-      $('.timeout-btn').addClass('disabled');
-      break;
-    case 'second half':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
-      //$('.panel', $('.team2')).removeClass('panel-default');
-      //$('.panel', $('.team2')).addClass('panel-primary');
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').removeClass('disabled');
-      $('.timeout-btn').removeClass('disabled');
-      break;
-    case 'end':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').addClass('hidden');
-      $('.timeout-btn').addClass('hidden');
-      //$('.panel', $('.team2')).removeClass('panel-default');
-      //$('.panel', $('.team2')).addClass('panel-primary');
-      $('.period-end-btn').addClass('hidden');
-      break;
-  }
+  $('.team1 .timeout-btn').text('Time-out ('+game.getTimeouts('team1')+'/'+game.data.settings.timeouts.number+')');
+  $('.team2 .timeout-btn').text('Time-out ('+game.getTimeouts('team2')+'/'+game.data.settings.timeouts.number+')');
+
+  this.drawButtons();
 
   var tbody = $('.logs tbody');
   tbody.empty();
@@ -171,42 +214,27 @@ ScorePanel.prototype.bindAPI = function() {
     drawData();
   });
   $('.team1 .timeout-btn').click(function () {
-    gameData.addTimeout(1, null, function() {
-      drawData();
+    gameData.games[currentGame].addTimeout(1, null, function() {
+      self.draw();
     });
-    drawData();
+    self.draw();
   });
   $('.team2 .timeout-btn').click(function () {
-    gameData.addTimeout(2, null, function() {
-      drawData();
+    gameData.games[currentGame].addTimeout(2, null, function() {
+      self.draw();
     });
-    drawData();
+    self.draw();
   });
 
   $('.period-end-btn').click(function () {
-    var stage = stages.indexOf(gameData.games[currentGame].stage);
+    var stage = Game.stages.indexOf(gameData.games[currentGame].stage);
 
-    if (stage >= stages.length -1) {
+    if (stage >= Game.stages.length -1) {
       return;
     }
-    var nextStage = stages[stage+1];
+    var nextStage = Game.stages[stage+1];
     console.log(nextStage);
     gameData.games[currentGame].stage = nextStage;
-    if (1==2 && stage >= stages.length - 2) {
-      // it's the end of the game
-      $('.goal-btn').addClass('hidden');
-      $('.timeout-btn').addClass('hidden');
-      $('.period-end-btn').addClass('hidden');
-      $('.panel').removeClass('panel-primary');
-      $('.panel').removeClass('panel-default');
-      if (gameData.team1.goals > gameData.team2.goals) {
-        $('.team1 .panel').addClass('panel-success');
-        $('.team2 .panel').addClass('panel-danger');
-      } else {
-        $('.team2 .panel').addClass('panel-success');
-        $('.team1 .panel').addClass('panel-danger');
-      }
-    }
 
     gameData.games[currentGame].addPeriodEnd(nextStage, null, function() {
       self.draw();

@@ -4,12 +4,12 @@ function Game() {
     team1: {
       id: null,
       goals: 0,
-      timeouts: 0,
+      timeouts: [],
     },
     team2: {
       id: null,
       goals: 0,
-      timeouts: 0,
+      timeouts: [],
     },
     settings: {
       starts: null,
@@ -45,6 +45,15 @@ function Game() {
   this.stage = 'not started';
   this.offense = null;
 }
+
+Game.stages = [
+  'not started',
+  'first half',
+  'half time',
+  'second half',
+  'end',
+];
+
 
 Game.prototype = {
   data: null,
@@ -87,6 +96,7 @@ Game.prototype = {
     var team = 'team' + tpos;
 
     var evt = {
+      'gid': this.data.id,
       'time': new Date().getTime(),
       'type': 'timeout',
       'team': team
@@ -98,8 +108,8 @@ Game.prototype = {
       }
     }.bind(this, evt), function errback(team, evt) {
     }.bind(this, team, evt));
-    self.events.push(evt);
-    self[team].timeouts += 1;
+    self.data.events.push(evt);
+    self._addTimeout(team);
   },
 
   addGoal: function(tpos, cb, eb) {
@@ -153,16 +163,27 @@ Game.prototype = {
   calculateEvents: function(cb) {
     var self = this;
     this.stage = 'not started';
+    this.offense = null;
     this.data['team1'].goals = 0;
     this.data['team2'].goals = 0;
+    this.data['team1'].timeouts = this._buildTimeoutStructure();
+    this.data['team2'].timeouts = this._buildTimeoutStructure();
     this.data.events.forEach(function (evt) {
       switch (evt.type) {
         case 'goal':
           var team = evt.team;
           self.data[team].goals += 1;
           break;
+        case 'timeout':
+          self._addTimeout(evt.team);
+          break;
         case 'pull':
           self.stage = 'first half';
+          if (evt.team == 'team1') {
+            this.offense = 'team2';
+          } else {
+            this.offense = 'team1';
+          }
           break;
         case 'half time':
           self.stage = 'half time';
@@ -196,6 +217,50 @@ Game.prototype = {
       cb();
     });
   },
+  getTimeouts: function(team) {
+    var periods = this._getTimeoutPeriods();
+    var period = this._getTimeoutPeriod();
+    
+    return this.data[team].timeouts[period];
+  },
+  _buildTimeoutStructure: function() {
+    var ts = [];
+    
+    var periods = this._getTimeoutPeriods();
+    for (var i = 0; i < periods; i++) {
+      ts[i] = 0;
+    }
+    return ts;
+  },
+  _addTimeout: function(team) {
+    var periods = this._getTimeoutPeriods();
+    var period = this._getTimeoutPeriod();
+    
+    this.data[team].timeouts[period] += 1;
+  },
+  _getTimeoutPeriod: function() {
+    var period = 0;
+    var periods = this._getTimeoutPeriods();
+
+    if (periods > 1 &&
+        Game.stages.indexOf(this.stage) > Game.stages.indexOf('half time')) {
+      period += 1;
+    }
+
+    return period;
+  },
+  _getTimeoutPeriods: function() {
+    var periods = 1;
+    switch (this.data.settings.timeouts.per) {
+      case 'half':
+        periods = 2;
+        break;
+      case 'game':
+        periods = 1;
+        break;
+    }
+    return periods;
+  }
 };
 
 
