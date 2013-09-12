@@ -9,7 +9,16 @@ panels['score'].class = ScorePanel;
 ScorePanel.prototype._setOffense = function () {
   var game = gameData.games[currentGame];
 
-  var offsense = game.offense;
+  var offense = game.offense;
+  console.log(offense);
+
+  if (!offense) {
+    $('.panel-team').addClass('panel-default');
+    $('.panel-team').removeClass('panel-primary');
+    $('.panel-team').removeClass('panel-danger');
+    $('.panel-team').removeClass('panel-success');
+    return;
+  }
 
   var defense = offense == 'team1'?'team2':'team1';
 
@@ -34,12 +43,10 @@ ScorePanel.prototype._setWinner = function () {
   }
 
   if (!winner) {
-    $('.panel', $('.'+winner)).addClass('panel-default');
-    $('.panel', $('.'+looser)).addClass('panel-default');
-    $('.panel', $('.'+winner)).removeClass('panel-primary');
-    $('.panel', $('.'+looser)).removeClass('panel-primary');
-    $('.panel', $('.'+looser)).removeClass('panel-danger');
-    $('.panel', $('.'+winner)).removeClass('panel-success');
+    $('.panel-team').addClass('panel-default');
+    $('.panel-team').removeClass('panel-primary');
+    $('.panel-team').removeClass('panel-danger');
+    $('.panel-team').removeClass('panel-success');
     return;
   }
 
@@ -202,16 +209,16 @@ ScorePanel.prototype.bindAPI = function() {
     self.draw();
   });
   $('.team1 .goal-btn').click(function () {
-    gameData.addGoal(1, null, function() {
-      drawData();
+    gameData.games[currentGame].addGoal(1, null, function() {
+      self.draw();
     });
-    drawData();
+    self.draw();
   });
   $('.team2 .goal-btn').click(function () {
-    gameData.addGoal(2, null, function() {
-      drawData();
+    gameData.games[currentGame].addGoal(2, null, function() {
+      self.draw();
     });
-    drawData();
+    self.draw();
   });
   $('.team1 .timeout-btn').click(function () {
     gameData.games[currentGame].addTimeout(1, null, function() {

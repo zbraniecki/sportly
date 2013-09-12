@@ -114,21 +114,9 @@ Game.prototype = {
 
   addGoal: function(tpos, cb, eb) {
     var team = 'team'+tpos;
-    /*var oper1 = {
-      'store': 'games',
-      'key': team+'.goals',
-      'type': 'math_inc', // 'math_inc', 'math_dec', 'edit', 'delete', 'add',
-      'value': 1, 
-    };
-    var self = this;
-    db.addTransaction([oper1], null, function errback() {
-      self[team].goals -= 1;
-      eb();
-    });
-
-    this[team].goals += 1;*/
 
     var evt = {
+      'gid': this.data.id,
       'time': new Date().getTime(),
       'type': 'goal',
       'team': team
@@ -138,15 +126,16 @@ Game.prototype = {
       evt.eid = eid;
     }.bind(this, evt), function errback(team, evt) {
       this[team].goals -= 1;
-      this.events.forEach(function (evt2, k) {
+      this.data.events.forEach(function (evt2, k) {
         if (evt2 === evt) {
-          this.events.splice(k, 1);
+          this.data.events.splice(k, 1);
         }
       }.bind(this));
       eb();
     }.bind(this, team, evt));
-    self.events.push(evt);
-    this[team].goals += 1;
+    self.data.events.push(evt);
+    this.data[team].goals += 1;
+    this.offense = team == 'team1' ? 'team2' : 'team1';
     if (cb) {
       cb();
     }
@@ -173,6 +162,7 @@ Game.prototype = {
         case 'goal':
           var team = evt.team;
           self.data[team].goals += 1;
+          self.offense = team == 'team1' ? 'team2' : 'team1';
           break;
         case 'timeout':
           self._addTimeout(evt.team);
@@ -180,9 +170,9 @@ Game.prototype = {
         case 'pull':
           self.stage = 'first half';
           if (evt.team == 'team1') {
-            this.offense = 'team2';
+            self.offense = 'team2';
           } else {
-            this.offense = 'team1';
+            self.offense = 'team1';
           }
           break;
         case 'half time':
