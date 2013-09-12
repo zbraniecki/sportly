@@ -20,13 +20,29 @@ GameListPanel.prototype.draw = function() {
   var tbody = $('.game-list tbody');
   tbody.empty();
   var game;
+
+  var games = [];
+
   for (var i in gameData.games) {
-    game = gameData.games[i];
+    games.push(gameData.games[i]);
+  }
+
+  games.sort(function (a, b) {
+    if (a.data.settings.starts > b.data.settings.starts) {
+      return 1;
+    } else if (a.data.settings.starts < b.data.settings.starts) {
+      return -1;
+    }
+    return 0;
+  });
+
+  for (var i in games) {
+    game = games[i];
     var data = game.data;
     var tr = $('<tr/>'); 
 
     var td = $('<td/>');
-    td.text(new Date(data.settings.starts));
+    td.text(formatDate(new Date(data.settings.starts)));
     td.click(function() {
       currentGame = $(this).parent().attr('data-game-id'); 
       loadPanel('score');

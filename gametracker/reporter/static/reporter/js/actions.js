@@ -267,10 +267,8 @@ LocalData.prototype = {
   },
 
   removeGame: function(gid, cb, eb) {
-    this.games.forEach(function (game, k) {
-      delete this.games[gid];
-      db.removeGame(gid);
-    }.bind(this));
+    delete this.games[gid];
+    db.removeGame(gid);
     if (cb) {
       cb();
     }

@@ -32,9 +32,9 @@ DB.prototype = {
 
     req.onupgradeneeded = function (evt) {
       console.log("openDb.onupgradeneeded");
-      evt.currentTarget.result.deleteObjectStore(self.dbGameStoreName);
-      evt.currentTarget.result.deleteObjectStore(self.dbTransactionStoreName);
-      evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
+      //evt.currentTarget.result.deleteObjectStore(self.dbGameStoreName);
+      //evt.currentTarget.result.deleteObjectStore(self.dbTransactionStoreName);
+      //evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
       var gameStore = evt.currentTarget.result.createObjectStore(self.dbGameStoreName, {keyPath: 'id'});
       evt.currentTarget.result.createObjectStore(self.dbTransactionStoreName, {keyPath: 'tid', 'autoIncrement': true});
       var eventStore = evt.currentTarget.result.createObjectStore(self.dbEventStoreName, {keyPath: 'eid', 'autoIncrement': true});

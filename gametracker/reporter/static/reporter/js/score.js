@@ -10,7 +10,6 @@ ScorePanel.prototype._setOffense = function () {
   var game = gameData.games[currentGame];
 
   var offense = game.offense;
-  console.log(offense);
 
   if (!offense) {
     $('.panel-team').addClass('panel-default');
@@ -111,6 +110,27 @@ ScorePanel.prototype.drawButtons = function() {
   }
 }
 
+function getPullTime(game) {
+  game.data.events.forEach(function (evt) {
+    if (evt.type == 'pull') {
+      return evt.time;
+    }
+  });
+  return null;
+}
+
+function getGameTime(game) {
+  if (game.stage == 'end') {
+    return '';
+  }
+  if (game.stage !== 'not started') {
+    var t = new Date().getTime() - getPullTime(game);
+    console.log(t);
+    return 'min ' + parseInt(t/1000/60/60);
+  }
+  return humanizeTimeDiff('Starts', game.data.settings.starts, new Date().getTime()); 
+}
+
 ScorePanel.prototype.draw = function() {
   var self = this;
 
@@ -123,12 +143,15 @@ ScorePanel.prototype.draw = function() {
   var title = team1Name + " vs. " + team2Name + ' ('+game.data.team1.goals+':'+game.data.team2.goals+')';
   document.head.getElementsByTagName('title')[0].textContent = title;
 
-  $('.game-settings .starts').text('Starts: ' + new Date(game.data.settings.starts));
+  $('.game-settings .starts').text('Starts: ' + formatDate(new Date(game.data.settings.starts)));
   $('.game-settings .regular-cap').text('Game to: ' + game.data.settings.caps.regular.value);
   $('.game-settings .point-cap').text('Point cap: ' + game.data.settings.caps.point.value);
   $('.game-settings .soft-cap').text('Soft cap: ' + game.data.settings.caps.soft.value + ' min, +' + game.data.settings.caps.soft.diff);
   $('.game-settings .hard-cap').text('Hard cap: ' + game.data.settings.caps.hard.value + ' min');
   $('.game-settings .timeouts').text('Time-outs: ' + game.data.settings.timeouts.number + ' / ' + game.data.settings.timeouts.per);
+
+  var time = getGameTime(game);
+  $('.game-settings .starts-in').text(time);
   $('.team1 .panel-heading').text(team1Name);
   $('.team2 .panel-heading').text(team2Name);
   $('.team1 .goals').text(game.data.team1.goals);
@@ -240,7 +263,6 @@ ScorePanel.prototype.bindAPI = function() {
       return;
     }
     var nextStage = Game.stages[stage+1];
-    console.log(nextStage);
     gameData.games[currentGame].stage = nextStage;
 
     gameData.games[currentGame].addPeriodEnd(nextStage, null, function() {
