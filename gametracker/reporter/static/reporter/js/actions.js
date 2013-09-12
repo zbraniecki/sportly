@@ -68,13 +68,15 @@ Game.prototype = {
       'team': team
     };
     var self = this;
-    db.addEvent(evt, function (eid, evt) {
+    db.addEvent(evt, function (evt, eid) {
+      evt.eid = eid;
       if (cb) {
         cb();
       }
     }.bind(this, evt), function errback(team, evt) {
     }.bind(this, team, evt));
     self.data.events.push(evt);
+    self.offense = team == 'team1' ? 'team2' : 'team1';
     self.stage = 'first half';
   },
   addPeriodEnd: function(type, cb, eb) {
@@ -84,12 +86,17 @@ Game.prototype = {
       'type': type,
     };
     var self = this;
-    db.addEvent(evt, function (eid, evt) {
+    db.addEvent(evt, function (evt, eid) {
+      evt.eid = eid;
       if (cb) {
         cb();
       }
     }.bind(this, evt), function errback(evt) {
     }.bind(this, evt));
+    if (type == 'second half') {
+      var startOffense = this.getPull().team;
+      self.offense = startOffense == 'team1' ? 'team1' : 'team2';
+    }
     self.data.events.push(evt);
   },
   addTimeout: function(tpos, cb, eb) {
@@ -102,7 +109,8 @@ Game.prototype = {
       'team': team
     };
     var self = this;
-    db.addEvent(evt, function (eid, evt) {
+    db.addEvent(evt, function (evt, eid) {
+      evt.eid = eid;
       if (cb) {
         cb();
       }
@@ -122,7 +130,7 @@ Game.prototype = {
       'team': team
     };
     var self = this;
-    db.addEvent(evt, function(eid, evt) {
+    db.addEvent(evt, function(evt, eid) {
       evt.eid = eid;
     }.bind(this, evt), function errback(team, evt) {
       this[team].goals -= 1;
@@ -221,6 +229,15 @@ Game.prototype = {
       ts[i] = 0;
     }
     return ts;
+  },
+  getPull: function () {
+    for (var i in this.data.events) {
+      var evt = this.data.events[i];
+      if (evt.type == 'pull') {
+        return evt;
+      }
+    }
+    return null;
   },
   _addTimeout: function(team) {
     var periods = this._getTimeoutPeriods();

@@ -97,52 +97,52 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Time cap</label>
+                <label for="inputTimeCap" class="col-lg-2 control-label">Time cap</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="75">
+                    <input type="text" id="inputTimeCap" class="form-control" placeholder="75">
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Soft cap</label>
+                <label for="inputSoftCap" class="col-lg-2 control-label">Soft cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" class="form-control" placeholder="17">
+                    <input type="text" id="inputSoftCap" class="form-control" placeholder="17">
                   </div>
                   <div class="col-lg-3">
-                    <select class="form-control" id="inputTeam2">
-                      <option>points</option>
-                      <option>min</option>
+                    <select class="form-control" id="inputSoftCapType">
+                      <option value="points">points</option>
+                      <option value="min">min</option>
                     </select>
                   </div>
                   <div class="col-lg-2">
-                    <input type="text" class="form-control" placeholder="+2">
+                    <input type="text" id="inputSoftCapDiff" class="form-control" placeholder="2">
                   </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Hard cap</label>
+                <label for="inputHardCap" class="col-lg-2 control-label">Hard cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" class="form-control" placeholder="110">
+                    <input type="text" id="inputHardCap" class="form-control" placeholder="110">
                   </div>
                   <div class="col-lg-3">
-                    <select class="form-control" id="inputTeam2">
-                      <option>points</option>
-                      <option selected>min</option>
+                    <select class="form-control" id="inputHardCapType">
+                      <option value="points">points</option>
+                      <option value="min" selected>min</option>
                     </select>
                   </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputStarts" class="col-lg-2 control-label">Timeouts</label>
+                <label for="inputTimeouts" class="col-lg-2 control-label">Timeouts</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" class="form-control" placeholder="2">
+                    <input type="text" id="inputTimeouts" class="form-control" placeholder="2">
                   </div>
                   <div class="col-lg-3">
-                    <select class="form-control" id="inputTeam2">
-                      <option>half</option>
-                      <option>game</option>
+                    <select class="form-control" id="inputTimeoutsPer">
+                      <option value="half">Half</option>
+                      <option value="game">Game</option>
                     </select>
                   </div>
                 </div>

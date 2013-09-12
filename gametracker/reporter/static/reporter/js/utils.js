@@ -53,7 +53,7 @@ function humanizeTimeDiff(prefix, time1, time2) {
     return prefix + ' now';
   }
   if (timeDiff < 1000 * 60 * 60) {
-    return prefix + ' in ' + (timeDiff/1000/60) + ' min';
+    return prefix + ' in ' + parseInt(timeDiff/1000/60) + ' min';
   }
   if (timeDiff < 1000 * 60 * 60 * 24) {
     return prefix + ' in ' + parseInt(timeDiff/1000/60/60) + ' hours';
@@ -79,3 +79,4 @@ function parseDate(str){
 
     return new Date(yyyy,mm,dd,h,m);
 }
+
