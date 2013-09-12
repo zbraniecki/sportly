@@ -24,6 +24,10 @@ body {
    position: absolute;
 }
 
+.view-gamelist .btn-clear {
+  float: right;
+}
+
 .row {
   font-size: 3vw;
 }

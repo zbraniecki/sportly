@@ -14,6 +14,9 @@ GameListPanel.prototype.bindAPI = function() {
   $('.view-gamelist .btn-clear').click(function() {
     db.clear();
   });
+  $('.view-gamelist .btn-fullscreen').click(function() {
+    toggleFullScreen();
+  });
 }
 
 GameListPanel.prototype.draw = function() {

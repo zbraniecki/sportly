@@ -41,6 +41,7 @@
         </table>
       </div>
       <button class="btn-add">Add game</button>
+      <button class="btn-fullscreen">Full screen</button>
       <button class="btn-clear">Clear data</button>
     </div>
     <div id="view-gamesettings" class="view view-gamesettings">
@@ -80,7 +81,7 @@
                 <label for="inputCap" class="col-lg-2 control-label">Cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputCap" class="form-control" placeholder="15">
+                    <input type="number" id="inputCap" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputCapType">
@@ -93,20 +94,20 @@
               <div class="form-group">
                 <label for="inputPointCap" class="col-lg-2 control-label">Point cap</label>
                 <div class="col-lg-10">
-                    <input type="text" id="inputPointCap" class="form-control" placeholder="15">
+                    <input type="number" id="inputPointCap" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputTimeCap" class="col-lg-2 control-label">Time cap</label>
                 <div class="col-lg-10">
-                    <input type="text" id="inputTimeCap" class="form-control" placeholder="75">
+                    <input type="text" id="inputTimeCap" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputSoftCap" class="col-lg-2 control-label">Soft cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputSoftCap" class="form-control" placeholder="17">
+                    <input type="text" id="inputSoftCap" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputSoftCapType">
@@ -115,7 +116,7 @@
                     </select>
                   </div>
                   <div class="col-lg-2">
-                    <input type="text" id="inputSoftCapDiff" class="form-control" placeholder="2">
+                    <input type="text" id="inputSoftCapDiff" class="form-control">
                   </div>
                 </div>
               </div>
@@ -123,12 +124,12 @@
                 <label for="inputHardCap" class="col-lg-2 control-label">Hard cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputHardCap" class="form-control" placeholder="110">
+                    <input type="text" id="inputHardCap" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputHardCapType">
                       <option value="points">points</option>
-                      <option value="min" selected>min</option>
+                      <option value="min">min</option>
                     </select>
                   </div>
                 </div>
@@ -137,12 +138,12 @@
                 <label for="inputTimeouts" class="col-lg-2 control-label">Timeouts</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputTimeouts" class="form-control" placeholder="2">
+                    <input type="text" id="inputTimeouts" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputTimeoutsPer">
-                      <option value="half">Half</option>
-                      <option value="game">Game</option>
+                      <option value="half">half</option>
+                      <option value="game">game</option>
                     </select>
                   </div>
                 </div>

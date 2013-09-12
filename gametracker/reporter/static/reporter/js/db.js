@@ -87,6 +87,7 @@ DB.prototype = {
     this.openDb(function() {
       var store = self.getObjectStore(self.dbGameStoreName, 'readwrite');
       var request = store.delete(parseInt(gid));
+      self.deleteGameEvents(gid);
       request.onerror = function() {
         console.log('error');
       }
@@ -174,6 +175,20 @@ DB.prototype = {
           cb();
         }
       }
+    });
+  },
+  deleteGameEvents: function(gid, cb, eb) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbEventStoreName, 'readwrite');
+      var index = store.index('gid');
+      index.openCursor(IDBKeyRange.only(parseInt(gid))).onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          var request = store.delete(cursor.primaryKey);
+          cursor.continue();
+        }
+      };
     });
   },
   addTransaction: function(operations, cb, eb) {
