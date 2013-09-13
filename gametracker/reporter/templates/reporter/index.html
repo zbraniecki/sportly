@@ -1,5 +1,5 @@
 {% load staticfiles %}<!DOCTYPE html>
-<html lang="en">
+<html lang="en"{% if offline %} manifest="/reporter/reporter.appcache"{% endif %}>
   <head>
     <meta charset="utf-8">
     <title>Game reporter</title>
@@ -8,13 +8,14 @@
 
     <script src="{% static 'reporter/jquery.js' %}"></script>
     <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
-<script src="{% static 'reporter/js/reporter.js' %}"></script>
-<script src="{% static 'reporter/js/gamelist.js' %}"></script>
-<script src="{% static 'reporter/js/gamesettings.js' %}"></script>
-<script src="{% static 'reporter/js/score.js' %}"></script>
-<script src="{% static 'reporter/js/actions.js' %}"></script>
-<script src="{% static 'reporter/js/db.js' %}"></script>
-<script src="{% static 'reporter/js/utils.js' %}"></script>
+    <script src="{% static 'reporter/js/reporter.js' %}"></script>
+    <script src="{% static 'reporter/js/gamelist.js' %}"></script>
+    <script src="{% static 'reporter/js/gamesettings.js' %}"></script>
+    <script src="{% static 'reporter/js/roster.js' %}"></script>
+    <script src="{% static 'reporter/js/score.js' %}"></script>
+    <script src="{% static 'reporter/js/actions.js' %}"></script>
+    <script src="{% static 'reporter/js/db.js' %}"></script>
+    <script src="{% static 'reporter/js/utils.js' %}"></script>
   </head>
 
   <body>
@@ -45,7 +46,7 @@
       <button class="btn-clear btn btn-warning">Clear data</button>
     </div>
     <div id="view-gamesettings" class="view view-gamesettings">
-      <button class="btn-back">Back</button>
+      <button class="btn-back btn btn-default">Back</button>
       <div class="container">
         <div class="panel panel-default">
           <div class="panel-heading"></div>
@@ -253,9 +254,52 @@
       </div>
     </div>
     <div id="view-roster" class="view view-roster">
+      <button class="btn-back btn btn-default">Back</button>
+      <div class="container">
+        <h1>Bay Area Bachanallia, 2013</h1>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Roster</h3>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <dl class="dl-horizontal">
+                <dt>Players:</dt>
+                <dd id="roster-stats-players">23</dd>
+                <dt>Men:</dt>
+                <dd id="roster-stats-men">12</dd>
+                <dt>Women:</dt>
+                <dd id="roster-stats-women">12</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="dl-horizontal">
+                <dt>Handlers:</dt>
+                <dd id="roster-stats-handlers">23</dd>
+                <dt>Cutters:</dt>
+                <dd id="roster-stats-cutters">12</dd>
+                <dt>Defenders:</dt>
+                <dd id="roster-stats-defenders">12</dd>
+              </dl>
+            </div>
+          </div>
+
+          <table class="panel-body table table-bordered table-roster">
+            <thead>
+              <tr>
+                <th style="width: 10%">#</th>
+                <th>Name</th>
+                <th>Last name</th>
+                <th>Nick</th>
+                <th>Sex</th>
+                <th>Roles</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    
-
-
  </body>
 </html>

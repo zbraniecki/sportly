@@ -9,6 +9,7 @@
 {% static 'reporter/js/gamelist.js' %}
 {% static 'reporter/js/gamesettings.js' %}
 {% static 'reporter/js/score.js' %}
+{% static 'reporter/js/roster.js' %}
 {% static 'reporter/js/actions.js' %}
 {% static 'reporter/js/db.js' %}
 {% static 'reporter/js/utils.js' %}

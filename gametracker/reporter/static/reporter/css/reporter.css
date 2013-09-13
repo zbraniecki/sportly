@@ -24,6 +24,14 @@ body {
    position: absolute;
 }
 
+.view-roster .container {
+   height: 50%;
+   width: 70%;
+   top: 5%;
+   left: 15%;
+   position: absolute;
+}
+
 .view-gamelist .btn-clear {
   float: right;
 }
@@ -32,11 +40,11 @@ body {
   margin-left: 2%;
 }
 
-.row {
+.view-score .row {
   font-size: 3vw;
 }
 
-.panel-default {
+.view-gamelist .panel-default {
   width: 100%;
 }
 
@@ -62,7 +70,7 @@ body {
   font-size: 2vw;
 }
 
-.row .btn {
+.view-score .row .btn {
   font-size: 3vw;
 }
 
@@ -88,4 +96,13 @@ body {
 
 .view-score .btn-back {
   cursor: pointer;
+}
+
+.view-roster table {
+  width: 100%;
+  font-size: 1.5vw;
+}
+
+.view-roster .panel-default {
+  width: 90%;
 }

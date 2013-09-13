@@ -2,6 +2,7 @@ var panels = {
   'gamelist': {'class': null, 'instance': null},
   'gamesettings': {'class': null, 'instance': null},
   'score': {'class': null, 'instance': null},
+  'roster': {'class': null, 'instance': null},
 };
 
 var eventData = null;

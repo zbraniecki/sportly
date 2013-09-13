@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 
 def index(request):
     context = {
+        'offline': False,
     }
     return render(request, 'reporter/index.html', context)
 
