@@ -56,6 +56,23 @@ Game.stages = [
 
 Game.prototype = {
   data: null,
+  addLine: function(players, cb, eb) {
+    var evt = {
+      'gid': this.data.id,
+      'time': new Date().getTime(),
+      'type': 'line',
+      'notes': players.join(','),
+    };
+    var self = this;
+    db.addEvent(evt, function (evt, eid) {
+      evt.eid = eid;
+      if (cb) {
+        cb();
+      }
+    }.bind(this, evt), function errback(evt) {
+    }.bind(this, evt));
+    self.data.events.push(evt);
+  },
   addPull: function(tpos, notes, cb, eb) {
     var team = 'team'+tpos;
 

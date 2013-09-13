@@ -220,12 +220,7 @@ ScorePanel.prototype.draw = function() {
     tr.append(td);
     var td = $('<td/>');
     if (evt.notes) {
-      var chunks = evt.notes.split(';');
-      if (chunks.length > 1) {
-        td.text(chunks[0]);
-      } else {
-        td.text('');
-      }
+      td.text(evt.notes);
     }
     tr.append(td);
     var td = $('<td><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
@@ -255,15 +250,18 @@ ScorePanel.prototype.drawlineButtons = function() {
   var self = this;
   var game = eventData.games[currentGame];
   var pull = game.getPull();
-  console.log(pull);
-  if (pull) {
+  if (game.stage == 'end') {
     $('#lines .pull-btn').addClass('hidden');
     $('#lines .offense-btn').addClass('hidden');
-    $('#lines .line-start').removeClass('hidden');
-  } else {
+    $('#lines .line-start').addClass('hidden');
+  } else if (game.stage == 'not started') {
     $('#lines .pull-btn').removeClass('hidden');
     $('#lines .offense-btn').removeClass('hidden');
     $('#lines .line-start').addClass('hidden');
+  } else {
+    $('#lines .pull-btn').addClass('hidden');
+    $('#lines .offense-btn').addClass('hidden');
+    $('#lines .line-start').removeClass('hidden');
   }
   if (this.line.length == lineLength) {
     $('#lines .btn').removeClass('disabled');
@@ -279,14 +277,9 @@ ScorePanel.prototype.calculatePlays = function(players) {
   var game = eventData.games[currentGame];
 
   game.data.events.forEach(function (evt) {
-    if (evt.type == 'pull' && evt.notes) {
+    if (evt.type == 'line' && evt.notes) {
       var notes = evt.notes;
-      var chunks = notes.split(';');
-      if (chunks.length > 1) {
-        var pls = chunks[1].split(',');
-      } else {
-        var pls = chunks[0].split(',');
-      }
+      var pls = notes.split(',');
       for (i in pls) {
         if (!points[pls[i]]) {
           points[pls[i]] = 0;
@@ -441,9 +434,11 @@ ScorePanel.prototype.bindAPI = function() {
     var game = eventData.games[currentGame];
     var bab = game.data.team1.id == 9 ? 1 : 2;
     var op = bab == 1 ? 2 : 1;
-    var notes = 'left;'+self.line.join(',');
 
-    eventData.games[currentGame].addPull(bab, notes, null, function() {
+    eventData.games[currentGame].addPull(bab, 'left', null, function() {
+      self.draw();
+    });
+    eventData.games[currentGame].addLine(self.line, null, function() {
       self.draw();
     });
     self.draw();
@@ -453,9 +448,11 @@ ScorePanel.prototype.bindAPI = function() {
     var game = eventData.games[currentGame];
     var bab = game.data.team1.id == 9 ? 1 : 2;
     var op = bab == 1 ? 2 : 1;
-    var notes = 'right;'+self.line.join(',');
 
-    eventData.games[currentGame].addPull(op, notes, null, function() {
+    eventData.games[currentGame].addPull(op, 'right', null, function() {
+      self.draw();
+    });
+    eventData.games[currentGame].addLine(self.line, null, function() {
       self.draw();
     });
     self.draw();
@@ -464,9 +461,11 @@ ScorePanel.prototype.bindAPI = function() {
     var game = eventData.games[currentGame];
     var bab = game.data.team1.id == 9 ? 1 : 2;
     var op = bab == 1 ? 2 : 1;
-    var notes = 'right;'+self.line.join(',');
 
-    eventData.games[currentGame].addPull(bab, notes, null, function() {
+    eventData.games[currentGame].addPull(bab, 'right', null, function() {
+      self.draw();
+    });
+    eventData.games[currentGame].addLine(self.line, null, function() {
       self.draw();
     });
     self.draw();
@@ -476,21 +475,19 @@ ScorePanel.prototype.bindAPI = function() {
     var game = eventData.games[currentGame];
     var bab = game.data.team1.id == 9 ? 1 : 2;
     var op = bab == 1 ? 2 : 1;
-    var notes = 'left;'+self.line.join(',');
 
-    eventData.games[currentGame].addPull(op, notes, null, function() {
+    eventData.games[currentGame].addPull(op, 'left', null, function() {
+      self.draw();
+    });
+    eventData.games[currentGame].addLine(self.line, null, function() {
       self.draw();
     });
     self.draw();
   });
   $('#lines .line-start').click(function() {
     var game = eventData.games[currentGame];
-    var bab = game.data.team1.id == 9 ? 1 : 2;
-    var op = bab == 1 ? 2 : 1;
-    var who = game.offense == 'team1' ? 2: 1;
-    var notes = self.line.join(',');
 
-    eventData.games[currentGame].addPull(who, notes, null, function() {
+    eventData.games[currentGame].addLine(self.line, null, function() {
       self.draw();
     });
     self.draw();
