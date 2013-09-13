@@ -61,23 +61,23 @@ ScorePanel.prototype._setOffense = function () {
   var offense = game.offense;
 
   if (!offense) {
-    $('.panel-team').addClass('panel-default');
-    $('.panel-team').removeClass('panel-primary');
-    $('.panel-team').removeClass('panel-danger');
-    $('.panel-team').removeClass('panel-success');
+    $('#score .panel-team').addClass('panel-default');
+    $('#score .panel-team').removeClass('panel-primary');
+    $('#score .panel-team').removeClass('panel-danger');
+    $('#score .panel-team').removeClass('panel-success');
     return;
   }
 
   var defense = offense == 'team1'?'team2':'team1';
 
-  $('.panel', $('.'+offense)).removeClass('panel-default');
-  $('.panel', $('.'+offense)).addClass('panel-primary');
-  $('.panel', $('.'+defense)).addClass('panel-default');
-  $('.panel', $('.'+defense)).removeClass('panel-primary');
-  $('.panel', $('.'+offense)).removeClass('panel-danger');
-  $('.panel', $('.'+offense)).removeClass('panel-success');
-  $('.panel', $('.'+defense)).removeClass('panel-danger');
-  $('.panel', $('.'+defense)).removeClass('panel-success');
+  $('.panel', $('#score .'+offense)).removeClass('panel-default');
+  $('.panel', $('#score .'+offense)).addClass('panel-primary');
+  $('.panel', $('#score .'+defense)).addClass('panel-default');
+  $('.panel', $('#score .'+defense)).removeClass('panel-primary');
+  $('.panel', $('#score .'+offense)).removeClass('panel-danger');
+  $('.panel', $('#score .'+offense)).removeClass('panel-success');
+  $('.panel', $('#score .'+defense)).removeClass('panel-danger');
+  $('.panel', $('#score .'+defense)).removeClass('panel-success');
 }
 ScorePanel.prototype._setWinner = function () {
   var game = eventData.games[currentGame];
@@ -91,21 +91,21 @@ ScorePanel.prototype._setWinner = function () {
   }
 
   if (!winner) {
-    $('.panel-team').addClass('panel-default');
-    $('.panel-team').removeClass('panel-primary');
-    $('.panel-team').removeClass('panel-danger');
-    $('.panel-team').removeClass('panel-success');
+    $('#score .panel-team').addClass('panel-default');
+    $('#score .panel-team').removeClass('panel-primary');
+    $('#score .panel-team').removeClass('panel-danger');
+    $('#score .panel-team').removeClass('panel-success');
     return;
   }
 
   var looser = winner == 'team1'?'team2':'team1';
 
-  $('.panel', $('.'+winner)).removeClass('panel-default');
-  $('.panel', $('.'+looser)).removeClass('panel-default');
-  $('.panel', $('.'+winner)).removeClass('panel-primary');
-  $('.panel', $('.'+looser)).removeClass('panel-primary');
-  $('.panel', $('.'+looser)).addClass('panel-danger');
-  $('.panel', $('.'+winner)).addClass('panel-success');
+  $('.panel', $('#score .'+winner)).removeClass('panel-default');
+  $('.panel', $('#score .'+looser)).removeClass('panel-default');
+  $('.panel', $('#score .'+winner)).removeClass('panel-primary');
+  $('.panel', $('#score .'+looser)).removeClass('panel-primary');
+  $('.panel', $('#score .'+looser)).addClass('panel-danger');
+  $('.panel', $('#score .'+winner)).addClass('panel-success');
 }
 
 ScorePanel.prototype.drawButtons = function() {
@@ -116,47 +116,47 @@ ScorePanel.prototype.drawButtons = function() {
 
   switch (game.stage) {
     case 'not started':
-      $('.pull-btn').removeClass('hidden');
-      $('.goal-btn').addClass('hidden');
-      $('.timeout-btn').addClass('hidden');
-      $('.period-end-btn').addClass('hidden');
-      $('.goal-btn').addClass('disabled');
-      $('.timeout-btn').addClass('disabled');
+      $('#score .pull-btn').removeClass('hidden');
+      $('#score .goal-btn').addClass('hidden');
+      $('#score .timeout-btn').addClass('hidden');
+      $('#score .period-end-btn').addClass('hidden');
+      $('#score .goal-btn').addClass('disabled');
+      $('#score .timeout-btn').addClass('disabled');
       this._setOffense();
       break;
     case 'first half':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
+      $('#score .pull-btn').addClass('hidden');
+      $('#score .goal-btn').removeClass('hidden');
+      $('#score .timeout-btn').removeClass('hidden');
       this._setOffense();
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').removeClass('disabled');
-      $('.timeout-btn').removeClass('disabled');
+      $('#score .period-end-btn').removeClass('hidden');
+      $('#score .goal-btn').removeClass('disabled');
+      $('#score .timeout-btn').removeClass('disabled');
       break;
     case 'half time':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').addClass('disabled');
-      $('.timeout-btn').addClass('disabled');
+      $('#score .pull-btn').addClass('hidden');
+      $('#score .goal-btn').removeClass('hidden');
+      $('#score .timeout-btn').removeClass('hidden');
+      $('#score .period-end-btn').removeClass('hidden');
+      $('#score .goal-btn').addClass('disabled');
+      $('#score .timeout-btn').addClass('disabled');
       this._setOffense();
       break;
     case 'second half':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').removeClass('hidden');
-      $('.timeout-btn').removeClass('hidden');
+      $('#score .pull-btn').addClass('hidden');
+      $('#score .goal-btn').removeClass('hidden');
+      $('#score .timeout-btn').removeClass('hidden');
       this._setOffense();
-      $('.period-end-btn').removeClass('hidden');
-      $('.goal-btn').removeClass('disabled');
-      $('.timeout-btn').removeClass('disabled');
+      $('#score .period-end-btn').removeClass('hidden');
+      $('#score .goal-btn').removeClass('disabled');
+      $('#score .timeout-btn').removeClass('disabled');
       break;
     case 'end':
-      $('.pull-btn').addClass('hidden');
-      $('.goal-btn').addClass('hidden');
-      $('.timeout-btn').addClass('hidden');
+      $('#score .pull-btn').addClass('hidden');
+      $('#score .goal-btn').addClass('hidden');
+      $('#score .timeout-btn').addClass('hidden');
       this._setWinner();
-      $('.period-end-btn').addClass('hidden');
+      $('#score .period-end-btn').addClass('hidden');
       break;
   }
 }
@@ -220,7 +220,12 @@ ScorePanel.prototype.draw = function() {
     tr.append(td);
     var td = $('<td/>');
     if (evt.notes) {
-      td.text(evt.notes);
+      var chunks = evt.notes.split(';');
+      if (chunks.length > 1) {
+        td.text(chunks[0]);
+      } else {
+        td.text('');
+      }
     }
     tr.append(td);
     var td = $('<td><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
@@ -239,6 +244,133 @@ ScorePanel.prototype.draw = function() {
     tr.attr('data-event-id', evt.eid);
     tbody.append(tr);
   });
+
+
+  this.drawLines();
+}
+
+var lineLength = 3;
+
+ScorePanel.prototype.drawlineButtons = function() {
+  var self = this;
+  var game = eventData.games[currentGame];
+  var pull = game.getPull();
+  console.log(pull);
+  if (pull) {
+    $('#lines .pull-btn').addClass('hidden');
+    $('#lines .offense-btn').addClass('hidden');
+    $('#lines .line-start').removeClass('hidden');
+  } else {
+    $('#lines .pull-btn').removeClass('hidden');
+    $('#lines .offense-btn').removeClass('hidden');
+    $('#lines .line-start').addClass('hidden');
+  }
+  if (this.line.length == lineLength) {
+    $('#lines .btn').removeClass('disabled');
+    $('#lines td').addClass('disabled');
+  } else {
+    $('#lines .btn').addClass('disabled');
+    $('#lines td').removeClass('disabled');
+  }
+}
+
+ScorePanel.prototype.calculatePlays = function(players) {
+  var points = {};
+  var game = eventData.games[currentGame];
+
+  game.data.events.forEach(function (evt) {
+    if (evt.type == 'pull' && evt.notes) {
+      var notes = evt.notes;
+      var chunks = notes.split(';');
+      if (chunks.length > 1) {
+        var pls = chunks[1].split(',');
+      } else {
+        var pls = chunks[0].split(',');
+      }
+      for (i in pls) {
+        if (!points[pls[i]]) {
+          points[pls[i]] = 0;
+        }
+        points[pls[i]] += 1;
+      }
+    }
+  });
+
+  return points;
+}
+
+ScorePanel.prototype.drawLines = function() {
+  var self = this;
+  this.line = [];
+
+  function togglePlayerLine(e) {
+    e.preventDefault();
+    var node = $(this);
+    var pid = node.data('pid');
+    
+    if (node.hasClass('active')) {
+      var pos = self.line.indexOf(pid);
+      self.line.splice(pos, 1);
+    } else {
+      if (self.line.length == lineLength) {
+        return;
+      }
+      self.line.push(pid);
+    }
+    node.toggleClass('active');
+    self.drawlineButtons();
+  }
+
+  var players = {
+    men: [],
+    women: [],
+  };
+
+  var plays = this.calculatePlays(eventData.players);
+
+  eventData.players.forEach(function (player, k) {
+    player.id = k;
+    if (player.sex == 'm') {
+      players.men.push(player);
+    } else {
+      players.women.push(player);
+    }
+  });
+  
+
+  var cols = 4;
+
+  for (sex in players) {
+    var i = 0;
+    var tr, td;
+
+    var tbody = $('#lines .table-lines-'+sex+' tbody');
+    tbody.empty();
+
+    players[sex].forEach(function (player, k) {
+      if (i==0) {
+        tr = $('<tr/>');
+      }
+      td = $('<td/>');
+      td.data('pid', player.id);
+      td.click(togglePlayerLine);
+
+      var name = player.name + " " + player.lastname;
+      if (plays[player.id]) {
+        name += ' ('+plays[player.id]+')';
+      }
+      td.text(name);
+      tr.append(td);
+      if (i==0) {
+        tbody.append(tr);
+      }
+      i++;
+      if (i >= cols) {
+        i = 0;
+      }
+    });
+  }
+  self.drawlineButtons();
 }
 
 ScorePanel.prototype.bindAPI = function() {
@@ -250,7 +382,7 @@ ScorePanel.prototype.bindAPI = function() {
     e.preventDefault()
     $(this).tab('show')
   })
-  $('.team1 .pull-btn').click(function () {
+  $('#score .team1 .pull-btn').click(function () {
     var side = $(this).data('side');
     eventData.games[currentGame].addPull(1, side, null, function() {
       self.draw();
@@ -259,38 +391,38 @@ ScorePanel.prototype.bindAPI = function() {
 
     self.draw();
   });
-  $('.team2 .pull-btn').click(function () {
+  $('#score .team2 .pull-btn').click(function () {
     eventData.games[currentGame].addPull(2, null, function() {
       self.draw();
     });
     self.draw();
   });
-  $('.team1 .goal-btn').click(function () {
+  $('#score .team1 .goal-btn').click(function () {
     eventData.games[currentGame].addGoal(1, null, function() {
       self.draw();
     });
     self.draw();
   });
-  $('.team2 .goal-btn').click(function () {
+  $('#score .team2 .goal-btn').click(function () {
     eventData.games[currentGame].addGoal(2, null, function() {
       self.draw();
     });
     self.draw();
   });
-  $('.team1 .timeout-btn').click(function () {
+  $('#score .team1 .timeout-btn').click(function () {
     eventData.games[currentGame].addTimeout(1, null, function() {
       self.draw();
     });
     self.draw();
   });
-  $('.team2 .timeout-btn').click(function () {
+  $('#score .team2 .timeout-btn').click(function () {
     eventData.games[currentGame].addTimeout(2, null, function() {
       self.draw();
     });
     self.draw();
   });
 
-  $('.period-end-btn').click(function () {
+  $('#score .period-end-btn').click(function () {
     var stage = Game.stages.indexOf(eventData.games[currentGame].stage);
 
     if (stage >= Game.stages.length -1) {
@@ -300,6 +432,65 @@ ScorePanel.prototype.bindAPI = function() {
     eventData.games[currentGame].stage = nextStage;
 
     eventData.games[currentGame].addPeriodEnd(nextStage, null, function() {
+      self.draw();
+    });
+    self.draw();
+  });
+
+  $('#lines .pull-left').click(function() {
+    var game = eventData.games[currentGame];
+    var bab = game.data.team1.id == 9 ? 1 : 2;
+    var op = bab == 1 ? 2 : 1;
+    var notes = 'left;'+self.line.join(',');
+
+    eventData.games[currentGame].addPull(bab, notes, null, function() {
+      self.draw();
+    });
+    self.draw();
+  });
+
+  $('#lines .offense-left').click(function() {
+    var game = eventData.games[currentGame];
+    var bab = game.data.team1.id == 9 ? 1 : 2;
+    var op = bab == 1 ? 2 : 1;
+    var notes = 'right;'+self.line.join(',');
+
+    eventData.games[currentGame].addPull(op, notes, null, function() {
+      self.draw();
+    });
+    self.draw();
+  });
+  $('#lines .pull-right').click(function() {
+    var game = eventData.games[currentGame];
+    var bab = game.data.team1.id == 9 ? 1 : 2;
+    var op = bab == 1 ? 2 : 1;
+    var notes = 'right;'+self.line.join(',');
+
+    eventData.games[currentGame].addPull(bab, notes, null, function() {
+      self.draw();
+    });
+    self.draw();
+  });
+
+  $('#lines .offense-right').click(function() {
+    var game = eventData.games[currentGame];
+    var bab = game.data.team1.id == 9 ? 1 : 2;
+    var op = bab == 1 ? 2 : 1;
+    var notes = 'left;'+self.line.join(',');
+
+    eventData.games[currentGame].addPull(op, notes, null, function() {
+      self.draw();
+    });
+    self.draw();
+  });
+  $('#lines .line-start').click(function() {
+    var game = eventData.games[currentGame];
+    var bab = game.data.team1.id == 9 ? 1 : 2;
+    var op = bab == 1 ? 2 : 1;
+    var who = game.offense == 'team1' ? 2: 1;
+    var notes = self.line.join(',');
+
+    eventData.games[currentGame].addPull(who, notes, null, function() {
       self.draw();
     });
     self.draw();

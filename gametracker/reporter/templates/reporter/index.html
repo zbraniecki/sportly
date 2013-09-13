@@ -175,6 +175,7 @@
       </nav>
       <ul class="nav nav-pills nav-stacked main-nav" id="myTab">
         <li class="active"><a href="#score">Score</a></li>
+        <li><a href="#lines">Lines</a></li>
         <li><a href="#logs">Logs</a></li>
       </ul>
 
@@ -208,6 +209,33 @@
             </div>
           </div>
           <button type="button" class="btn btn-primary btn-lg btn-block period-end-btn hidden"></button>
+        </div>
+        <div class="tab-pane" id="lines">
+          <table class="panel-body table table-bordered table-lines-men">
+            <tbody>
+            </tbody>
+          </table>
+          <table class="panel-body table table-bordered table-lines-women">
+            <tbody>
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="col-md-6">
+              <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left disabled">pull left</button>
+            </div>
+            <div class="col-md-6">
+              <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right disabled">pull right</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block offense-btn offense-left disabled">offense left</button>
+            </div>
+            <div class="col-md-6">
+              <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block offense-btn offense-right disabled">offense right</button>
+            </div>
+          </div>
+          <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block offense-btn line-start hidden disabled">line</button>
         </div>
         <div class="tab-pane" id="logs">
           <div class="panel panel-default">

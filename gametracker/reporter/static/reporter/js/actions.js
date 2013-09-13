@@ -158,6 +158,7 @@ Game.prototype = {
   },
   calculateEvents: function(cb) {
     var self = this;
+    var firstPull = null;
     this.stage = 'not started';
     this.offense = null;
     this.data['team1'].goals = 0;
@@ -175,11 +176,14 @@ Game.prototype = {
           self._addTimeout(evt.team);
           break;
         case 'pull':
-          self.stage = 'first half';
-          if (evt.team == 'team1') {
-            self.offense = 'team2';
-          } else {
-            self.offense = 'team1';
+          if (!firstPull) {
+            self.stage = 'first half';
+            if (evt.team == 'team1') {
+              self.offense = 'team2';
+            } else {
+              self.offense = 'team1';
+            }
+          firstPull = true;
           }
           break;
         case 'half time':
@@ -290,6 +294,215 @@ Event.prototype = {
     11: {'name': 'Feral Cows'},
   },
   games: {},
+  players: [
+    {
+      number: 8,
+      pic: 'player8_photo.jpg',
+      name: 'Zibi',
+      lastname: 'Braniecki',
+      nick: 'Zibi',
+      sex: 'm',
+      roles: ['defender', 'cutter'],
+    },
+    {
+      number: 69,
+      pic: 'player69_photo.jpg',
+      name: 'Alice',
+      lastname: 'Barton',
+      nick: 'Alice',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 16,
+      pic: null,
+      name: 'Arvind',
+      lastname: 'Chari',
+      nick: 'Arvind',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Carl',
+      lastname: 'Ma',
+      nick: 'Carl',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Christabelle',
+      lastname: 'Piansay',
+      nick: 'Belle',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 17,
+      pic: null,
+      name: 'Deborah',
+      lastname: 'Liu',
+      nick: 'Debbie',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Pradeep',
+      lastname: 'Nair',
+      nick: 'Pradeep',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 20,
+      pic: null,
+      name: 'Eric',
+      lastname: 'Hartge',
+      nick: 'Hartch',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Jason',
+      lastname: 'Schissel',
+      nick: 'Jason',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Katherine',
+      lastname: 'Johnson',
+      nick: 'Tango',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Tyler',
+      lastname: 'Walker',
+      nick: 'Tyler',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Julie',
+      lastname: 'Clemmensen',
+      nick: 'Juicebox',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Dave',
+      lastname: 'Kavulak',
+      nick: 'Caddy',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 9,
+      pic: null,
+      name: 'Kristen',
+      lastname: 'Clemmensen',
+      nick: 'Kristen',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Shannon',
+      lastname: 'Speaker',
+      nick: 'Speaks',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Alex',
+      lastname: 'Taipale',
+      nick: 'Alex',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Franklin',
+      lastname: 'Pearsall',
+      nick: 'Franklin',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Rob',
+      lastname: 'Jaslow',
+      nick: 'Rob',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Ed',
+      lastname: 'Parsons',
+      nick: 'Woody',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 14,
+      pic: null,
+      name: 'Matt',
+      lastname: 'Christie',
+      nick: 'Christie',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Charlotte',
+      lastname: 'Koeniger',
+      nick: 'Charlotte',
+      sex: 'f',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Patrick',
+      lastname: 'Lee',
+      nick: 'Pat',
+      sex: 'm',
+      roles: [],
+    },
+    {
+      number: 0,
+      pic: null,
+      name: 'Emily',
+      lastname: 'Paris',
+      nick: 'Emily',
+      sex: 'f',
+      roles: [],
+    },
+  ],
 
   removeGame: function(gid, cb, eb) {
     delete this.games[gid];
@@ -336,12 +549,12 @@ Event.prototype = {
   loadData: function(cb) {
     var self = this;
 
-    db.getTeams(function(teams) {
+    /*db.getTeams(function(teams) {
       teams.forEach(function (team) {
         self.teams[team.id] = team;
       });
       cb();
-    });
+    });*/
 
     db.getGames(function(games) {
       self.games = {};

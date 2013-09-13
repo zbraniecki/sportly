@@ -108,3 +108,7 @@ body {
 .view-roster .panel-default {
   width: 90%;
 }
+
+.view-score #lines td {
+  cursor: pointer;
+}
