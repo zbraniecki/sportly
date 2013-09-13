@@ -1,14 +1,18 @@
 from django.contrib import admin
 
 from tracker.models.tournaments import GroupRoster
-from tracker.models.games import Game, GameState, GameMomentType, GameMoment
+from tracker.models.games import Game, GameState, GameSettings, GameMomentType, GameMoment
 
 class GameMomentInline(admin.TabularInline):
     model = GameMoment
 
+class GameSettingsInline(admin.TabularInline):
+    model = GameSettings
+
 class GameAdmin(admin.ModelAdmin):
     inlines = [
-        GameMomentInline
+        GameSettingsInline,
+        GameMomentInline,
     ]
 
 class GroupRosterInline(admin.TabularInline):
@@ -21,5 +25,6 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.register(Game, GameAdmin)
 admin.site.register(GameState)
+admin.site.register(GameSettings)
 admin.site.register(GameMomentType)
 admin.site.register(GameMoment)

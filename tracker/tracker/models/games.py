@@ -33,6 +33,7 @@ class Game(TrackerModel):
     pos1 = models.IntegerField(blank=True, null=True)
     pos2 = models.IntegerField(blank=True, null=True)
     start = models.DateTimeField()
+    #remove
     length = models.PositiveIntegerField()
     points1 = models.PositiveIntegerField(default=0)
     points2 = models.PositiveIntegerField(default=0)
@@ -93,6 +94,16 @@ class Game(TrackerModel):
         return 'Game %s vs %s at %s' % (self.home_display(),
                                         self.away_display(),
                                         self.group)
+
+class GameSettings(TrackerModel):
+    game = models.ForeignKey(Game)
+    key = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)
+
+    def __str__(self):
+        return 'Settings %s=%s for game %s' % (self.key,
+                                               self.value,
+                                               self.game)
 
 
 class GameMomentType(TrackerModel):
