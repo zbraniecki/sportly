@@ -9,7 +9,7 @@ function GameSettingsPanel() {
       id: null,
     },
     settings: {
-      starts: new Date(), 
+      starts: new Date().getTime(), 
       caps: {
         regular: {
           type: 'points',
@@ -102,19 +102,17 @@ GameSettingsPanel.prototype.bindAPI = function() {
         def = def[chunks[j]];
       }
       if (node.val()) {
-        val[chunks[j]] = node.val();
+        var v = node.val();
+        if (chunks[j] == 'starts') {
+          v = parseDate(v).getTime();
+        }
+        val[chunks[j]] = v;
       } else {
         var v = def[chunks[j]];
-        if (chunks[j] == 'starts') {
-          console.log(v);
-          //v = formatDateString(v);
-          console.log('two');
-        }
         val[chunks[j]] = v;
       }
     }
 
-    game.data.settings.starts = parseDate($('#inputStarts').val());
     game.data['team1'].timeouts = game._buildTimeoutStructure();
     game.data['team2'].timeouts = game._buildTimeoutStructure();
     if (self.gid) {
@@ -165,7 +163,7 @@ GameSettingsPanel.prototype.draw = function() {
       val = val[chunks[j]];
     }
     if (chunks[j] == 'starts') {
-      val = formatDateString(val);
+      val = formatDateString(new Date(val));
     }
     if (node.is('select') || game) {
       node.val(val);

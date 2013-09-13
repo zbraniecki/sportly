@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="{% static 'reporter/reporter.appcache' %}">
   <head>
     <meta charset="utf-8">
     <title>Game reporter</title>
@@ -41,9 +41,10 @@
           </tbody>
         </table>
       </div>
-      <button class="btn-add">Add game</button>
-      <button class="btn-fullscreen">Full screen</button>
-      <button class="btn-clear">Clear data</button>
+      <button class="btn-add btn btn-default">Add game</button>
+      <button class="btn-roster btn btn-default">Roster</button>
+      <button class="btn-fullscreen btn btn-default">Full screen</button>
+      <button class="btn-clear btn btn-warning">Clear data</button>
     </div>
     <div id="view-gamesettings" class="view view-gamesettings">
       <button class="btn-back">Back</button>
@@ -69,7 +70,7 @@
               <div class="form-group">
                 <label for="inputStarts" class="col-lg-2 control-label">Starts</label>
                 <div class="col-lg-10">
-                  <input type="datetime" id="inputStarts" class="form-control" placeholder="2013-08-13 12:00">
+                  <input type="datetime" id="inputStarts" class="form-control">
                 </div>
               </div>
               <div class="form-group">
@@ -95,14 +96,14 @@
               <div class="form-group">
                 <label for="inputTimeCap" class="col-lg-2 control-label">Time cap</label>
                 <div class="col-lg-10">
-                    <input type="text" id="inputTimeCap" class="form-control">
+                    <input type="number" id="inputTimeCap" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputSoftCap" class="col-lg-2 control-label">Soft cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputSoftCap" class="form-control">
+                    <input type="number" id="inputSoftCap" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputSoftCapType">
@@ -111,7 +112,7 @@
                     </select>
                   </div>
                   <div class="col-lg-2">
-                    <input type="text" id="inputSoftCapDiff" class="form-control">
+                    <input type="number" id="inputSoftCapDiff" class="form-control">
                   </div>
                 </div>
               </div>
@@ -119,7 +120,7 @@
                 <label for="inputHardCap" class="col-lg-2 control-label">Hard cap</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputHardCap" class="form-control">
+                    <input type="number" id="inputHardCap" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputHardCapType">
@@ -133,7 +134,7 @@
                 <label for="inputTimeouts" class="col-lg-2 control-label">Timeouts</label>
                 <div class="row">
                   <div class="col-lg-2">
-                    <input type="text" id="inputTimeouts" class="form-control">
+                    <input type="number" id="inputTimeouts" class="form-control">
                   </div>
                   <div class="col-lg-3">
                     <select class="form-control" id="inputTimeoutsPer">
@@ -151,8 +152,7 @@
             </form>
           </div>
         </div>
-
-    </div>
+      </div>
     </div>
     <div id="view-score" class="view view-score">
     
@@ -254,7 +254,8 @@
         </div>
       </div>
     </div>
-
+    <div id="view-roster" class="view view-roster">
+    </div>
     
 
 

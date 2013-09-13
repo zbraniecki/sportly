@@ -29,7 +29,7 @@ function formatDate(date) {
     }
     return (ref.getMonth() + 1) +
            '/' +
-           (ref.getDate() + 1) +
+           (ref.getDate()) +
            ' ' +
            formatHour(ref.getHours(), ref.getMinutes());
   }    
@@ -37,7 +37,7 @@ function formatDate(date) {
          '-' +
          (ref.getMonth() + 1) +
          '-' +
-         (ref.getDate() + 1) +
+         (ref.getDate()) +
          ' ' +
          formatHour(ref.getHours(), ref.getMinutes());
 }

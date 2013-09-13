@@ -293,7 +293,7 @@ Event.prototype = {
     }
   },
   addGame: function(game, cb, eb) {
-    //this.games[game.data.id] = game;
+    this.games[game.data.id] = game;
     //db.addGame(game.data);
   },
   editGame: function(game) {
