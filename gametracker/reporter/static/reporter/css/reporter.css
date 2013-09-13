@@ -112,3 +112,7 @@ body {
 .view-score #lines td {
   cursor: pointer;
 }
+
+.view-score .table-lines-stats {
+  margin-top: 10%;
+}

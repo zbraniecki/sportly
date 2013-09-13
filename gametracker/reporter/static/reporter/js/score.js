@@ -244,7 +244,7 @@ ScorePanel.prototype.draw = function() {
   this.drawLines();
 }
 
-var lineLength = 3;
+var lineLength = 7;
 
 ScorePanel.prototype.drawlineButtons = function() {
   var self = this;
@@ -295,6 +295,7 @@ ScorePanel.prototype.calculatePlays = function(players) {
 ScorePanel.prototype.drawLines = function() {
   var self = this;
   this.line = [];
+  var game = eventData.games[currentGame];
 
   function togglePlayerLine(e) {
     e.preventDefault();
@@ -364,6 +365,67 @@ ScorePanel.prototype.drawLines = function() {
     });
   }
   self.drawlineButtons();
+
+  var lines = [];
+  var score = [0,0];
+
+  lines.push({'score': '0:0',
+    'type': 'O',
+    'players': []});
+  game.data.events.forEach(function (evt) {
+    if (evt.type == 'goal') {
+      if (evt.team == 'team1') {
+        score[0]++;
+      } else {
+        score[1]++;
+      }
+      lines.push({'score': score[0]+':'+score[1],
+                  'type': 'O',
+                  'players': []});
+    } else if (evt.type == 'line') {
+      lines[lines.length-1].players = evt.notes.split(',');
+    }
+  });
+
+  var table = $('.table-lines-stats');
+  var thr = $('thead tr', table);
+  thr.empty();
+  var tbody = $('tbody', table);
+  tbody.empty();
+
+  var th = $('<th/>');
+  th.text('Player');
+  thr.append(th);
+
+  lines.forEach(function (line, k) {
+    if (k == lines.length-1) {
+      return;
+    }
+    var th = $('<th/>');
+    th.text(line.score);
+    thr.append(th);
+  });
+  eventData.players.forEach(function(player) {
+    var tr = $('<tr/>');
+
+    var td = $('<td/>');
+    td.text(player.nick);
+    tr.append(td);
+    lines.forEach(function (line, k) {
+      if (k == lines.length-1) {
+        return;
+      }
+      var td = $('<td/>');
+      if (line.players.indexOf(player.id.toString()) == -1) {
+        td.text('');
+      } else {
+        td.text('1');
+      }
+      tr.append(td);
+    });
+    tbody.append(tr);
+  });
+
 }
 
 ScorePanel.prototype.bindAPI = function() {
