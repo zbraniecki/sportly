@@ -12,5 +12,6 @@
 {% static 'reporter/js/roster.js' %}
 {% static 'reporter/js/actions.js' %}
 {% static 'reporter/js/db.js' %}
+{% static 'reporter/js/cloud.js' %}
 {% static 'reporter/js/utils.js' %}
 {% static 'reporter/bootstrap/fonts/glyphicons-halflings-regular.woff' %}

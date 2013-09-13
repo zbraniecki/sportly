@@ -22,7 +22,6 @@ function Game() {
           value: 0,
         },
         time: {
-          type: null,
           value: 0,
         },
         soft: {
@@ -275,15 +274,22 @@ function Event() {
 }
 
 Event.prototype = {
-  name: "UPA NorCal Sectionals 2013",
+  name: "2013 USA Ultimate Nor Cal Sectionals",
   division: "mixed",
   teams: {
-    1: {name: 'BAB'},
-    2: {name: 'OSC'},
-    3: {name: 'Fluffer'},
+    1: {'name': 'BW Ultimate'},
+    2: {'name': 'Groove'},
+    3: {'name': 'Capitol Punishment'},
+    4: {'name': 'Classy'},
+    5: {'name': 'DR'},
+    6: {'name': 'The Greater Good'},
+    7: {'name': 'Fluffy'},
+    8: {'name': 'Happy Cows'},
+    9: {'name': 'BAB'},
+    10: {'name': 'OSC'},
+    11: {'name': 'Feral Cows'},
   },
-  games: {
-  },
+  games: {},
 
   removeGame: function(gid, cb, eb) {
     delete this.games[gid];
@@ -294,7 +300,7 @@ Event.prototype = {
   },
   addGame: function(game, cb, eb) {
     this.games[game.data.id] = game;
-    //db.addGame(game.data);
+    db.addGame(game.data);
   },
   editGame: function(game) {
     this.games[game.data.id] = game;
@@ -303,8 +309,40 @@ Event.prototype = {
   getGame: function(gid) {
     return this.games[gid]; 
   },
+  syncWithCloud: function(cb) {
+    var self = this;
+    cloud.getTeams(function(teams) {
+      teams.forEach(function (to) {
+        if (!self.teams[to.id]) {
+          self.teams[to.id] = to;
+          db.addTeam(to);
+        }
+      });
+    });
+    cloud.getGames(function(games) {
+      games.forEach(function (gd) {
+        if (!self.games[gd.id]) {
+          var game = new Game();
+          game.data = gd;
+          self.games[gd.id] = game;
+          db.addGame(gd);
+        }
+      });
+      if (cb) {
+        cb();
+      }
+    });
+  },
   loadData: function(cb) {
     var self = this;
+
+    db.getTeams(function(teams) {
+      teams.forEach(function (team) {
+        self.teams[team.id] = team;
+      });
+      cb();
+    });
+
     db.getGames(function(games) {
       self.games = {};
 

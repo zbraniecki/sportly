@@ -7,17 +7,15 @@ var panels = {
 
 var eventData = null;
 var db = null;
+var cloud = null;
 var currentGame = null;
 
 $(document).ready(function() {
   $(document.body).hide();
   db = new DB();
+  cloud = new Cloud();
   eventData = new Event();
-
-
-  db.openDb(function() {
   eventData.loadData(loadPanel);
-  });
 });
 
 

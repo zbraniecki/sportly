@@ -32,8 +32,10 @@ body {
    position: absolute;
 }
 
-.view-gamelist .btn-clear {
+.view-gamelist .btn-clear,
+.view-gamelist .btn-sync {
   float: right;
+  margin-right: 2%;
 }
 
 .view-gamelist h1 {

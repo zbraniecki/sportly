@@ -9,6 +9,7 @@ panels['gamelist'].class = GameListPanel;
 
 
 GameListPanel.prototype.bindAPI = function() {
+  var self = this;
   $('.view-gamelist .btn-add').click(function() {
     loadPanel('gamesettings');
   });
@@ -20,6 +21,9 @@ GameListPanel.prototype.bindAPI = function() {
   });
   $('.view-gamelist .btn-fullscreen').click(function() {
     toggleFullScreen();
+  });
+  $('.view-gamelist .btn-sync').click(function() {
+    //eventData.syncWithCloud(self.draw.bind(this));
   });
 }
 

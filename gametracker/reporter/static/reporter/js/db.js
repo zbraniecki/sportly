@@ -7,6 +7,7 @@ DB.prototype = {
   dbGameStoreName: 'games',
   dbEventStoreName: 'events',
   dbTransactionStoreName: 'transactions',
+  dbTeamStoreName: 'teams',
   db: null,
 
   openDb: function(cb) {
@@ -17,7 +18,7 @@ DB.prototype = {
       return;
     }
     console.log("openDb ...");
-    var req = indexedDB.open(this.dbName, 13);
+    var req = indexedDB.open(this.dbName, 14);
     var self = this;
     req.onsuccess = function (evt) {
       self.db = this.result;
@@ -32,10 +33,20 @@ DB.prototype = {
 
     req.onupgradeneeded = function (evt) {
       console.log("openDb.onupgradeneeded");
-      //evt.currentTarget.result.deleteObjectStore(self.dbGameStoreName);
-      //evt.currentTarget.result.deleteObjectStore(self.dbTransactionStoreName);
-      //evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
+      try {
+        evt.currentTarget.result.deleteObjectStore(self.dbGameStoreName);
+      } catch (e) {}
+      try {
+        evt.currentTarget.result.deleteObjectStore(self.dbTransactionStoreName);
+      } catch (e) {}
+      try {
+        evt.currentTarget.result.deleteObjectStore(self.dbEventStoreName);
+      } catch (e) {}
+      try {
+        evt.currentTarget.result.deleteObjectStore(self.dbTeamStoreName);
+      } catch (e) {}
       var gameStore = evt.currentTarget.result.createObjectStore(self.dbGameStoreName, {keyPath: 'id'});
+      var teamStore = evt.currentTarget.result.createObjectStore(self.dbTeamStoreName, {keyPath: 'id'});
       evt.currentTarget.result.createObjectStore(self.dbTransactionStoreName, {keyPath: 'tid', 'autoIncrement': true});
       var eventStore = evt.currentTarget.result.createObjectStore(self.dbEventStoreName, {keyPath: 'eid', 'autoIncrement': true});
 
@@ -62,6 +73,14 @@ DB.prototype = {
         var cursor = event.target.result;
         if (cursor) {
           var request = store2.delete(cursor.key);
+          cursor.continue();
+        }
+      };
+      var store3 = self.getObjectStore(self.dbTeamStoreName, 'readwrite');
+      store3.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          var request = store3.delete(cursor.key);
           cursor.continue();
         }
       };
@@ -139,6 +158,33 @@ DB.prototype = {
         console.log('game:' + event.target.result);
         cb(event.target.result);
       }
+    });
+  },
+  addTeam: function(team, cb, eb) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbTeamStoreName, 'readwrite');
+      var request = store.add(team);
+      request.onsuccess = function(event) {
+      }
+    });
+  },
+  getTeams: function(cb, eb) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbTeamStoreName, 'readonly');
+      var teams = [];
+      store.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          cursor.value.id = cursor.key;
+          teams.push(cursor.value);
+          cursor.continue();
+        }
+        else {
+          cb(teams);
+        }
+      };
     });
   },
   addEvent: function(evt, cb, eb) {
