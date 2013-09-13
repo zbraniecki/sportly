@@ -1,3 +1,12 @@
+
+function onUpdateReady() {
+  alert('found new version!');
+}
+window.applicationCache.addEventListener('updateready', onUpdateReady);
+if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+  onUpdateReady();
+}
+
 function formatTime(num) {
   return num < 10? '0' + num : num;
 }
