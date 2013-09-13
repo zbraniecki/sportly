@@ -56,7 +56,7 @@ ScorePanel.prototype._setGameTime = function(game) {
 }
 
 ScorePanel.prototype._setOffense = function () {
-  var game = gameData.games[currentGame];
+  var game = eventData.games[currentGame];
 
   var offense = game.offense;
 
@@ -80,7 +80,7 @@ ScorePanel.prototype._setOffense = function () {
   $('.panel', $('.'+defense)).removeClass('panel-success');
 }
 ScorePanel.prototype._setWinner = function () {
-  var game = gameData.games[currentGame];
+  var game = eventData.games[currentGame];
 
   var winner = null
   if (game.data.team1.goals > game.data.team2.goals) {
@@ -109,7 +109,7 @@ ScorePanel.prototype._setWinner = function () {
 }
 
 ScorePanel.prototype.drawButtons = function() {
-  var game = gameData.games[currentGame];
+  var game = eventData.games[currentGame];
   var nextStage = Game.stages[Game.stages.indexOf(game.stage)+1];
   $('.period-end-btn').text(nextStage);
 
@@ -166,11 +166,11 @@ ScorePanel.prototype.drawButtons = function() {
 ScorePanel.prototype.draw = function() {
   var self = this;
 
-  var game = gameData.games[currentGame];
+  var game = eventData.games[currentGame];
 
 
-  var team1Name = gameData.teams[game.data.team1.id].name;
-  var team2Name = gameData.teams[game.data.team2.id].name;
+  var team1Name = eventData.teams[game.data.team1.id].name;
+  var team2Name = eventData.teams[game.data.team2.id].name;
   
   var title = team1Name + " vs. " + team2Name + ' ('+game.data.team1.goals+':'+game.data.team2.goals+')';
   document.head.getElementsByTagName('title')[0].textContent = title;
@@ -214,8 +214,8 @@ ScorePanel.prototype.draw = function() {
     tr.append(td);
     var td = $('<td/>');
     if (evt.team) {
-      var team = gameData.games[currentGame].data[evt.team].id; 
-      td.text(gameData.teams[team].name);
+      var team = eventData.games[currentGame].data[evt.team].id; 
+      td.text(eventData.teams[team].name);
     }
     tr.append(td);
     var td = $('<td/>');
@@ -226,7 +226,7 @@ ScorePanel.prototype.draw = function() {
     var td = $('<td><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
     $('.remove-btn', td).click(function() {
       var row = $(this).parent().parent();
-      gameData.games[currentGame].deleteEvent(evt.eid, function() {
+      eventData.games[currentGame].deleteEvent(evt.eid, function() {
         row.remove();
         self.draw();
       },
@@ -252,7 +252,7 @@ ScorePanel.prototype.bindAPI = function() {
   })
   $('.team1 .pull-btn').click(function () {
     var side = $(this).data('side');
-    gameData.games[currentGame].addPull(1, side, null, function() {
+    eventData.games[currentGame].addPull(1, side, null, function() {
       self.draw();
     });
     
@@ -260,46 +260,46 @@ ScorePanel.prototype.bindAPI = function() {
     self.draw();
   });
   $('.team2 .pull-btn').click(function () {
-    gameData.games[currentGame].addPull(2, null, function() {
+    eventData.games[currentGame].addPull(2, null, function() {
       self.draw();
     });
     self.draw();
   });
   $('.team1 .goal-btn').click(function () {
-    gameData.games[currentGame].addGoal(1, null, function() {
+    eventData.games[currentGame].addGoal(1, null, function() {
       self.draw();
     });
     self.draw();
   });
   $('.team2 .goal-btn').click(function () {
-    gameData.games[currentGame].addGoal(2, null, function() {
+    eventData.games[currentGame].addGoal(2, null, function() {
       self.draw();
     });
     self.draw();
   });
   $('.team1 .timeout-btn').click(function () {
-    gameData.games[currentGame].addTimeout(1, null, function() {
+    eventData.games[currentGame].addTimeout(1, null, function() {
       self.draw();
     });
     self.draw();
   });
   $('.team2 .timeout-btn').click(function () {
-    gameData.games[currentGame].addTimeout(2, null, function() {
+    eventData.games[currentGame].addTimeout(2, null, function() {
       self.draw();
     });
     self.draw();
   });
 
   $('.period-end-btn').click(function () {
-    var stage = Game.stages.indexOf(gameData.games[currentGame].stage);
+    var stage = Game.stages.indexOf(eventData.games[currentGame].stage);
 
     if (stage >= Game.stages.length -1) {
       return;
     }
     var nextStage = Game.stages[stage+1];
-    gameData.games[currentGame].stage = nextStage;
+    eventData.games[currentGame].stage = nextStage;
 
-    gameData.games[currentGame].addPeriodEnd(nextStage, null, function() {
+    eventData.games[currentGame].addPeriodEnd(nextStage, null, function() {
       self.draw();
     });
     self.draw();
@@ -308,7 +308,7 @@ ScorePanel.prototype.bindAPI = function() {
   if (this.I) {
     clearInterval(this.I);
   }
-  this.I = setInterval(this._setGameTime.bind(this, gameData.games[currentGame]), 1000);
+  this.I = setInterval(this._setGameTime.bind(this, eventData.games[currentGame]), 1000);
 }
 
 ScorePanel.prototype.unbindAPI = function() {

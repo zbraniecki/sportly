@@ -7,6 +7,7 @@ GameListPanel.prototype.construtor = GameListPanel;
 
 panels['gamelist'].class = GameListPanel;
 
+
 GameListPanel.prototype.bindAPI = function() {
   $('.view-gamelist .btn-add').click(function() {
     loadPanel('gamesettings');
@@ -20,14 +21,15 @@ GameListPanel.prototype.bindAPI = function() {
 }
 
 GameListPanel.prototype.draw = function() {
+  $('.view-gamelist h1').text(eventData.name + ', ' + eventData.division);
   var tbody = $('.game-list tbody');
   tbody.empty();
   var game;
 
   var games = [];
 
-  for (var i in gameData.games) {
-    games.push(gameData.games[i]);
+  for (var i in eventData.games) {
+    games.push(eventData.games[i]);
   }
 
   games.sort(function (a, b) {
@@ -52,10 +54,10 @@ GameListPanel.prototype.draw = function() {
     });
     tr.append(td);
     var td = $('<td/>');
-    td.text(gameData.teams[data.team1.id].name);
+    td.text(eventData.teams[data.team1.id].name);
     tr.append(td);
     var td = $('<td/>');
-    td.text(gameData.teams[data.team2.id].name);
+    td.text(eventData.teams[data.team2.id].name);
     tr.append(td);
     var td = $('<td/>');
     td.text(data.team1.goals + ' : ' + data.team2.goals);
@@ -63,11 +65,16 @@ GameListPanel.prototype.draw = function() {
     var td = $('<td/>');
     td.text(game.stage);
     tr.append(td);
-    var td = $('<td><button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-edit"></span></button><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
-    $('.remove-btn', td).click(function(e) {
+    var td = $('<td><button type="button" class="btn btn-default btn-lg btn-edit"><span class="glyphicon glyphicon-edit"></span></button><button type="button" class="btn btn-default btn-lg btn-remove"><span class="glyphicon glyphicon-remove"></span></button></td>');
+    $('.btn-edit', td).click(function(e) {
       e.preventDefault();
       var id = $(this).parent().parent().attr('data-game-id');
-      gameData.removeGame(id);
+      loadPanel('gamesettings', {gid: id});
+    });
+    $('.btn-remove', td).click(function(e) {
+      e.preventDefault();
+      var id = $(this).parent().parent().attr('data-game-id');
+      eventData.removeGame(id);
       $(this).parent().parent().fadeOut();
     });
     tr.append(td);

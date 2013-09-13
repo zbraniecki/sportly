@@ -82,6 +82,16 @@ DB.prototype = {
       }
     });
   },
+  editGame: function(game) {
+    var self = this;
+    this.openDb(function() {
+      var store = self.getObjectStore(self.dbGameStoreName, 'readwrite');
+      var request = store.put(game);
+      request.onsuccess = function(event) {
+        console.log('edited game');
+      }
+    });
+  },
   removeGame: function(gid, cb, eb) {
     var self = this;
     this.openDb(function() {

@@ -271,10 +271,12 @@ Game.prototype = {
 };
 
 
-function LocalData () {
+function Event() {
 }
 
-LocalData.prototype = {
+Event.prototype = {
+  name: "UPA NorCal Sectionals 2013",
+  division: "mixed",
   teams: {
     1: {name: 'BAB'},
     2: {name: 'OSC'},
@@ -291,8 +293,15 @@ LocalData.prototype = {
     }
   },
   addGame: function(game, cb, eb) {
+    //this.games[game.data.id] = game;
+    //db.addGame(game.data);
+  },
+  editGame: function(game) {
     this.games[game.data.id] = game;
-    db.addGame(game.data);
+    db.editGame(game.data);
+  },
+  getGame: function(gid) {
+    return this.games[gid]; 
   },
   loadData: function(cb) {
     var self = this;

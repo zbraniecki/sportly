@@ -10,14 +10,14 @@ function formatHour(h, m) {
   return formatTime(h) + ':' + formatTime(m) + 'am';
 }
 
+function formatTwoDigit(h) {
+  if (h < 10) {
+    return '0' + h;
+  }
+  return h;
+}
+
 function formatDate(date) {
-  /*
-  t = "2013-09-12 09:00";
-  var t = convertDateTime(t);
-  console.log(t.toISOString());
-  t.setTime( t.getTime() - t.getTimezoneOffset()*60*1000 );
-  console.log(t.toGMTString());
-  */
   var today = new Date();
 
   var ref = new Date(date);
@@ -40,6 +40,15 @@ function formatDate(date) {
          (ref.getDate() + 1) +
          ' ' +
          formatHour(ref.getHours(), ref.getMinutes());
+}
+
+function formatDateString(date) {
+  var curr_date = formatTwoDigit(date.getDate());
+  var curr_month = formatTwoDigit(date.getMonth() + 1); //Months are zero based
+  var curr_year = date.getFullYear();
+  var curr_hour = formatTwoDigit(date.getHours());
+  var curr_minute = formatTwoDigit(date.getMinutes());
+  return curr_year + "-" + curr_month + "-" + curr_date + " " + curr_hour + ":" + curr_minute;
 }
 
 

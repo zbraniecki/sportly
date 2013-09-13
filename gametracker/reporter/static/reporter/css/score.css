@@ -28,6 +28,10 @@ body {
   float: right;
 }
 
+.view-gamelist h1 {
+  margin-left: 2%;
+}
+
 .row {
   font-size: 3vw;
 }

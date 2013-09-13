@@ -4,23 +4,23 @@ var panels = {
   'score': {'class': null, 'instance': null},
 };
 
-var gameData = {};
+var eventData = null;
 var db = null;
 var currentGame = null;
 
 $(document).ready(function() {
   $(document.body).hide();
   db = new DB();
-  gameData = new LocalData();
+  eventData = new Event();
 
 
   db.openDb(function() {
-    gameData.loadData(loadPanel);
+  eventData.loadData(loadPanel);
   });
 });
 
 
-function loadPanel(id) {
+function loadPanel(id, data) {
   if (!id) {
     id = 'gamelist';
   }
@@ -30,6 +30,7 @@ function loadPanel(id) {
     panels[id].instance = new pc();
     panels[id].instance.bindAPI();
   }
+  panels[id].instance.setData(data);
   $('.view').removeClass('current');
   $('.view-'+id).addClass('current');
 
@@ -43,7 +44,7 @@ function Panel(id) {
 }
 
 Panel.prototype = {
-  id: null,
-  bindAPI: null,
-  draw: null,
+  bindAPI: function() {},
+  draw: function() {},
+  setData: function() {},
 }
