@@ -11,7 +11,7 @@ body {
 .view-score .container  {
    height: 50%;
    width: 60%;
-   top: 25%;
+   top: 20%;
    left: 25%;
    position: absolute;
 }
@@ -109,10 +109,19 @@ body {
   width: 90%;
 }
 
-.view-score #lines td {
+.view-score #lines .table-lines-men td,
+.view-score #lines .table-lines-women td {
   cursor: pointer;
+  font-size: 1.5vw;
 }
 
 .view-score .table-lines-stats {
   margin-top: 10%;
+}
+
+#lines .offense-btn {
+  margin-top: 1%;
+}
+#lines .btn {
+  font-size: 1.5vw;
 }

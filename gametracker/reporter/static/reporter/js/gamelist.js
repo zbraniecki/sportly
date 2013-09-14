@@ -28,6 +28,7 @@ GameListPanel.prototype.bindAPI = function() {
 }
 
 GameListPanel.prototype.draw = function() {
+  document.head.getElementsByTagName('title')[0].textContent = 'Game reporter';
   $('.view-gamelist h1').text(eventData.name + ', ' + eventData.division);
   var tbody = $('.game-list tbody');
   tbody.empty();

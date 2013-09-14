@@ -332,7 +332,7 @@ ScorePanel.prototype.drawLines = function() {
   });
   
 
-  var cols = 4;
+  var cols = 5;
 
   for (sex in players) {
     var i = 0;
@@ -349,7 +349,7 @@ ScorePanel.prototype.drawLines = function() {
       td.data('pid', player.id);
       td.click(togglePlayerLine);
 
-      var name = player.name + " " + player.lastname;
+      var name = player.nick;
       if (plays[player.id]) {
         name += ' ('+plays[player.id]+')';
       }
