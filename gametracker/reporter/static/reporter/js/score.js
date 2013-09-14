@@ -457,12 +457,14 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#lines"]').tab('show');
   });
   $('#score .team2 .goal-btn').click(function () {
     eventData.games[currentGame].addGoal(2, null, function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#lines"]').tab('show');
   });
   $('#score .team1 .timeout-btn').click(function () {
     eventData.games[currentGame].addTimeout(1, null, function() {
@@ -504,6 +506,8 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#score"]').tab('show');
+    
   });
 
   $('#lines .offense-left').click(function() {
@@ -518,6 +522,7 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#score"]').tab('show');
   });
   $('#lines .pull-right').click(function() {
     var game = eventData.games[currentGame];
@@ -531,6 +536,7 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#score"]').tab('show');
   });
 
   $('#lines .offense-right').click(function() {
@@ -545,6 +551,7 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#score"]').tab('show');
   });
   $('#lines .line-start').click(function() {
     var game = eventData.games[currentGame];
@@ -553,6 +560,7 @@ ScorePanel.prototype.bindAPI = function() {
       self.draw();
     });
     self.draw();
+    $('#myTab a[href="#score"]').tab('show');
   });
 
   if (this.I) {
