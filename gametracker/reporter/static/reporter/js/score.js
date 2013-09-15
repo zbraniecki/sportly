@@ -302,7 +302,7 @@ ScorePanel.prototype.drawLines = function() {
     var node = $(this);
     var pid = node.data('pid');
     
-    if (node.hasClass('active')) {
+    if (node.hasClass('in')) {
       var pos = self.line.indexOf(pid);
       self.line.splice(pos, 1);
     } else {
@@ -311,7 +311,7 @@ ScorePanel.prototype.drawLines = function() {
       }
       self.line.push(pid);
     }
-    node.toggleClass('active');
+    node.toggleClass('in');
     self.drawlineButtons();
   }
 

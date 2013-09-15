@@ -125,3 +125,9 @@ body {
 #lines .btn {
   font-size: 1.5vw;
 }
+
+#lines .table-lines-men td.in,
+#lines .table-lines-women td.in {
+  background-color: rgb(66, 139, 202);
+  color: rgb(255, 255, 255);
+}
