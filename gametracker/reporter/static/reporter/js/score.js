@@ -198,7 +198,9 @@ ScorePanel.prototype.draw = function() {
 
   var tbody = $('.logs tbody');
   tbody.empty();
-  game.data.events.forEach(function(evt) {
+
+  for (var i = game.data.events.length-1; i >=0; i--) {
+    var evt = game.data.events[i];
     var tr = $('<tr/>'); 
 
     var td = $('<td/>');
@@ -238,7 +240,7 @@ ScorePanel.prototype.draw = function() {
     tr.append(td);
     tr.attr('data-event-id', evt.eid);
     tbody.append(tr);
-  });
+  };
 
 
   this.drawLines();

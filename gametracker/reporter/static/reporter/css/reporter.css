@@ -80,12 +80,9 @@ body {
   text-align: left;
 }
 
-.table.game-list {
-  cursor: pointer;
-}
-
-.table.game-list tr:hover {
+.table.game-list tbody tr:hover {
   background-color: #eee;
+  cursor: pointer;
 }
 
 .view {
