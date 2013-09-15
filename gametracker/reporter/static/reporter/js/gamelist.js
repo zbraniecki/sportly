@@ -56,8 +56,8 @@ GameListPanel.prototype.draw = function() {
 
     var td = $('<td/>');
     td.text(formatDate(new Date(data.settings.starts)));
-    td.click(function() {
-      currentGame = $(this).parent().attr('data-game-id'); 
+    tr.click(function() {
+      currentGame = $(this).attr('data-game-id'); 
       loadPanel('score');
     });
     tr.append(td);
@@ -76,14 +76,18 @@ GameListPanel.prototype.draw = function() {
     var td = $('<td><button type="button" class="btn btn-default btn-lg btn-edit"><span class="glyphicon glyphicon-edit"></span></button><button type="button" class="btn btn-default btn-lg btn-remove"><span class="glyphicon glyphicon-remove"></span></button></td>');
     $('.btn-edit', td).click(function(e) {
       e.preventDefault();
+      e.stopPropagation();
       var id = $(this).parent().parent().attr('data-game-id');
       loadPanel('gamesettings', {gid: id});
+      return false;
     });
     $('.btn-remove', td).click(function(e) {
       e.preventDefault();
+      e.stopPropagation();
       var id = $(this).parent().parent().attr('data-game-id');
       eventData.removeGame(id);
       $(this).parent().parent().fadeOut();
+      return false;
     });
     tr.append(td);
     tr.attr('data-game-id', data.id);
