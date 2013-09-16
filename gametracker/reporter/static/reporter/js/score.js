@@ -228,7 +228,8 @@ ScorePanel.prototype.draw = function() {
     var td = $('<td><button type="button" class="btn btn-default btn-lg remove-btn"><span class="glyphicon glyphicon-remove"></span></button></td>');
     $('.remove-btn', td).click(function() {
       var row = $(this).parent().parent();
-      eventData.games[currentGame].deleteEvent(evt.eid, function() {
+      var id = row.data('event-id');
+      eventData.games[currentGame].deleteEvent(id, function() {
         row.remove();
         self.draw();
       },
@@ -238,7 +239,7 @@ ScorePanel.prototype.draw = function() {
       row.fadeOut();
     });
     tr.append(td);
-    tr.attr('data-event-id', evt.eid);
+    tr.data('event-id', evt.eid);
     tbody.append(tr);
   };
 
@@ -371,18 +372,25 @@ ScorePanel.prototype.drawLines = function() {
   var lines = [];
   var score = [0,0];
 
+  var firstPull = game.getPull();
+  var usHome = game.data.team1.id == 9 ? true : false;
+  var bab = game.data[firstPull.team].id == 9 ? true : false;
+  var usOffense = bab ? false : true;
+
   lines.push({'score': '0:0',
-    'type': 'O',
+    'type': usOffense ? 'O' : 'D',
     'players': []});
   game.data.events.forEach(function (evt) {
     if (evt.type == 'goal') {
       if (evt.team == 'team1') {
         score[0]++;
+        usOffense = usHome ? false : true;
       } else {
         score[1]++;
+        usOffense = usHome ? true : false
       }
       lines.push({'score': score[0]+':'+score[1],
-                  'type': 'O',
+                  'type': usOffense ? 'O' : 'D',
                   'players': []});
     } else if (evt.type == 'line') {
       lines[lines.length-1].players = evt.notes.split(',');
@@ -404,7 +412,7 @@ ScorePanel.prototype.drawLines = function() {
       return;
     }
     var th = $('<th/>');
-    th.text(line.score);
+    th.text(line.score + " ("+line.type+")");
     thr.append(th);
   });
   eventData.players.forEach(function(player) {
