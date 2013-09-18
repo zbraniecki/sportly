@@ -24,7 +24,7 @@ class Game(TrackerModel):
     desc = models.CharField(max_length=200, blank=True, null=True)
     # round instead of group
     group = models.ForeignKey(Group, related_name='games', blank=True, null=True)
-    field = models.ForeignKey(Field)
+    field = models.ForeignKey(Field, null=True, blank=True)
     roster1 = models.ForeignKey(Roster, blank=True, null=True, related_name='+')
     roster2 = models.ForeignKey(Roster, blank=True, null=True, related_name='+')
 
@@ -33,6 +33,7 @@ class Game(TrackerModel):
     pos1 = models.IntegerField(blank=True, null=True)
     pos2 = models.IntegerField(blank=True, null=True)
     start = models.DateTimeField()
+    #remove
     length = models.PositiveIntegerField()
     points1 = models.PositiveIntegerField(default=0)
     points2 = models.PositiveIntegerField(default=0)
@@ -94,6 +95,16 @@ class Game(TrackerModel):
                                         self.away_display(),
                                         self.group)
 
+class GameSettings(TrackerModel):
+    game = models.ForeignKey(Game)
+    key = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)
+
+    def __str__(self):
+        return 'Settings %s=%s for game %s' % (self.key,
+                                               self.value,
+                                               self.game)
+
 
 class GameMomentType(TrackerModel):
     name = models.CharField(max_length=200)
@@ -103,6 +114,7 @@ class GameMomentType(TrackerModel):
 
 class GameMoment(TrackerModel):
     game = models.ForeignKey(Game, related_name='moments')
+    # type
     moment_type = models.ForeignKey(GameMomentType)
     player1 = models.ForeignKey(Person, blank=True, null=True, related_name='+')
     player2 = models.ForeignKey(Person, blank=True, null=True, related_name='+')

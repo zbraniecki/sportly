@@ -1,0 +1,343 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="en"{% if offline %} manifest="/reporter/reporter.appcache"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <title>Game reporter</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'reporter/css/reporter.css' %}" />
+
+    <script src="{% static 'reporter/jquery.js' %}"></script>
+    <script src="{% static 'reporter/bootstrap/js/bootstrap.js' %}"></script>
+    <script src="{% static 'reporter/js/reporter.js' %}"></script>
+    <script src="{% static 'reporter/js/gamelist.js' %}"></script>
+    <script src="{% static 'reporter/js/gamesettings.js' %}"></script>
+    <script src="{% static 'reporter/js/roster.js' %}"></script>
+    <script src="{% static 'reporter/js/score.js' %}"></script>
+    <script src="{% static 'reporter/js/actions.js' %}"></script>
+    <script src="{% static 'reporter/js/db.js' %}"></script>
+    <script src="{% static 'reporter/js/cloud.js' %}"></script>
+    <script src="{% static 'reporter/js/utils.js' %}"></script>
+  </head>
+
+  <body>
+    <div id="view-gamelist" class="view view-gamelist">
+      <h1></h1>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Games</h3>
+        </div>
+        <table class="panel-body table table-bordered game-list">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Home</th>
+              <th>Away</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-add btn btn-default">Add game</button>
+      <button class="btn-roster btn btn-default">Roster</button>
+      <button class="btn-fullscreen btn btn-default">Full screen</button>
+      <button class="btn-clear btn btn-warning">Clear data</button>
+      <button class="btn-sync btn btn-info">Sync</button>
+    </div>
+    <div id="view-gamesettings" class="view view-gamesettings">
+      <button class="btn-back btn btn-default">Back</button>
+      <div class="container">
+        <div class="panel panel-default">
+          <div class="panel-heading"></div>
+          <div class="panel-body">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label for="inputTeam1" class="col-lg-2 control-label">Team 1</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam1">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTeam2" class="col-lg-2 control-label">Team 2</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam2">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStarts" class="col-lg-2 control-label">Starts</label>
+                <div class="col-lg-10">
+                  <input type="datetime" id="inputStarts" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputCap" class="col-lg-2 control-label">Cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="number" id="inputCap" class="form-control">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputCapType">
+                      <option value="points">points</option>
+                      <option value="min">min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputPointCap" class="col-lg-2 control-label">Point cap</label>
+                <div class="col-lg-10">
+                    <input type="number" id="inputPointCap" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTimeCap" class="col-lg-2 control-label">Time cap</label>
+                <div class="col-lg-10">
+                    <input type="number" id="inputTimeCap" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputSoftCap" class="col-lg-2 control-label">Soft cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="number" id="inputSoftCap" class="form-control">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputSoftCapType">
+                      <option value="points">points</option>
+                      <option value="min">min</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-2">
+                    <input type="number" id="inputSoftCapDiff" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputHardCap" class="col-lg-2 control-label">Hard cap</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="number" id="inputHardCap" class="form-control">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputHardCapType">
+                      <option value="points">points</option>
+                      <option value="min">min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTimeouts" class="col-lg-2 control-label">Timeouts</label>
+                <div class="row">
+                  <div class="col-lg-2">
+                    <input type="number" id="inputTimeouts" class="form-control">
+                  </div>
+                  <div class="col-lg-3">
+                    <select class="form-control" id="inputTimeoutsPer">
+                      <option value="half">half</option>
+                      <option value="game">game</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                  <button type="submit" class="btn btn-default btn-submit"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="view-score" class="view view-score">
+    
+      <nav class="navbar navbar-inverse game-settings" role="navigation">
+        <p class="navbar-text btn-back"> &lt;&lt;</p>
+        <p class="navbar-text starts"></p>
+        <p class="navbar-text regular-cap"></p>
+        <p class="navbar-text point-cap"></p>
+        <p class="navbar-text soft-cap"></p>
+        <p class="navbar-text hard-cap"></p>
+        <p class="navbar-text timeouts"></p>
+
+        <p class="navbar-text navbar-right starts-in"></p>
+        <div class="progress progress-striped navbar-right">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            <span class="sr-only">0% Complete</span>
+          </div>
+        </div>
+      </nav>
+      <ul class="nav nav-pills nav-stacked main-nav" id="myTab">
+        <li class="active"><a href="#score">Score</a></li>
+        <li><a href="#lines">Lines</a></li>
+        <li><a href="#logs">Logs</a></li>
+      </ul>
+
+
+      <div class="tab-content container">
+        <div class="tab-pane active" id="score">
+          <div class="row">
+            <div class="col-xs-6 team1">
+              <div class="panel panel-team panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                  <span class="goals"></span>
+                  <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+                  <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+                  <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6 team2">
+              <div class="panel panel-team panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                  <span class="goals"></span>
+                  <button type="button" class="btn btn-success btn-lg btn-block goal-btn hidden">+1</button>
+                  <button type="button" class="btn btn-default btn-lg btn-block timeout-btn hidden">Time-out</button>
+                  <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left">pull left</button>
+                  <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right">pull right</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg btn-block period-end-btn hidden"></button>
+        </div>
+        <div class="tab-pane" id="lines">
+          <table class="panel-body table table-bordered table-lines-men">
+            <tbody>
+            </tbody>
+          </table>
+          <table class="panel-body table table-bordered table-lines-women">
+            <tbody>
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="col-xs-6">
+              <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block pull-btn pull-left disabled">pull left</button>
+            </div>
+            <div class="col-xs-6">
+              <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block pull-btn pull-right disabled">pull right</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <button type="button" data-side="left" class="btn btn-primary btn-lg btn-block offense-btn offense-left disabled">offense left</button>
+            </div>
+            <div class="col-xs-6">
+              <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block offense-btn offense-right disabled">offense right</button>
+            </div>
+          </div>
+          <button type="button" data-side="right" class="btn btn-primary btn-lg btn-block offense-btn line-start hidden disabled">line</button>
+          <table class="panel-body table table-bordered table-lines-stats">
+            <thead>
+              <tr>
+              </tr>
+            </head>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane" id="logs">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Logs</h3>
+            </div>
+            <table class="panel-body table table-bordered logs">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Team</th>
+                  <th>Note</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for moment in logs %}
+                <tr data-moment-id="{{moment.pk}}">
+                  <td>{{moment.time}}</td>
+                  <td>{{moment.moment_type}}</td>
+                  <td>{{moment.player1|default:""}}</td>
+                  <td>{{moment.player2|default:""}}</td>
+                  <td>{{moment.team|default:""}}</td>
+                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-sort"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-lg">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg remove-btn">
+                      <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="view-roster" class="view view-roster">
+      <button class="btn-back btn btn-default">Back</button>
+      <div class="container">
+        <h1>Bay Area Bachanallia, 2013</h1>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Roster</h3>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <dl class="dl-horizontal">
+                <dt>Players:</dt>
+                <dd id="roster-stats-players">23</dd>
+                <dt>Men:</dt>
+                <dd id="roster-stats-men">12</dd>
+                <dt>Women:</dt>
+                <dd id="roster-stats-women">12</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="dl-horizontal">
+                <dt>Handlers:</dt>
+                <dd id="roster-stats-handlers">23</dd>
+                <dt>Cutters:</dt>
+                <dd id="roster-stats-cutters">12</dd>
+                <dt>Defenders:</dt>
+                <dd id="roster-stats-defenders">12</dd>
+              </dl>
+            </div>
+          </div>
+
+          <table class="panel-body table table-bordered table-roster">
+            <thead>
+              <tr>
+                <th style="width: 10%">#</th>
+                <th>Name</th>
+                <th>Last name</th>
+                <th>Nick</th>
+                <th>Sex</th>
+                <th>Roles</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+ </body>
+</html>

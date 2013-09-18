@@ -1,0 +1,17 @@
+{% load staticfiles %}CACHE MANIFEST
+# v3 - 2013-09-13
+/reporter/
+{% static 'reporter/bootstrap/css/bootstrap.css' %}
+{% static 'reporter/css/reporter.css' %}
+{% static 'reporter/jquery.js' %}
+{% static 'reporter/bootstrap/js/bootstrap.js' %}
+{% static 'reporter/js/reporter.js' %}
+{% static 'reporter/js/gamelist.js' %}
+{% static 'reporter/js/gamesettings.js' %}
+{% static 'reporter/js/score.js' %}
+{% static 'reporter/js/roster.js' %}
+{% static 'reporter/js/actions.js' %}
+{% static 'reporter/js/db.js' %}
+{% static 'reporter/js/cloud.js' %}
+{% static 'reporter/js/utils.js' %}
+{% static 'reporter/bootstrap/fonts/glyphicons-halflings-regular.woff' %}

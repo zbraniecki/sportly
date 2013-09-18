@@ -96,13 +96,27 @@ class EventDivision(TrackerModel):
         return '%s, %s' % (self.event.__str__(),
                            self.division.__str__())
 
-    def squads(self):
-        signups = EventDivisionSignUp.objects.filter(event_division=self,
+    def accepted_signups(self):
+        sul = EventDivisionSignUp.objects.filter(event_division=self,
                                                      status__name="yes")
-        squads = []
-        for signup in signups:
-            squads.append(signup.signee)
-        return squads
+        signups = []
+        for signup in sul:
+            signups.append(signup.signee)
+        return signups
+
+    def seeding(self):
+        seeding = []
+
+        st = StageType.objects.get(name='seeding')
+        seeding_stage = Stage.objects.get(stage_type=st)
+        seeding_group = seeding_stage.groups.all()[0]
+        group_rosters = seeding_group.rosters.all()
+        for group_roster in group_rosters:
+            seeding.append({
+                'roster': group_roster.roster,
+                'seed': group_roster.pos
+            })
+        return seeding
 
 class SquadSelectionType(TrackerModel):
     """

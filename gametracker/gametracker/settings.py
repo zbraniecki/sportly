@@ -1,5 +1,5 @@
 """
-Django settings for tracker project.
+Django settings for gametracker project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g++m3(1bv-bz6urdd80vaf#106%vop+u$et(uof$ivi^ou@x@c'
+SECRET_KEY = 'g++m3(1bv-bz6urdd80vaf#106%v^@+u$et(uof$ivi^ou@x@c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,10 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'grappelli',
-    'django_countries',
-    #'django_extensions',
-    'tracker',
+    'reporter',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tracker.urls'
+ROOT_URLCONF = 'gametracker.urls'
 
-WSGI_APPLICATION = 'tracker.wsgi.application'
+WSGI_APPLICATION = 'gametracker.wsgi.application'
 
 
 # Database
@@ -62,9 +59,15 @@ WSGI_APPLICATION = 'tracker.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'tracker', 'db', 'tracker.sqlite'),
+        'NAME': os.path.join(BASE_DIR, 'gametracker', 'db', 'db.sqlite3'),
+    },
+    'tracker': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'gametracker', 'db', 'tracker.sqlite')
     }
 }
+
+DATABASE_ROUTERS = ['gametracker.db.router.TrackerRouter',]
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
@@ -84,5 +87,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
