@@ -1,0 +1,14 @@
+{
+  "name": "report-tracker-server",
+  "description": "Reporter server",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "passport": "0.1.x",
+    "passport-local": "0.1.x",
+    "swig": "~1.1.0",
+    "orm": "~2.1.2",
+    "sqlite3": "~2.1.17"
+  }
+}
