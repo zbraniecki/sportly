@@ -2,12 +2,12 @@ var Game = function(id) {
   this.id = id;
   this.elements = {
     'in': [],
-    'results': [],
+    'status': [],
     'out': [],
   };
   this.cells = {
     'in': [],
-    'results': [],
+    'status': [],
     'out': [],
   };
 }

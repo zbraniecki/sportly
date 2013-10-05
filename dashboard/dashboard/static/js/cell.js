@@ -3,6 +3,7 @@ var Cell = function(parent, pos) {
   this.node = null;
   this.id = null;
   this.pos = pos;
+  this.link = null;
   this.settings = {
     'droppable': false,
   };

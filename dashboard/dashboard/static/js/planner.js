@@ -23,7 +23,9 @@ function feedTournamentData(data) {
       var dtGroup = dtStage.groups[j];
       var group = stage.addGroup(dtGroup.name, dtGroup.id, tournament.size);
       groups[dtGroup.id] = group;
-      group.settings.resolvable = false;
+      if (['seeding'].indexOf(dtStage.type) !== -1) {
+        group.settings.resolvable = false;
+      }
       group.size = tournament.size / dtStage.groups.length;
       group.init();
     }

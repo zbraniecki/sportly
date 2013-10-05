@@ -29,6 +29,7 @@ Link.prototype.updateTournamentData = function(to, pos) {
     delete this.to.object.elements['in'][this.to.pos];
   }
   to.elements['in'][pos] = this;
+  to.cells['in'][pos].link = this;
 }
 
 Link.prototype.getSourceNode = function() {
@@ -74,12 +75,12 @@ Link.prototype.getLinkNode = function() {
 
 Link.prototype.draw = function(type) {
   if (!type) {
-    type = 'both';
+    type = ['in', 'out', 'status'];
   }
   var cell;
   var node;
 
-  if (type == 'out' || type == 'both') {
+  if (type.indexOf('out') !== -1) {
     cell = this.from.object.struct.cells['out'][this.from.pos];
     if (!this.to.object) {
       node = this.getLinkNode();
@@ -89,13 +90,25 @@ Link.prototype.draw = function(type) {
     cell.node.appendChild(node);
   }
 
-  if (type == 'in' || type == 'both') {
+  if (type.indexOf('in') !== -1) {
     if (this.to.object instanceof Game) {
       cell = this.to.object.cells['in'][this.to.pos];
     } else {
       cell = this.to.object.struct.cells['in'][this.to.pos];
     }
     cell.node.appendChild(this.getLinkNode());
+  }
+
+  if (type.indexOf('status') !== -1 ||
+      (type.indexOf('out') !== -1 && this.to.object && this.to.object.settings.resolvable)) {
+    this.resolveName();
+  }
+}
+
+Link.prototype.resolveName = function() {
+  var preLink = this.from.object.struct.cells['in'][this.from.pos].link;
+  if (preLink instanceof Team) {
+    this.to.object.struct.cells['status'][this.to.pos].node.innerHTML = preLink.name;
   }
 }
 
