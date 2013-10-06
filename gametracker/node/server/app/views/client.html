@@ -1,0 +1,11 @@
+<html>
+  <head>
+  <script type="text/javascript">
+    var source = new EventSource('/update-stream');
+
+    source.addEventListener('weborm-db-update', function(e) { // note: 'newcontent'
+        console.log(e);
+    }, false);
+</script>
+</head>
+</html>

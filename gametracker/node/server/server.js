@@ -24,22 +24,37 @@ app.configure(function() {
   app.use(passport.session());
 });
 
-
-orm.connect('sqlite://./db.sqlite', function (err, db) {
+function syncdb() {
+  orm.connect('sqlite://./db.sqlite', function (err, db) {
     if (err) throw err;
     db.load("./app/models/models", function(err) {
       db.sync();
       var Person = db.models.Person;
+    });
+  });
+}
 
-      Person.create([{
-        name: 'Zibi',
-        surname: 'Braniecki',
-      }], function(err, items) {
+function fillDefaults() {
+  orm.connect('sqlite://./db.sqlite', function (err, db) {
+    if (err) throw err;
+    db.load("./app/models/models", function(err) {
+      var Event = db.models.Event;
+
+      Event.create([
+        {
+          name: '2013 USA Ultimate Nor Cal Sectionals',
+          division: 'mixed',
+        }
+      ], function(err, items) {
         console.log(err);
         console.log(items);
       });
     });
-});
+  });
+}
+
+//syncdb();
+//fillDefaults();
 
 require('./config/routes')(app, passport);
 
