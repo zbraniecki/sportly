@@ -8,6 +8,17 @@ body {
    width: 100%;
 } 
 
+.view {
+  display: none;
+}
+
+.view.current {
+  display: block;
+}
+
+
+/* specific */
+
 .view-score .container  {
    height: 50%;
    width: 60%;
@@ -85,13 +96,6 @@ body {
   cursor: pointer;
 }
 
-.view {
-  display: none;
-}
-
-.view.current {
-  display: block;
-}
 
 .view-score .btn-back {
   cursor: pointer;

@@ -9,19 +9,67 @@
     <script src="http://download.pouchdb.com/pouchdb-nightly.js"></script>
     <script src="./js/jquery/jquery.js"></script>
     <script src="./js/bootstrap/bootstrap.js"></script>
-    <script src="./js/reporter.js"></script>
-    <script src="./js/gamelist.js"></script>
-    <script src="./js/gamesettings.js"></script>
-    <script src="./js/event.js"></script>
-    <script src="./js/roster.js"></script>
-    <script src="./js/score.js"></script>
-    <script src="./js/actions.js"></script>
-    <script src="./js/db.js"></script>
-    <script src="./js/cloud.js"></script>
-    <script src="./js/utils.js"></script>
+    <script data-main="js/main" src="./js/vendor/require.js"></script>
   </head>
 
   <body>
+    <div id="view-eventlist" class="view view-eventlist">
+      <h1></h1>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Events</h3>
+        </div>
+        <table class="panel-body table table-bordered game-list">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Division</th>
+              <th>Teams</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-add btn btn-default">Add event</button>
+      <button class="btn-fullscreen btn btn-default">Full screen</button>
+      <button class="btn-clear btn btn-warning">Clear data</button>
+      <button class="btn-sync btn btn-info">Sync</button>
+    </div>
+    <div id="view-eventedit" class="view view-eventedit">
+      <button class="btn-back btn btn-default">Back</button>
+      <div class="container">
+        <div class="panel panel-default">
+          <div class="panel-heading"></div>
+          <div class="panel-body">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label for="inputTeam1" class="col-lg-2 control-label">Team 1</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam1">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTeam2" class="col-lg-2 control-label">Team 2</label>
+                <div class="col-lg-10">
+                  <select class="form-control" id="inputTeam2">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                  <button type="submit" class="btn btn-default btn-submit"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="view-gamelist" class="view view-gamelist">
       <h1></h1>
       <div class="panel panel-default">
