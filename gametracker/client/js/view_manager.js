@@ -18,7 +18,7 @@ define(function (require, exports) {
 
       this.views[name] = {'node': viewNodes[i], 'obj': null};
     } 
-    this.showView('eventlist');
+    this.showView('eventedit');
   }
 
   ViewManager.prototype.initView = function(name, cb) {
@@ -65,17 +65,40 @@ define(function (require, exports) {
   }
 
   View.prototype.init = function(node, cb) {
-    this.viewNode = node;
-    cb();
+    if (this._init) {
+      this._init(function() {
+        this.viewNode = node;
+        cb();
+      }.bind(this));
+    } else {
+      this.viewNode = node;
+      cb();
+    }
   }
 
   View.prototype.bindUI = function(cb) {
-    cb();
+    if (this._bindUI) {
+      this._bindUI(function() {
+        this.loaded = true;
+        cb();
+      }.bind(this));
+    } else {
+      this.loaded = true;
+      cb();
+    }
+  }
+
+  View.prototype.drawUI = function(cb) {
+    if (this._drawUI) {
+      this._drawUI(cb);
+    } else {
+      cb();
+    }
   }
 
   View.prototype.preShow = function(cb) {
-    if (!this.uiBinded) {
-      this.bindUI(cb);
+    if (!this.loaded) {
+      this.drawUI(this.bindUI.bind(this, cb));
     } else {
       cb();
     }

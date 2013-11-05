@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="./css/bootstrap/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="./css/reporter.css" />
 
-    <script src="http://download.pouchdb.com/pouchdb-nightly.js"></script>
+    <script async src="./js/vendor/pouchdb-src.js"></script>
     <script src="./js/jquery/jquery.js"></script>
     <script src="./js/bootstrap/bootstrap.js"></script>
     <script data-main="js/main" src="./js/vendor/require.js"></script>
@@ -43,28 +43,11 @@
       <button class="btn-back btn btn-default">Back</button>
       <div class="container">
         <div class="panel panel-default">
-          <div class="panel-heading"></div>
+          <div class="panel-heading">
+          <h3 class="panel-title">New event</h3>
+          </div>
           <div class="panel-body">
-            <form class="form-horizontal" role="form">
-              <div class="form-group">
-                <label for="inputTeam1" class="col-lg-2 control-label">Team 1</label>
-                <div class="col-lg-10">
-                  <select class="form-control" id="inputTeam1">
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="inputTeam2" class="col-lg-2 control-label">Team 2</label>
-                <div class="col-lg-10">
-                  <select class="form-control" id="inputTeam2">
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-10">
-                  <button type="submit" class="btn btn-default btn-submit"></button>
-                </div>
-              </div>
+            <form class="form-horizontal form-eventform" role="form">
             </form>
           </div>
         </div>

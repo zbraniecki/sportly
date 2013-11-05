@@ -15,7 +15,7 @@ define(function (require, exports) {
   EventListView.prototype = Object.create(View.prototype);
   EventListView.prototype.constructor = EventListView;
 
-  EventListView.prototype.bindUI = function(cb) {
+  EventListView.prototype._bindUI = function(cb) {
     var self = this;
 
     this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
