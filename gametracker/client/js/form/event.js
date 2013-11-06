@@ -8,11 +8,34 @@ define(function (require, exports) {
 
   var EventForm = {
     'name': 'EventForm',
-    'fields': [
-      {'name': 'Name', 'field': EventModel.model.name},
-      {'name': 'Start date', 'field': EventModel.model.start_date},
-      {'name': 'End date', 'field': EventModel.model.end_date},
-    ]
+    'schema': [
+      {
+        'name': 'Name',
+        'type': 'String'
+      },
+      {
+        'name': 'Start date',
+        'type': 'DateTime',
+        'default': function() {
+          var d = new Date();
+          return d.toLocaleString();
+        },
+      },
+      {
+        'name': 'End date',
+        'type': 'DateTime',
+        'default': function() {
+          var d = new Date();
+          var h = d.getHours();
+          d.setHours(h+24);
+          return d.toLocaleString();
+        },
+      },
+      {
+        'name': 'Add',
+        'type': 'Submit'
+      },
+    ],
   };
 
   exports.EventForm = EventForm;

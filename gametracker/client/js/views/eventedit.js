@@ -9,6 +9,7 @@ define(function (require, exports) {
 
   var ModelForm = null;
   var EventForm = null;
+  var FormManager = null;
 
   function EventEditView(viewManager) {
     View.call(this, viewManager);
@@ -20,8 +21,10 @@ define(function (require, exports) {
 
   EventEditView.prototype._init = function(cb) {
     require(['../model_form',
+             '../form_manager',
              '../model/event',
-             '../form/event'], function(MF, EM, EF) {
+             '../form/event'], function(MF, FM, EM, EF) {
+      FormManager = FM.FormManager;
       ModelForm = MF.ModelForm;
       EventForm = EF.EventForm;
       cb();
@@ -29,9 +32,8 @@ define(function (require, exports) {
   }
 
   EventEditView.prototype._drawUI = function(cb) {
-    this.modelForm = new ModelForm(this);
-    this.modelForm.init(EventForm);
-    this.modelForm.draw(); 
+    var fm = new FormManager(this);
+    fm.draw(EventForm);
     cb();
   }
 
