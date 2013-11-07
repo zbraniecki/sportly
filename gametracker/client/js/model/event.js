@@ -4,6 +4,8 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
+  var DateFormatter = require('utils/date').DateFormatter;
+
   function DivisionModel() {
   }
 
@@ -11,21 +13,56 @@ define(function (require, exports) {
     'name': String,
   };
 
-  function EventModel() {
+  function EventModel(app) {
+    this.app = app;
+
+    this.fields = {};
+    this.constructor.model.forEach(function (field) {
+      var name = field.name.toLowerCase().replace(' ', '_');
+      this.fields[name] = null;
+    }.bind(this));
   }
 
-  EventModel.model = {
-    'name': {'type': 'String'},
+  EventModel.prototype.commit = function() {
+    var doc = {};
+    doc.name = this.fields['name'];
+    this.app.db.addEvent(doc);
+  }
+
+  EventModel.model = [
+    {
+      'name': 'Name',
+      'type': 'String'
+    },
     //'parent': {'type': 'ForeignKey', 'fk': 'Division'},
     //'series': Array,
     //'event_type': Array,
     //'field_type': Array,
-    'start_date': {'type': 'DateTime'},
-    'end_date': {'type': 'DateTime'},
-    'location': {'type': 'String'},
+    {
+      'name': 'Start date',
+      'type': 'DateTime',
+      'default': function() {
+        var d = new Date();
+        return DateFormatter.dateToString(d);
+      },
+    },
+    {
+      'name': 'End date',
+      'type': 'DateTime',
+      'default': function() {
+        var d = new Date();
+        var h = d.getHours();
+        d.setHours(h+24);
+        return DateFormatter.dateToString(d);
+      },
+    },
+    {
+      'name': 'Location',
+      'type': 'String'
+    },
     //'visibility': Array,
     //'organizer': Array,
-  };
+  ];
 
   function EventDivisionModel() {
   }

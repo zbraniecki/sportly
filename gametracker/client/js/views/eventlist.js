@@ -15,6 +15,21 @@ define(function (require, exports) {
   EventListView.prototype = Object.create(View.prototype);
   EventListView.prototype.constructor = EventListView;
 
+  EventListView.prototype._drawUI = function(cb) {
+    var db = this.viewManager.app.db;
+    db.getEvents(function (events) {
+      var rootNode = this.viewNode.querySelector('tbody');
+      events.forEach(function(evt) {
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.textContent = evt.name;
+        tr.appendChild(td);
+        rootNode.appendChild(tr);
+      }.bind(this));
+      cb();
+    }.bind(this));
+  }
+
   EventListView.prototype._bindUI = function(cb) {
     var self = this;
 

@@ -1,6 +1,10 @@
 (function() {
-  require(['view_manager'], function(ViewManager) {
-    var viewManager = new ViewManager.ViewManager();
-    viewManager.init();
+  require(['reporter',
+           'view_manager',
+           'eventemitter',
+           'db',
+           'utils/date'], function(Reporter) {
+    var reporter = new Reporter.Reporter();
+    reporter.init();
   });
 })();

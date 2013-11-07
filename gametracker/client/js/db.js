@@ -1,6 +1,11 @@
+if (typeof define !== 'function') {
+  var define = require('amdefine')(module);
+}
+define(function (require, exports) {
+  'use strict';
 
 function DB() {
-  this.startSync();
+  //this.startSync();
 }
 
 DB.prototype = {
@@ -40,6 +45,30 @@ DB.prototype = {
   },
 
   clear: function() {
+  },
+
+  addEvent: function(evt) {
+    var self = this;
+    this.openDb('event', function(db) {
+      evt._id = PouchDB.uuids()[0];
+      db.put(evt, function callback(err, result) {
+        if (!err) {
+          console.log('added an event');
+        }
+      });
+    });
+  },
+  getEvents: function(cb) {
+    var self = this;
+    this.openDb('event', function(db) {
+      db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+        var events = [];
+        doc.rows.forEach(function (doc) {
+          events.push(doc.doc);
+        });
+        cb(events);
+      });
+    });
   },
 
   addGame: function(game) {
@@ -134,52 +163,6 @@ DB.prototype = {
       };
     });
   },
-  addEvent: function(evt, cb, eb) {
-    var self = this;
-    this.openDb(function() {
-      var store = self.getObjectStore(self.dbEventStoreName, 'readwrite');
-      var request = store.add(evt);
-      request.onsuccess = function(event) {
-        cb(event.target.result);
-        console.log('added event');
-      }
-
-      request.onerror = function(event) {
-        console.log("Database error: " + event.target.errorCode);
-        eb();
-      }
-    });
-  },
-  getEvents: function(gid, cb) {
-    var self = this;
-    this.openDb(function() {
-      var store = self.getObjectStore(self.dbEventStoreName, 'readonly');
-      var events = [];
-      var index = store.index('gid');
-      index.openCursor(IDBKeyRange.only(parseInt(gid))).onsuccess = function(event) {
-        var cursor = event.target.result;
-        if (cursor) {
-          events.push(cursor.value);
-          cursor.continue();
-        }
-        else {
-          cb(events);
-        }
-      };
-    });
-  },
-  deleteEvent: function(key, cb, eb) {
-    var self = this;
-    this.openDb(function() {
-      var store = self.getObjectStore(self.dbEventStoreName, 'readwrite');
-      var request = store.delete(key);
-      request.onsuccess = function(evt) {
-        if (cb) {
-          cb();
-        }
-      }
-    });
-  },
   deleteGameEvents: function(gid, cb, eb) {
     var self = this;
     this.openDb(function() {
@@ -195,3 +178,7 @@ DB.prototype = {
     });
   },
 }
+
+exports.DB = DB;
+
+});

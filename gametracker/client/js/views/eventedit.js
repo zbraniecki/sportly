@@ -7,9 +7,7 @@ define(function (require, exports) {
   var ViewManager = require('../view_manager');
   var View = ViewManager.View;
 
-  var ModelForm = null;
   var EventForm = null;
-  var FormManager = null;
 
   function EventEditView(viewManager) {
     View.call(this, viewManager);
@@ -24,16 +22,22 @@ define(function (require, exports) {
              '../form_manager',
              '../model/event',
              '../form/event'], function(MF, FM, EM, EF) {
-      FormManager = FM.FormManager;
-      ModelForm = MF.ModelForm;
       EventForm = EF.EventForm;
       cb();
     });
   }
 
   EventEditView.prototype._drawUI = function(cb) {
-    var fm = new FormManager(this);
-    fm.draw(EventForm);
+    var ef = new EventForm(this.viewManager.app);
+
+    ef.addEventListener('commit', function() {
+      this.viewManager.showView('eventlist');
+    }.bind(this));
+
+    var domFragment = ef.getHTML();
+    var rootNode = this.viewNode.querySelector('.panel-body');
+
+    rootNode.appendChild(domFragment);
     cb();
   }
 

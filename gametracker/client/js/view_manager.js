@@ -4,7 +4,8 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  function ViewManager() {
+  function ViewManager(app) {
+    this.app = app;
     this.views = {};
     this.currentView = null;
   }
@@ -18,7 +19,7 @@ define(function (require, exports) {
 
       this.views[name] = {'node': viewNodes[i], 'obj': null};
     } 
-    this.showView('eventedit');
+    this.showView('eventlist');
   }
 
   ViewManager.prototype.initView = function(name, cb) {

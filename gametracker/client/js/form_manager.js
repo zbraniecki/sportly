@@ -4,31 +4,56 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  function FormManager(view) {
-    this.view = view;
+  var EventEmitter = require('eventemitter').EventEmitter;
+  var DateFormatter = require('utils/date').DateFormatter;
+
+  function Form() {
+
+    this.fields = [];
+    this.schema = [];
+    this._emitter = new EventEmitter();
   }
 
-  FormManager.prototype.draw = function(form) {
-    var rootNode = this.view.viewNode.querySelector('.form-'+form.name.toLowerCase());
-    form.schema.forEach(function(schemaElement) {
+  Form.prototype.getHTML = function() {
+    var formNode = document.createElement('form');
+    formNode.classList.add('form-horizontal');
+    formNode.classList.add('form-eventform');
+    formNode.setAttribute('role', 'form');
+
+    this.schema.forEach(function(schemaElement) {
       var field;
       switch(schemaElement.type) {
         case 'String':
-          field = new StringField(schemaElement, form);
+          field = new StringField(schemaElement, this);
           break;
         case 'DateTime':
-          field = new DateTimeField(schemaElement, form);
+          field = new DateTimeField(schemaElement, this);
           break;
         case 'Submit':
-          field = new SubmitField(schemaElement, form);
+          field = new SubmitField(schemaElement, this);
           break;
       }
-      rootNode.appendChild(field.getHTML());
+      this.fields.push(field);
+      formNode.appendChild(field.getHTML());
     }.bind(this));
+    return formNode;
   }
 
+  Form.prototype.addEventListener = function(type, cb) {
+    return this._emitter.addEventListener(type, cb);
+  }
 
-  function Form() {
+  Form.prototype.removeEventListener = function(type, cb) {
+    return this._emitter.removeEventListener(type, cb);
+  }
+
+  Form.prototype.commit = function() {
+    this._emitter.emit('commit');
+  }
+
+  Form.extend = function(subForm){
+    subForm.prototype = Object.create(Form.prototype);
+    subForm.prototype.constructor = subForm;
   }
 
   function Field() {
@@ -39,6 +64,13 @@ define(function (require, exports) {
   function StringField(schema, form) {
     this.form = form;
     this.schema = schema;
+
+    this.value = null;
+    this.node = null;
+  }
+
+  StringField.prototype.onChange = function(evt) {
+    this.value = evt.target.value;
   }
 
   StringField.prototype.getHTML = function() {
@@ -60,14 +92,28 @@ define(function (require, exports) {
     input.setAttribute('type', 'text');
     input.classList.add('form-control');
     input.setAttribute('id', name);
+    if (this.schema.default) {
+      this.value = this.schema.default();
+      input.value = this.value;
+    }
+
+    input.addEventListener('change', this.onChange.bind(this));
     valDiv.appendChild(input);
     formGroup.appendChild(valDiv);
+    this.node = formGroup;
     return formGroup;
   }
 
   function DateTimeField(schema, form) {
     this.form = form;
     this.schema = schema;
+
+    this.value = null;
+    this.node = null;
+  }
+
+  DateTimeField.prototype.onChange = function(evt) {
+    this.value = evt.value;
   }
 
   DateTimeField.prototype.getHTML = function() {
@@ -90,10 +136,14 @@ define(function (require, exports) {
     input.classList.add('form-control');
     input.setAttribute('id', name);
     if (this.schema.default) {
-      input.value = this.schema.default();
+      this.value = this.schema.default();
+      input.value = this.value;
     }
+
+    input.addEventListener('change', this.onChange.bind(this));
     valDiv.appendChild(input);
     formGroup.appendChild(valDiv);
+    this.node = formGroup;
     return formGroup;
   }
 
@@ -118,12 +168,17 @@ define(function (require, exports) {
     button.classList.add('btn-default');
     button.classList.add('btn-submit');
     button.textContent = this.schema.name;
+
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      this.form.commit();
+    }.bind(this));
+
     valDiv.appendChild(button);
     formGroup.appendChild(valDiv);
     return formGroup;
   }
 
-  exports.FormManager = FormManager;
   exports.Form = Form;
   exports.Field = Field;
 });

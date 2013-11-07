@@ -1,47 +1,22 @@
-var panels = {
-  'gamelist': {'class': null, 'instance': null},
-  'gamesettings': {'class': null, 'instance': null},
-  'score': {'class': null, 'instance': null},
-  'roster': {'class': null, 'instance': null},
-};
+if (typeof define !== 'function') {
+  var define = require('amdefine')(module);
+}
+define(function (require, exports) {
+  'use strict';
 
-var eventData = null;
-var db = null;
-var currentGame = null;
+  var DB = require('db').DB;
+  var ViewManager = require('view_manager').ViewManager;
 
-$(document).ready(function() {
-  $(document.body).hide();
-  db = new DB();
-  eventData = Event.getEvent(0);
-  eventData.loadData(loadPanel);
+  function Reporter() {
+    this.db = null;
+  }
+
+  Reporter.prototype.init = function() {
+    this.db = new DB();
+
+    var viewManager = new ViewManager(this);
+    viewManager.init();
+  }
+
+  exports.Reporter = Reporter;
 });
-
-
-function loadPanel(id, data) {
-  if (!id) {
-    id = 'gamelist';
-  }
-  var pc = panels[id].class;
-
-  if (!panels[id].instance) {
-    panels[id].instance = new pc();
-    panels[id].instance.bindAPI();
-  }
-  panels[id].instance.setData(data);
-  $('.view').removeClass('current');
-  $('.view-'+id).addClass('current');
-
-  panels[id].instance.draw();
-  $(document.body).show();
-}
-
-
-function Panel(id) {
-  this.id = id;
-}
-
-Panel.prototype = {
-  bindAPI: function() {},
-  draw: function() {},
-  setData: function() {},
-}
