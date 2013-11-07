@@ -58,6 +58,14 @@ DB.prototype = {
       });
     });
   },
+  removeEvent: function(evt, cb, eb) {
+    var self = this;
+    this.openDb('event', function(db) {
+      db.remove(evt, function(err, response) {
+        console.log('event removed');
+      });
+    });
+  },
   getEvents: function(cb) {
     var self = this;
     this.openDb('event', function(db) {

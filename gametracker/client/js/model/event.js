@@ -25,7 +25,9 @@ define(function (require, exports) {
 
   EventModel.prototype.commit = function() {
     var doc = {};
-    doc.name = this.fields['name'];
+    for (var k in this.fields) {
+      doc[k] = this.fields[k];
+    }
     this.app.db.addEvent(doc);
   }
 

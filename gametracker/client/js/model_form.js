@@ -44,7 +44,19 @@ define(function (require, exports) {
   }
 
   ModelForm.prototype.commit = function() {
-    this.model.fields['name'] = this.form.fields[0].value;
+    this.form.fields.forEach(function (field) {
+      if (field.name in this.model.fields) {
+        switch (field.schema.type) {
+          case 'String':
+            this.model.fields[field.name] = field.value;
+            break;
+          case 'DateTime':
+            var dt = DateFormatter.stringToDate(field.value);
+            this.model.fields[field.name] = dt;
+            break;
+        }
+      }
+    }.bind(this));
     this.model.commit();
     this._emitter.emit('commit');
   }

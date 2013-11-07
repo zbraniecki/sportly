@@ -33,6 +33,7 @@ define(function (require, exports) {
           field = new SubmitField(schemaElement, this);
           break;
       }
+      field.name = schemaElement.name.toLowerCase().replace(' ', '_');
       this.fields.push(field);
       formNode.appendChild(field.getHTML());
     }.bind(this));
