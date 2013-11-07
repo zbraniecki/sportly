@@ -24,8 +24,9 @@ define(function (require, exports) {
 
   ViewManager.prototype.initView = function(name, cb) {
     var view = this.views[name];
+    var appDir = this.app.appName.toLowerCase();
     var self = this;
-    require(['views/'+name], function(View) {
+    require([appDir+'/views/'+name], function(View) {
       view.obj = new View.View(self);
       view.obj.init(view.node, cb);
     });

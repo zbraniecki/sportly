@@ -13,6 +13,7 @@ define(function (require, exports) {
     'name': String,
   };
 
+  foo = 1;
   function EventModel(app) {
     this.app = app;
 

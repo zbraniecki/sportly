@@ -4,7 +4,7 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var EventEmitter = require('eventemitter').EventEmitter;
+  var EventEmitter = require('feather/event_emitter').EventEmitter;
 
 function DB() {
   this.startSync();

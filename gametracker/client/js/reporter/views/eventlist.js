@@ -4,9 +4,9 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var ViewManager = require('../view_manager');
+  var ViewManager = require('feather/view_manager');
   var View = ViewManager.View;
-  var DateFormatter = require('utils/date').DateFormatter;
+  var DateFormatter = require('reporter/utils/date').DateFormatter;
 
   var cols = [
     'date',
