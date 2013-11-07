@@ -28,14 +28,29 @@ define(function (require, exports) {
 
   EventListView.prototype._drawUI = function(cb) {
     var db = this.viewManager.app.db;
-    db.getEvents(function (events) {
+    /*db.getEvents(function (events) {
       var rootNode = this.viewNode.querySelector('tbody');
       events.forEach(function(evt) {
         rootNode.appendChild(this.buildRowNode(evt));
       }.bind(this));
 
       cb();
+    }.bind(this));*/
+    db.addEventListener('event', 'added', function(evt) {
+      var rootNode = this.viewNode.querySelector('tbody');
+      rootNode.appendChild(this.buildRowNode(evt));
     }.bind(this));
+    db.addEventListener('event', 'removed', function(eid) {
+      var rootNode = this.viewNode.querySelector('tbody');
+      var trs = rootNode.getElementsByTagName('tr');
+
+      for (var i=0; i < trs.length; i++) {
+        if (trs[i].dataset.eid == eid) {
+          trs[i].parentNode.removeChild(trs[i]);
+        }
+      }
+    }.bind(this));
+    cb();
   }
 
   EventListView.prototype.onRemoveEvent = function(e) {
@@ -62,9 +77,11 @@ define(function (require, exports) {
       switch (col) {
         case 'date':
           if (evt.start_date && evt.end_date) {
-            var dtStart = DateFormatter.dateToString(evt.start_date);
-            var dtEnd = DateFormatter.dateToString(evt.end_date);
-            td.textContent = dtStart + ' - ' + dtEnd;
+            var dtStart = new Date(evt.start_date);
+            var dtEnd = new Date(evt.end_date);
+            var startStr = DateFormatter.dateToString(dtStart);
+            var endStr = DateFormatter.dateToString(dtEnd);
+            td.textContent = startStr + ' - ' + endStr;
           }
           break;
         case 'name':

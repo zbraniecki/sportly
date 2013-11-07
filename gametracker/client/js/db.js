@@ -4,8 +4,18 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
+  var EventEmitter = require('eventemitter').EventEmitter;
+
 function DB() {
-  //this.startSync();
+  this.startSync();
+}
+
+var DEBUG = false;
+
+function dump(msg) {
+  if (DEBUG) {
+    console.log(msg);
+  }
 }
 
 DB.prototype = {
@@ -16,19 +26,43 @@ DB.prototype = {
   },
   dbHandles: {
   },
+  dbEmitters: {
+  },
   remote: 'http://zbraniecki:lomtjjz@127.0.0.1:5984/',
 
   openDb: function(name, cb) {
     if (!this.dbHandles[name]) {
-      this.dbHandles[name] = new PouchDB(name);
+      this.initDBHandle(name);
     }
     cb(this.dbHandles[name]);
+  },
+
+  addEventListener: function(db, type, cb) {
+    this.dbEmitters[db].addEventListener(type, cb);
+  },
+
+  initDBHandle: function(name) {
+    this.dbHandles[name] = new PouchDB(name);
+    this.dbEmitters[name] = new EventEmitter();
+
+    this.dbHandles[name].changes({
+      continuous: true,
+      onChange: function(change) {
+        if (!change.deleted) {
+          this.dbHandles[name].get(change.id, function(err, doc) {
+            this.dbEmitters[name].emit('added', doc);
+          }.bind(this));
+        } else {
+          this.dbEmitters[name].emit('removed', change.id); 
+        }
+      }.bind(this)
+    });
   },
 
   startSync: function() {
     for (var name in this.dbNames) {
       if (!this.dbHandles[name]) {
-        this.dbHandles[name] = new PouchDB(name);
+        this.initDBHandle(name);
       }
       this.sync(this.dbNames[name]);
     }
@@ -53,7 +87,7 @@ DB.prototype = {
       evt._id = PouchDB.uuids()[0];
       db.put(evt, function callback(err, result) {
         if (!err) {
-          console.log('added an event');
+          dump('added an event');
         }
       });
     });
@@ -62,7 +96,7 @@ DB.prototype = {
     var self = this;
     this.openDb('event', function(db) {
       db.remove(evt, function(err, response) {
-        console.log('event removed');
+        dump('event removed');
       });
     });
   },
