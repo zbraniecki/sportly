@@ -13,7 +13,11 @@ define(function (require, exports) {
 
     this._emitter = new EventEmitter();
 
-    this.form = new Form(this.constructor.model.model, this.constructor.formName);
+    var fields = this.constructor.model.model.filter(function (f) {
+      var name = f.name.toLowerCase().replace(' ', '_');
+      return this.constructor.fields.indexOf(name) !== -1;
+    }.bind(this));
+    this.form = new Form(fields, this.constructor.formName);
 
     this.form.addEventListener('commit', this.commit.bind(this));
 

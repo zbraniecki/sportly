@@ -42,6 +42,10 @@ define(function (require, exports) {
   }
 
   EventModel.model = [
+    { 
+      'name': '_id',
+      'type': 'String',
+    },
     {
       'name': 'Name',
       'type': 'String'
