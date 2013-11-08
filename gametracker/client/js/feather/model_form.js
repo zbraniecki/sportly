@@ -6,35 +6,28 @@ define(function (require, exports) {
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
   var Form = require('feather/form_manager').Form;
+  var DateFormatter = require('feather/utils/date').DateFormatter;
 
-  // remove ?
-  var DateFormatter = require('reporter/utils/date').DateFormatter;
-
-  function ModelForm(app) {
-    this.app = app;
-
-    this.form = null;
+  function ModelForm(db, instance) {
+    this.db = db;
 
     this._emitter = new EventEmitter();
 
-    this.form = new Form();
+    this.form = new Form(this.constructor.model.model, this.constructor.formName);
 
     this.form.addEventListener('commit', this.commit.bind(this));
 
-    this.model = new this.constructor.model(app);
+    this.model = new this.constructor.model(db);
 
-    this.createFormSchema();
+    if (instance) {
+      this.fillForm(instance);
+    }
   }
 
-  ModelForm.prototype.createFormSchema = function() {
-    this.constructor.model.model.forEach(function (field) {
-      this.form.schema.push(field);
+  ModelForm.prototype.fillForm = function(instance) {
+    this.form.fields.forEach(function (field) {
+      field.value = instance.fields[field.name];
     }.bind(this));
-    this.form.schema.push({
-      'type': 'Submit',
-      'name': 'Add',
-    });
-    this.form.name = this.constructor.formName;
   }
 
   ModelForm.prototype.addEventListener = function(type, cb) {

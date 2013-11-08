@@ -41,11 +41,11 @@ define(function (require, exports) {
     }
   }
 
-  ViewManager.prototype.showView = function(name, cb) {
+  ViewManager.prototype.showView = function(name, options, cb) {
     var view = this.views[name];
     var self = this;
     this.ensureViewInitialized(name, function() {
-      view.obj.preShow(function() {
+      view.obj.preShow(options, function() {
         if (self.currentView) {
           self.views[self.currentView].node.classList.remove('current');
         }
@@ -64,6 +64,8 @@ define(function (require, exports) {
     this.viewNode = null;
     this.nodes = {};
     this.loaded = false;
+
+    this.options = {};
   }
 
   View.prototype.init = function(node, cb) {
@@ -98,11 +100,26 @@ define(function (require, exports) {
     }
   }
 
-  View.prototype.preShow = function(cb) {
-    if (!this.loaded) {
-      this.drawUI(this.bindUI.bind(this, cb));
+  View.prototype.preShow = function(options, cb) {
+    if (options) {
+      this.options = options;
     } else {
-      cb();
+      this.options = {};
+    }
+    if (this._preShow) {
+      this._preShow(function() {
+        if (!this.loaded) {
+          this.drawUI(this.bindUI.bind(this, cb));
+        } else {
+          cb();
+        }
+      }.bind(this));
+    } else {
+      if (!this.loaded) {
+        this.drawUI(this.bindUI.bind(this, cb));
+      } else {
+        cb();
+      }
     }
   }
 

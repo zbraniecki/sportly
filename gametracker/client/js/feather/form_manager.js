@@ -6,19 +6,30 @@ define(function (require, exports) {
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
 
-  function Form() {
+  function Form(schema, name) {
 
     this.fields = [];
     this.schema = [];
     this._emitter = new EventEmitter();
+
+    if (schema) {
+      this.fillSchema(schema, name);
+      this.createFields();
+    }
   }
 
-  Form.prototype.getHTML = function() {
-    var formNode = document.createElement('form');
-    formNode.classList.add('form-horizontal');
-    formNode.classList.add('form-eventform');
-    formNode.setAttribute('role', 'form');
+  Form.prototype.fillSchema = function(schema, name) {
+    schema.forEach(function (field) {
+      this.schema.push(field);
+    }.bind(this));
+    this.schema.push({
+      'type': 'Submit',
+      'name': 'Submit',
+    });
+    this.name = name;
+  }
 
+  Form.prototype.createFields = function() {
     this.schema.forEach(function(schemaElement) {
       var field;
       switch(schemaElement.type) {
@@ -34,6 +45,16 @@ define(function (require, exports) {
       }
       field.name = schemaElement.name.toLowerCase().replace(' ', '_');
       this.fields.push(field);
+    }.bind(this));
+  }
+
+  Form.prototype.getHTML = function() {
+    var formNode = document.createElement('form');
+    formNode.classList.add('form-horizontal');
+    formNode.classList.add('form-eventform');
+    formNode.setAttribute('role', 'form');
+
+    this.fields.forEach(function(field) {
       formNode.appendChild(field.getHTML());
     }.bind(this));
     return formNode;
@@ -92,8 +113,10 @@ define(function (require, exports) {
     input.setAttribute('type', 'text');
     input.classList.add('form-control');
     input.setAttribute('id', name);
-    if (this.schema.default) {
+    if (this.value === null && this.schema.default) {
       this.value = this.schema.default();
+    }
+    if (this.value) {
       input.value = this.value;
     }
 
@@ -135,8 +158,10 @@ define(function (require, exports) {
     input.setAttribute('type', 'datetime');
     input.classList.add('form-control');
     input.setAttribute('id', name);
-    if (this.schema.default) {
+    if (this.value === null && this.schema.default) {
       this.value = this.schema.default();
+    }
+    if (this.value) {
       input.value = this.value;
     }
 

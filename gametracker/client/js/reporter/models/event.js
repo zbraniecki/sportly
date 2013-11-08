@@ -4,7 +4,7 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var DateFormatter = require('reporter/utils/date').DateFormatter;
+  var DateFormatter = require('feather/utils/date').DateFormatter;
 
   function DivisionModel() {
   }
@@ -13,8 +13,8 @@ define(function (require, exports) {
     'name': String,
   };
 
-  function EventModel(app) {
-    this.app = app;
+  function EventModel(db) {
+    this.db = db;
 
     this.fields = {};
     this.constructor.model.forEach(function (field) {
@@ -23,12 +23,22 @@ define(function (require, exports) {
     }.bind(this));
   }
 
+  EventModel.get = function(db, eid, cb) {
+    var model = new EventModel(db);
+    db.getEvent(eid, function(doc) {
+      for(var k in model.fields) {
+        model.fields[k] = doc[k];
+      }
+      cb(model);
+    }.bind(this));
+  }
+
   EventModel.prototype.commit = function() {
     var doc = {};
     for (var k in this.fields) {
       doc[k] = this.fields[k];
     }
-    this.app.db.addEvent(doc);
+    this.db.addEvent(doc);
   }
 
   EventModel.model = [

@@ -104,6 +104,14 @@ DB.prototype = {
       });
     });
   },
+  getEvent: function(eid, cb) {
+    var self = this;
+    this.openDb('event', function(db) {
+      db.get(eid, function(err, doc) {
+        cb(doc);
+      });
+    });
+  },
   getEvents: function(cb) {
     var self = this;
     this.openDb('event', function(db) {

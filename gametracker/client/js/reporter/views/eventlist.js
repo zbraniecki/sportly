@@ -6,7 +6,7 @@ define(function (require, exports) {
 
   var ViewManager = require('feather/view_manager');
   var View = ViewManager.View;
-  var DateFormatter = require('reporter/utils/date').DateFormatter;
+  var DateFormatter = require('feather/utils/date').DateFormatter;
 
   var cols = [
     'date',
@@ -49,6 +49,10 @@ define(function (require, exports) {
   }
 
   EventListView.prototype.onEditEvent = function(e) {
+    var tr = e.target.parentNode.parentNode;
+    this.viewManager.showView('eventedit', {
+      eid: tr.dataset.eid 
+    }); 
   }
 
   EventListView.prototype.buildRowNode = function(evt) {

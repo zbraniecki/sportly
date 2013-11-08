@@ -8,6 +8,7 @@ define(function (require, exports) {
   var View = ViewManager.View;
 
   var EventForm = null;
+  var EventModel = null;
 
   function EventEditView(viewManager) {
     View.call(this, viewManager);
@@ -23,22 +24,40 @@ define(function (require, exports) {
              'reporter/models/event',
              'reporter/forms/event'], function(MF, FM, EM, EF) {
       EventForm = EF.EventForm;
+      EventModel = EM.EventModel;
       cb();
     });
   }
 
-  EventEditView.prototype._drawUI = function(cb) {
-    var ef = new EventForm(this.viewManager.app);
-
-    ef.addEventListener('commit', function() {
-      this.viewManager.showView('eventlist');
-    }.bind(this));
-
-    var domFragment = ef.getHTML();
+  EventEditView.prototype._preShow = function(cb) {
     var rootNode = this.viewNode.querySelector('.panel-body');
 
-    rootNode.appendChild(domFragment);
-    cb();
+    rootNode.removeChild(rootNode.childNodes[0]);
+
+    if (!('eid' in this.options)) {
+      var ef = new EventForm(this.viewManager.app.db);
+
+      ef.addEventListener('commit', function() {
+        this.viewManager.showView('eventlist');
+      }.bind(this));
+
+      var domFragment = ef.getHTML();
+
+      rootNode.appendChild(domFragment);
+      cb();
+    }
+    EventModel.get(this.viewManager.app.db, this.options.eid, function(model) {
+      var ef = new EventForm(this.viewManager.app.db, model);
+
+      ef.addEventListener('commit', function() {
+        this.viewManager.showView('eventlist');
+      }.bind(this));
+
+      var domFragment = ef.getHTML();
+
+      rootNode.appendChild(domFragment);
+      cb();
+    }.bind(this));
   }
 
   EventEditView.prototype._bindUI = function(cb) {
