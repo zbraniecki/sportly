@@ -28,7 +28,7 @@ DB.prototype = {
   },
   dbEmitters: {
   },
-  remote: 'http://zbraniecki:lomtjjz@127.0.0.1:5984/',
+  remote: 'http://zbraniecki:zbraniecki@127.0.0.1:5984/',
 
   openDb: function(name, cb) {
     if (!this.dbHandles[name]) {
@@ -38,20 +38,24 @@ DB.prototype = {
   },
 
   addEventListener: function(db, type, cb) {
+    if (!(db in this.dbEmitters)) {
+      this.dbEmitters[db] = new EventEmitter();
+      this.registerChangeListener(db);
+    }
     this.dbEmitters[db].addEventListener(type, cb);
   },
 
   initDBHandle: function(name) {
     this.dbHandles[name] = new PouchDB(name);
-    this.dbEmitters[name] = new EventEmitter();
+  },
 
+  registerChangeListener: function(name) {
     this.dbHandles[name].changes({
       continuous: true,
+      include_docs: true,
       onChange: function(change) {
         if (!change.deleted) {
-          this.dbHandles[name].get(change.id, function(err, doc) {
-            this.dbEmitters[name].emit('added', doc);
-          }.bind(this));
+          this.dbEmitters[name].emit('added', change.doc);
         } else {
           this.dbEmitters[name].emit('removed', change.id); 
         }

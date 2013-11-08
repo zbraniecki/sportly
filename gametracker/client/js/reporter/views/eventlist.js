@@ -28,30 +28,14 @@ define(function (require, exports) {
 
   EventListView.prototype._drawUI = function(cb) {
     var db = this.viewManager.app.db;
-    /*db.getEvents(function (events) {
-      var rootNode = this.viewNode.querySelector('tbody');
-      events.forEach(function(evt) {
-        rootNode.appendChild(this.buildRowNode(evt));
-      }.bind(this));
 
-      cb();
-    }.bind(this));*/
     db.addEventListener('event', 'added', function(evt) {
       var rootNode = this.viewNode.querySelector('tbody');
       rootNode.appendChild(this.buildRowNode(evt));
     }.bind(this));
-    db.addEventListener('event', 'removed', function(eid) {
-      var rootNode = this.viewNode.querySelector('tbody');
-      var trs = rootNode.getElementsByTagName('tr');
-
-      for (var i=0; i < trs.length; i++) {
-        if (trs[i].dataset.eid == eid) {
-          trs[i].parentNode.removeChild(trs[i]);
-        }
-      }
-    }.bind(this));
     cb();
   }
+
 
   EventListView.prototype.onRemoveEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
@@ -124,6 +108,19 @@ define(function (require, exports) {
     this.nodes['add_button'].addEventListener('click', function() {
       self.viewManager.showView('eventedit'); 
     });
+
+    var db = this.viewManager.app.db;
+
+    db.addEventListener('event', 'removed', function(eid) {
+      var rootNode = this.viewNode.querySelector('tbody');
+      var trs = rootNode.getElementsByTagName('tr');
+
+      for (var i=0; i < trs.length; i++) {
+        if (trs[i].dataset.eid == eid) {
+          trs[i].parentNode.removeChild(trs[i]);
+        }
+      }
+    }.bind(this));
     cb();
   }
 

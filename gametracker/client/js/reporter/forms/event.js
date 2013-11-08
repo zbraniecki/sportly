@@ -4,9 +4,8 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var EventModel = require('../model/event').EventModel;
-  var Form = require('../form_manager').Form;
-  var ModelForm = require('../model_form').ModelForm;
+  var EventModel = require('reporter/models/event').EventModel;
+  var ModelForm = require('feather/model_form').ModelForm;
 
   function EventForm(app) {
     ModelForm.call(this, app);

@@ -4,7 +4,7 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var ViewManager = require('../view_manager');
+  var ViewManager = require('feather/view_manager');
   var View = ViewManager.View;
 
   var EventForm = null;
@@ -18,10 +18,10 @@ define(function (require, exports) {
   EventEditView.prototype.constructor = EventEditView;
 
   EventEditView.prototype._init = function(cb) {
-    require(['../model_form',
-             '../form_manager',
-             '../model/event',
-             '../form/event'], function(MF, FM, EM, EF) {
+    require(['feather/model_form',
+             'feather/form_manager',
+             'reporter/models/event',
+             'reporter/forms/event'], function(MF, FM, EM, EF) {
       EventForm = EF.EventForm;
       cb();
     });

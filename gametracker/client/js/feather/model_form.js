@@ -4,9 +4,11 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var EventEmitter = require('eventemitter').EventEmitter;
-  var Form = require('form_manager').Form;
-  var DateFormatter = require('utils/date').DateFormatter;
+  var EventEmitter = require('feather/event_emitter').EventEmitter;
+  var Form = require('feather/form_manager').Form;
+
+  // remove ?
+  var DateFormatter = require('reporter/utils/date').DateFormatter;
 
   function ModelForm(app) {
     this.app = app;

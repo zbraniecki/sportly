@@ -4,7 +4,7 @@ if (typeof define !== 'function') {
 define(function (require, exports) {
   'use strict';
 
-  var DateFormatter = require('utils/date').DateFormatter;
+  var DateFormatter = require('reporter/utils/date').DateFormatter;
 
   function DivisionModel() {
   }
@@ -13,7 +13,6 @@ define(function (require, exports) {
     'name': String,
   };
 
-  foo = 1;
   function EventModel(app) {
     this.app = app;
 
