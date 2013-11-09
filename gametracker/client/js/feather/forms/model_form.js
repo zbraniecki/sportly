@@ -8,9 +8,7 @@ define(function (require, exports) {
   var Form = require('feather/forms/manager').Form;
   var DateFormatter = require('feather/utils/date').DateFormatter;
 
-  function ModelForm(db, instance) {
-    this.db = db;
-
+  function ModelForm(instance) {
     this._emitter = new EventEmitter();
 
     var fields = this.constructor.model.model.filter(function (f) {
@@ -21,7 +19,7 @@ define(function (require, exports) {
 
     this.form.addEventListener('commit', this.commit.bind(this));
 
-    this.model = new this.constructor.model(db);
+    this.model = new this.constructor.model();
 
     if (instance) {
       this.fillForm(instance);

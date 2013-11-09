@@ -32,10 +32,12 @@ define(function (require, exports) {
   EventEditView.prototype._preShow = function(cb) {
     var rootNode = this.viewNode.querySelector('.panel-body');
 
-    rootNode.removeChild(rootNode.childNodes[0]);
+    if (rootNode.childNodes.length) {
+      rootNode.removeChild(rootNode.childNodes[0]);
+    }
 
     if (!('eid' in this.options)) {
-      var ef = new EventForm(this.viewManager.app.db);
+      var ef = new EventForm();
 
       ef.addEventListener('commit', function() {
         this.viewManager.showView('eventlist');
@@ -46,8 +48,8 @@ define(function (require, exports) {
       rootNode.appendChild(domFragment);
       cb();
     }
-    EventModel.get(this.viewManager.app.db, this.options.eid, function(model) {
-      var ef = new EventForm(this.viewManager.app.db, model);
+    EventModel.objects.get(this.options.eid, function(model) {
+      var ef = new EventForm(model);
 
       ef.addEventListener('commit', function() {
         this.viewManager.showView('eventlist');

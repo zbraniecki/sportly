@@ -1,10 +1,15 @@
 if (typeof define !== 'function') {
   var define = require('amdefine')(module);
 }
-define(function (require, exports) {
+define(['feather/utils/date',
+        'feather/models/model',
+        'feather/models/manager'],
+        function (date, model, manager) {
   'use strict';
 
-  var DateFormatter = require('feather/utils/date').DateFormatter;
+  var DateFormatter = date.DateFormatter;
+  var Model = model.Model;
+  var ModelManager = manager.ModelManager;
 
   function DivisionModel() {
   }
@@ -13,37 +18,22 @@ define(function (require, exports) {
     'name': String,
   };
 
-  function EventModel(db) {
-    this.db = db;
-
-    this.fields = {};
-    this.constructor.model.forEach(function (field) {
-      var name = field.name.toLowerCase().replace(' ', '_');
-      this.fields[name] = null;
-    }.bind(this));
+  function EventModel() {
+    Model.call(this);
   }
 
-  EventModel.get = function(db, eid, cb) {
-    var model = new EventModel(db);
-    db.getEvent(eid, function(doc) {
-      for(var k in model.fields) {
-        model.fields[k] = doc[k];
-      }
-      cb(model);
-    }.bind(this));
-  }
+  EventModel.prototype = Object.create(Model.prototype);
+  EventModel.prototype.constructor = EventModel;
 
-  EventModel.prototype.commit = function() {
-    var doc = {};
-    for (var k in this.fields) {
-      doc[k] = this.fields[k];
-    }
-    this.db.addEvent(doc);
-  }
+  EventModel.objects = new ModelManager(EventModel);
 
   EventModel.model = [
     { 
       'name': '_id',
+      'type': 'String',
+    },
+    { 
+      'name': '_rev',
       'type': 'String',
     },
     {
@@ -88,6 +78,8 @@ define(function (require, exports) {
     'division': {'type': 'ForeignKey', 'fk': 'Division'},
   };
 
-  exports.EventModel = EventModel;
-  exports.EventDivisionModel = EventDivisionModel;
+  return {
+    EventModel: EventModel,
+    EventDivisionModel: EventDivisionModel
+  };
 });

@@ -5,6 +5,7 @@ define(function (require, exports) {
   'use strict';
 
   var ViewManager = require('feather/view_manager');
+  var EventModel = require('reporter/models/event').EventModel;
   var View = ViewManager.View;
   var DateFormatter = require('feather/utils/date').DateFormatter;
 
@@ -27,9 +28,16 @@ define(function (require, exports) {
   EventListView.prototype.constructor = EventListView;
 
   EventListView.prototype._drawUI = function(cb) {
-    var db = this.viewManager.app.db;
+    var rootNode = this.viewNode.querySelector('tbody');
+    EventModel.objects.all(function(models) {
+      models.forEach(function(model) {
+        rootNode.appendChild(this.buildRowNode(model.fields));
+      }.bind(this));
+    }.bind(this));
 
-    db.addEventListener('event', 'added', function(evt) {
+    console.log('setting listener');
+    EventModel.objects.addEventListener('event', 'added', function(evt) {
+      console.log(evt);
       var rootNode = this.viewNode.querySelector('tbody');
       rootNode.appendChild(this.buildRowNode(evt));
     }.bind(this));
@@ -45,7 +53,7 @@ define(function (require, exports) {
       '_rev': tr.dataset.rev
     };
 
-    this.viewManager.app.db.removeEvent(evt);
+    EventModel.objects.delete(evt);
   }
 
   EventListView.prototype.onEditEvent = function(e) {
@@ -113,9 +121,7 @@ define(function (require, exports) {
       self.viewManager.showView('eventedit'); 
     });
 
-    var db = this.viewManager.app.db;
-
-    db.addEventListener('event', 'removed', function(eid) {
+    EventModel.objects.addEventListener('removed', function(eid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');
 

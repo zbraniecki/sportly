@@ -7,8 +7,8 @@ define(function (require, exports) {
   var EventModel = require('reporter/models/event').EventModel;
   var ModelForm = require('feather/forms/model_form').ModelForm;
 
-  function EventForm(db, instance) {
-    ModelForm.call(this, db, instance);
+  function EventForm(instance) {
+    ModelForm.call(this, instance);
   }
 
   ModelForm.extend(EventForm);
