@@ -5,7 +5,7 @@ define(function (require, exports) {
   'use strict';
 
   var EventModel = require('reporter/models/event').EventModel;
-  var ModelForm = require('feather/model_form').ModelForm;
+  var ModelForm = require('feather/forms/model_form').ModelForm;
 
   function EventForm(db, instance) {
     ModelForm.call(this, db, instance);

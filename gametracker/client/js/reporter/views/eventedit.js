@@ -19,8 +19,8 @@ define(function (require, exports) {
   EventEditView.prototype.constructor = EventEditView;
 
   EventEditView.prototype._init = function(cb) {
-    require(['feather/model_form',
-             'feather/form_manager',
+    require(['feather/forms/model_form',
+             'feather/forms/manager',
              'reporter/models/event',
              'reporter/forms/event'], function(MF, FM, EM, EF) {
       EventForm = EF.EventForm;

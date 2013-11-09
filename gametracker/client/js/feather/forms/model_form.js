@@ -5,7 +5,7 @@ define(function (require, exports) {
   'use strict';
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
-  var Form = require('feather/form_manager').Form;
+  var Form = require('feather/forms/manager').Form;
   var DateFormatter = require('feather/utils/date').DateFormatter;
 
   function ModelForm(db, instance) {
