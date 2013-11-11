@@ -12,7 +12,6 @@ define(['feather/event_emitter',
 
     Model.db.addEventListener('event', 'added', function(model) {
       this.emitter.emit('added', model);
-      console.log('emitted');
     }.bind(this));
     Model.db.addEventListener('event', 'removed', function(model) {
       this.emitter.emit('removed', model);

@@ -27,34 +27,34 @@ define(['feather/utils/date',
 
   EventModel.objects = new ModelManager(EventModel);
 
-  EventModel.model = [
+  EventModel.schema = [
     { 
       'name': '_id',
-      'type': 'String',
+      'type': 'string',
     },
     { 
       'name': '_rev',
-      'type': 'String',
+      'type': 'string',
     },
     {
-      'name': 'Name',
-      'type': 'String'
+      'name': 'name',
+      'type': 'string'
     },
     //'parent': {'type': 'ForeignKey', 'fk': 'Division'},
     //'series': Array,
     //'event_type': Array,
     //'field_type': Array,
     {
-      'name': 'Start date',
-      'type': 'DateTime',
+      'name': 'start_date',
+      'type': 'dateTime',
       'default': function() {
         var d = new Date();
         return DateFormatter.dateToString(d);
       },
     },
     {
-      'name': 'End date',
-      'type': 'DateTime',
+      'name': 'end_date',
+      'type': 'dateTime',
       'default': function() {
         var d = new Date();
         var h = d.getHours();
@@ -63,8 +63,8 @@ define(['feather/utils/date',
       },
     },
     {
-      'name': 'Location',
-      'type': 'String'
+      'name': 'location',
+      'type': 'string'
     },
     //'visibility': Array,
     //'organizer': Array,

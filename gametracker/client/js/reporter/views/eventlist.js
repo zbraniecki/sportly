@@ -29,16 +29,18 @@ define(function (require, exports) {
 
   EventListView.prototype._drawUI = function(cb) {
     var rootNode = this.viewNode.querySelector('tbody');
-    EventModel.objects.all(function(models) {
-      models.forEach(function(model) {
-        rootNode.appendChild(this.buildRowNode(model.fields));
-      }.bind(this));
-    }.bind(this));
-
-    console.log('setting listener');
-    EventModel.objects.addEventListener('event', 'added', function(evt) {
-      console.log(evt);
+    EventModel.objects.addEventListener('added', function(evt) {
       var rootNode = this.viewNode.querySelector('tbody');
+      var rows = rootNode.children;
+      
+      var newRow = this.buildRowNode(evt);
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        if (row.dataset.eid == evt._id) {
+          rootNode.replaceChild(newRow, row);
+          return;
+        }
+      }
       rootNode.appendChild(this.buildRowNode(evt));
     }.bind(this));
     cb();

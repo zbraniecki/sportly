@@ -3,9 +3,8 @@ define(function (require, exports) {
 
   function Model() {
     this.fields = {};
-    this.constructor.model.forEach(function (field) {
-      var name = field.name.toLowerCase().replace(' ', '_');
-      this.fields[name] = null;
+    this.constructor.schema.forEach(function (field) {
+      this.fields[field.name] = null;
     }.bind(this));
   }
 

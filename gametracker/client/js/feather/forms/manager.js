@@ -5,16 +5,18 @@ define(function (require, exports) {
   'use strict';
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
+  var DateFormatter = require('feather/utils/date').DateFormatter;
 
-  function Form(schema, name) {
+  function Form(fields, name, model) {
 
     this.fields = [];
     this.schema = [];
     this._emitter = new EventEmitter();
 
-    if (schema) {
-      this.fillSchema(schema, name);
+    if (model) {
+      this.fillSchema(fields, name);
       this.createFields();
+      this.fillFields(model);
     }
   }
 
@@ -23,23 +25,36 @@ define(function (require, exports) {
       this.schema.push(field);
     }.bind(this));
     this.schema.push({
-      'type': 'Submit',
-      'name': 'Submit',
+      'type': 'submit',
+      'name': 'submit',
     });
     this.name = name;
+  }
+
+  Form.prototype.fillFields = function(model) {
+    this.fields.forEach(function (field) {
+      switch (field.schema.type) {
+        case 'dateTime':
+          var val = DateFormatter.dateToString(model.fields[field.name]);
+          field.value = val;
+          break;
+        default:
+          field.value = model.fields[field.name];
+      }
+    }.bind(this));
   }
 
   Form.prototype.createFields = function() {
     this.schema.forEach(function(schemaElement) {
       var field;
       switch(schemaElement.type) {
-        case 'String':
+        case 'string':
           field = new StringField(schemaElement, this);
           break;
-        case 'DateTime':
+        case 'dateTime':
           field = new DateTimeField(schemaElement, this);
           break;
-        case 'Submit':
+        case 'submit':
           field = new SubmitField(schemaElement, this);
           break;
       }
@@ -82,6 +97,11 @@ define(function (require, exports) {
 
   /* Fields */
 
+  function toDisplayName(name) {
+    var name = name.replace('_', ' ');
+    return name[0].toUpperCase() + name.substr(1);
+  }
+
   function StringField(schema, form) {
     this.form = form;
     this.schema = schema;
@@ -101,7 +121,7 @@ define(function (require, exports) {
     formGroup.classList.add('form-group');
 
     var label = document.createElement('label');
-    label.textContent = this.schema.name;
+    label.textContent = toDisplayName(this.schema.name);
     label.classList.add('col-lg-2');
     label.classList.add('control-label');
     label.setAttribute('for', name);
@@ -146,7 +166,7 @@ define(function (require, exports) {
     formGroup.classList.add('form-group');
 
     var label = document.createElement('label');
-    label.textContent = this.schema.name;
+    label.textContent = toDisplayName(this.schema.name);
     label.classList.add('col-lg-2');
     label.classList.add('control-label');
     label.setAttribute('for', name);

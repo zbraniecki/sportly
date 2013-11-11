@@ -11,25 +11,32 @@ define(function (require, exports) {
   function ModelForm(instance) {
     this._emitter = new EventEmitter();
 
-    var fields = this.constructor.model.model.filter(function (f) {
-      var name = f.name.toLowerCase().replace(' ', '_');
-      return this.constructor.fields.indexOf(name) !== -1;
-    }.bind(this));
-    this.form = new Form(fields, this.constructor.formName);
-
-    this.form.addEventListener('commit', this.commit.bind(this));
-
     this.model = new this.constructor.model();
 
     if (instance) {
-      this.fillForm(instance);
+      this.fillModel(instance);
     }
+
+    var fields = [];
+    this.model.constructor.schema.forEach(function(field) {
+      if (this.constructor.fields.indexOf(field.name) === -1) {
+        return;
+      }
+      field.value = this.model.fields[field.name];
+      fields.push(field);
+    }.bind(this));
+
+    this.form = new Form(fields, this.constructor.formName, this.model);
+
+    this.form.addEventListener('commit', this.commit.bind(this));
+
+
   }
 
-  ModelForm.prototype.fillForm = function(instance) {
-    this.form.fields.forEach(function (field) {
-      field.value = instance.fields[field.name];
-    }.bind(this));
+  ModelForm.prototype.fillModel = function(instance) {
+    for (var k in this.model.fields) {
+      this.model.fields[k] = instance.fields[k];
+    }
   }
 
   ModelForm.prototype.addEventListener = function(type, cb) {
@@ -44,10 +51,10 @@ define(function (require, exports) {
     this.form.fields.forEach(function (field) {
       if (field.name in this.model.fields) {
         switch (field.schema.type) {
-          case 'String':
+          case 'string':
             this.model.fields[field.name] = field.value;
             break;
-          case 'DateTime':
+          case 'dateTime':
             var dt = DateFormatter.stringToDate(field.value);
             this.model.fields[field.name] = dt;
             break;
