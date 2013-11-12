@@ -47,6 +47,7 @@ define(function (require, exports) {
 
       rootNode.appendChild(domFragment);
       cb();
+      return;
     }
     EventModel.objects.get(this.options.eid, function(model) {
       var ef = new EventForm(model);

@@ -88,7 +88,7 @@ DB.prototype = {
   addEvent: function(evt) {
     var self = this;
     this.openDb('event', function(db) {
-      if (!('_id' in evt)) {
+      if (!evt['_id']) {
         evt._id = PouchDB.uuids()[0];
       }
       db.put(evt, function callback(err, result) {

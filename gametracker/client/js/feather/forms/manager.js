@@ -35,7 +35,10 @@ define(function (require, exports) {
     this.fields.forEach(function (field) {
       switch (field.schema.type) {
         case 'dateTime':
-          var val = DateFormatter.dateToString(model.fields[field.name]);
+          var val = model.fields[field.name];
+          if (val) {
+            val = DateFormatter.dateToString(val);
+          }
           field.value = val;
           break;
         default:
