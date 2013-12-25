@@ -33,7 +33,6 @@ define(function (require, exports) {
   }
 
   TeamListView.prototype.drawRow = function(doc) {
-    console.dir(doc);
     var rootNode = this.viewNode.querySelector('tbody');
     var rows = rootNode.children;
     var newRow = this.buildRowNode(doc.fields);
@@ -82,17 +81,12 @@ define(function (require, exports) {
     cols.forEach(function (col) {
       var td = document.createElement('td');
       switch (col) {
-        case 'date':
-          if (evt.start_date && evt.end_date) {
-            var dtStart = new Date(evt.start_date);
-            var dtEnd = new Date(evt.end_date);
-            var startStr = DateFormatter.dateToString(dtStart);
-            var endStr = DateFormatter.dateToString(dtEnd);
-            td.textContent = startStr + ' - ' + endStr;
-          }
-          break;
         case 'name':
-          td.textContent = evt.name;
+        case 'division':
+        case 'city':
+        case 'region':
+        case 'country':
+          td.textContent = evt[col];
           break;
         case 'action':
           var button = document.createElement('button');

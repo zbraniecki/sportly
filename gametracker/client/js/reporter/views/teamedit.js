@@ -56,7 +56,7 @@ define(function (require, exports) {
         this.viewManager.showView('teamlist');
       }.bind(this));
 
-      var domFragment = ef.getHTML();
+      var domFragment = tf.getHTML();
 
       rootNode.appendChild(domFragment);
       cb();
