@@ -25,6 +25,8 @@ define(['feather/utils/date',
   EventModel.prototype = Object.create(Model.prototype);
   EventModel.prototype.constructor = EventModel;
 
+  EventModel.dbName = 'event';
+
   EventModel.objects = new ModelManager(EventModel);
 
   EventModel.schema = [

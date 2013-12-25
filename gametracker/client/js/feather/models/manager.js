@@ -10,11 +10,15 @@ define(['feather/event_emitter',
     this.model = model;
     this.emitter = new EventEmitter();
 
-    Model.db.addEventListener('event', 'added', function(model) {
+    Model.db.addEventListener(this.model.dbName, 'added', function(doc) {
+      var model = new this.model();
+      for(var k in model.fields) {
+        model.fields[k] = doc[k];
+      }
       this.emitter.emit('added', model);
     }.bind(this));
-    Model.db.addEventListener('event', 'removed', function(model) {
-      this.emitter.emit('removed', model);
+    Model.db.addEventListener(this.model.dbName, 'removed', function(docid) {
+      this.emitter.emit('removed', docid);
     }.bind(this));
   }
 
@@ -24,7 +28,7 @@ define(['feather/event_emitter',
 
   ModelManager.prototype.get = function(eid, cb) {
     var model = new this.model();
-    Model.db.getEvent(eid, function(doc) {
+    Model.db.getDocument(eid, this.model.dbName, function(doc) {
       for(var k in model.fields) {
         model.fields[k] = doc[k];
       }
@@ -33,7 +37,7 @@ define(['feather/event_emitter',
   }
 
   ModelManager.prototype.all = function(cb) {
-    Model.db.getEvents(function(docs) {
+    Model.db.getDocuments(this.model.dbName, function(docs) {
       var models = [];
       docs.forEach(function(doc) {
         var model = new this.model();
@@ -47,7 +51,7 @@ define(['feather/event_emitter',
   }
 
   ModelManager.prototype.delete = function(evt, cb) {
-    Model.db.removeEvent(evt);
+    Model.db.removeDocument(evt, this.model.dbName);
   }
 
   return {

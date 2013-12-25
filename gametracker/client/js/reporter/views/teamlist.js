@@ -5,34 +5,35 @@ define(function (require, exports) {
   'use strict';
 
   var ViewManager = require('feather/view_manager');
-  var EventModel = require('reporter/models/event').EventModel;
+  var TeamModel = require('reporter/models/team').TeamModel;
   var View = ViewManager.View;
   var DateFormatter = require('feather/utils/date').DateFormatter;
 
   var cols = [
-    'date',
     'name',
     'division',
-    'teams',
-    'status',
+    'city',
+    'region',
+    'country',
     'action',
   ];
 
 
-  function EventListView(viewManager) {
+  function TeamListView(viewManager) {
     View.call(this, viewManager);
   }
 
 
-  EventListView.prototype = Object.create(View.prototype);
-  EventListView.prototype.constructor = EventListView;
+  TeamListView.prototype = Object.create(View.prototype);
+  TeamListView.prototype.constructor = TeamListView;
 
-  EventListView.prototype.drawRows = function(cb, docs) {
+  TeamListView.prototype.drawRows = function(cb, docs) {
     docs.forEach(this.drawRow.bind(this));
     cb();
   }
 
-  EventListView.prototype.drawRow = function(doc) {
+  TeamListView.prototype.drawRow = function(doc) {
+    console.dir(doc);
     var rootNode = this.viewNode.querySelector('tbody');
     var rows = rootNode.children;
     var newRow = this.buildRowNode(doc.fields);
@@ -46,17 +47,16 @@ define(function (require, exports) {
     rootNode.appendChild(newRow);
   }
 
-  EventListView.prototype._drawUI = function(cb) {
+  TeamListView.prototype._drawUI = function(cb) {
     var rootNode = this.viewNode.querySelector('tbody');
 
-    EventModel.objects.all(this.drawRows.bind(this, cb));
+    TeamModel.objects.all(this.drawRows.bind(this, cb));
 
     // it unfortunately reruns all events
-    EventModel.objects.addEventListener('added', this.drawRow.bind(this));
+    TeamModel.objects.addEventListener('added', this.drawRow.bind(this));
   }
 
-
-  EventListView.prototype.onRemoveEvent = function(e) {
+  TeamListView.prototype.onRemoveEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
 
     var evt = {
@@ -64,17 +64,17 @@ define(function (require, exports) {
       '_rev': tr.dataset.rev
     };
 
-    EventModel.objects.delete(evt);
+    TeamModel.objects.delete(evt);
   }
 
-  EventListView.prototype.onEditEvent = function(e) {
+  TeamListView.prototype.onTeamEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
-    this.viewManager.showView('eventedit', {
+    this.viewManager.showView('teamedit', {
       eid: tr.dataset.eid 
     }); 
   }
 
-  EventListView.prototype.buildRowNode = function(evt) {
+  TeamListView.prototype.buildRowNode = function(evt) {
     var tr = document.createElement('tr');
     tr.dataset.eid = evt._id;
     tr.dataset.rev = evt._rev;
@@ -104,7 +104,7 @@ define(function (require, exports) {
           span.classList.add('glyphicon');
           span.classList.add('glyphicon-edit');
           button.appendChild(span);
-          button.addEventListener('click', this.onEditEvent.bind(this));
+          button.addEventListener('click', this.onTeamEvent.bind(this));
           td.appendChild(button);
 
           var button = document.createElement('button');
@@ -124,20 +124,20 @@ define(function (require, exports) {
     return tr;
   }
 
-  EventListView.prototype._bindUI = function(cb) {
+  TeamListView.prototype._bindUI = function(cb) {
     var self = this;
 
     this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
     this.nodes['add_button'].addEventListener('click', function() {
-      self.viewManager.showView('eventedit'); 
+      self.viewManager.showView('teamedit'); 
     });
 
-    this.nodes['teams_button'] = this.viewNode.querySelector('.btn-teams');
-    this.nodes['teams_button'].addEventListener('click', function() {
-      self.viewManager.showView('teamlist'); 
+    this.nodes['events_button'] = this.viewNode.querySelector('.btn-events');
+    this.nodes['events_button'].addEventListener('click', function() {
+      self.viewManager.showView('eventlist'); 
     });
 
-    EventModel.objects.addEventListener('removed', function(eid) {
+    TeamModel.objects.addEventListener('removed', function(eid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');
 
@@ -150,5 +150,6 @@ define(function (require, exports) {
     cb();
   }
 
-  exports.View = EventListView;
+  exports.View = TeamListView;
 });
+

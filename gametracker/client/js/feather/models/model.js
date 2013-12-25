@@ -13,7 +13,11 @@ define(function (require, exports) {
     for (var k in this.fields) {
       doc[k] = this.fields[k];
     }
-    Model.db.addEvent(doc);
+    doc['acl'] = {
+      'groups': ['4hands'],
+      'users': ['rlenczewski'],
+    };
+    Model.db.putDocument(doc, this.constructor.dbName);
   }
 
   exports.Model = Model;
