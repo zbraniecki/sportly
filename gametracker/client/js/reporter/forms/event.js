@@ -18,7 +18,7 @@ define(function (require, exports) {
   EventForm.formName = 'EventForm';
 
   EventForm.fields = [
-    'name', 'start_date', 'end_date', 'location'
+    'name', 'start_date', 'end_date', 'location', 'team',
   ];
 
   exports.EventForm = EventForm;

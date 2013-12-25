@@ -68,6 +68,11 @@ define(['feather/utils/date',
       'name': 'location',
       'type': 'string'
     },
+    {
+      'name': 'team',
+      'type': 'foreignkey',
+      'model': 'Team',
+    },
     //'visibility': Array,
     //'organizer': Array,
   ];

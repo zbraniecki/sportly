@@ -6,6 +6,7 @@ define(function (require, exports) {
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
   var DateFormatter = require('feather/utils/date').DateFormatter;
+  var TeamModel = require('reporter/models/team').TeamModel;
 
   function Form(fields, name, model) {
 
@@ -56,6 +57,9 @@ define(function (require, exports) {
           break;
         case 'dateTime':
           field = new DateTimeField(schemaElement, this);
+          break;
+        case 'foreignkey':
+          field = new ForeignkeyField(schemaElement, this);
           break;
         case 'submit':
           field = new SubmitField(schemaElement, this);
@@ -224,6 +228,24 @@ define(function (require, exports) {
 
     valDiv.appendChild(button);
     formGroup.appendChild(valDiv);
+    return formGroup;
+  }
+
+  function ForeignkeyField(schema, form) {
+    this.form = form;
+    this.schema = schema;
+
+    this.value = null;
+    this.node = null;
+  }
+
+  ForeignkeyField.prototype.getHTML = function() {
+    var formGroup = document.createElement('div');
+    TeamModel.objects.get('9535F385-BB65-42C4-BE7B-8BED7DC5C820', function(doc) {
+      formGroup.textContent = doc.fields.name;
+      formGroup.dataset.tid = doc.fields._id;
+      this.value = doc.fields._id;
+    }.bind(this));
     return formGroup;
   }
 

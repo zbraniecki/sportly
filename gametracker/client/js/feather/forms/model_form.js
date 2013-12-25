@@ -58,6 +58,10 @@ define(function (require, exports) {
             var dt = DateFormatter.stringToDate(field.value);
             this.model.fields[field.name] = dt;
             break;
+          case 'foreignkey':
+            // here should go model
+            this.model.fields[field.name] = field.value;
+            break;
         }
       }
     }.bind(this));
