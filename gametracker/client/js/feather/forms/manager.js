@@ -42,6 +42,9 @@ define(function (require, exports) {
           }
           field.value = val;
           break;
+        case 'foreignkey':
+          field.value = model.fields[field.name].id;
+          break;
         default:
           field.value = model.fields[field.name];
       }
@@ -239,13 +242,36 @@ define(function (require, exports) {
     this.node = null;
   }
 
+  ForeignkeyField.prototype.onChange = function(evt) {
+    this.value = evt.target.value;
+  }
+
   ForeignkeyField.prototype.getHTML = function() {
+
     var formGroup = document.createElement('div');
-    TeamModel.objects.get('9535F385-BB65-42C4-BE7B-8BED7DC5C820', function(doc) {
-      formGroup.textContent = doc.fields.name;
-      formGroup.dataset.tid = doc.fields._id;
-      this.value = doc.fields._id;
+
+    TeamModel.objects.all(function(docs) {
+      var select = document.createElement('select');
+
+      for (var i in docs) {
+        var doc = docs[i];
+        var option = document.createElement('option');
+        option.textContent = doc.fields.name;
+        option.value = doc.fields._id;
+        select.appendChild(option);
+
+        if (!this.value) {
+          this.value = doc.fields._id;
+        } else if (this.value == doc.fields._id) {
+          option.setAttribute('selected', 'selected');
+        }
+      }
+      select.addEventListener('change', this.onChange.bind(this));
+
+      formGroup.appendChild(select);
     }.bind(this));
+
+
     return formGroup;
   }
 

@@ -22,7 +22,13 @@ define(function (require, exports) {
       if (this.constructor.fields.indexOf(field.name) === -1) {
         return;
       }
-      field.value = this.model.fields[field.name];
+      switch (field.type) {
+        case 'foreignkey':
+          field.value = this.model.fields[field.name].id;
+          break;
+        default:
+          field.value = this.model.fields[field.name];
+      }
       fields.push(field);
     }.bind(this));
 
