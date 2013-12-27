@@ -73,9 +73,15 @@ DB.prototype = {
   },
 
   sync: function(name) {
-    var opts = {continuous: true, complete: this.syncError};
+    var opts = {continuous: true, complete: this.onComplete.bind(this, name)};
     this.dbHandles[name].replicate.to(this.remote+name, opts);
     this.dbHandles[name].replicate.from(this.remote+name, opts);
+  },
+
+  onComplete: function(name) {
+    if (this.dbEmitters[name]) {
+      this.dbEmitters[name].emit('complete');
+    }
   },
 
   syncError: function(err) {
@@ -88,10 +94,11 @@ DB.prototype = {
   putDocument: function(doc, dbName) {
     var self = this;
     this.openDb(dbName, function(db) {
+      var oper = db.put;
       if (!doc['_id']) {
-        doc._id = PouchDB.uuids()[0];
+        oper = db.post;
       }
-      db.put(doc, function callback(err, result) {
+      oper(doc, function callback(err, result) {
         if (!err) {
           dump('added doc to '+dbName);
         }

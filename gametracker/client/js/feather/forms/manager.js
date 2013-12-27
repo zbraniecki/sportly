@@ -43,7 +43,9 @@ define(function (require, exports) {
           field.value = val;
           break;
         case 'foreignkey':
-          field.value = model.fields[field.name].id;
+          if (model.fields[field.name]) {
+            field.value = model.fields[field.name].id;
+          }
           break;
         default:
           field.value = model.fields[field.name];

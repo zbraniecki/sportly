@@ -24,7 +24,9 @@ define(function (require, exports) {
       }
       switch (field.type) {
         case 'foreignkey':
-          field.value = this.model.fields[field.name].id;
+          if (this.model.fields[field.name]) {
+            field.value = this.model.fields[field.name].id;
+          }
           break;
         default:
           field.value = this.model.fields[field.name];
