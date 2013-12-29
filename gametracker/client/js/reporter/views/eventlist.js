@@ -137,6 +137,11 @@ define(function (require, exports) {
       self.viewManager.showView('teamlist'); 
     });
 
+    this.nodes['players_button'] = this.viewNode.querySelector('.btn-players');
+    this.nodes['players_button'].addEventListener('click', function() {
+      self.viewManager.showView('playerlist'); 
+    });
+
     EventModel.objects.addEventListener('removed', function(eid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');

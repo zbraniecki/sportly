@@ -3,12 +3,14 @@ if (typeof define !== 'function') {
 }
 define(['feather/utils/date',
         'feather/models/model',
-        'feather/models/manager'],
-        function (date, model, manager) {
+        'feather/models/manager',
+        'reporter/models/player'],
+        function (date, model, manager, player) {
   'use strict';
 
   var Model = model.Model;
   var ModelManager = manager.ModelManager;
+  var PlayerModel = player.PlayerModel;
 
   function RosterModel() {
     Model.call(this);
@@ -47,9 +49,42 @@ define(['feather/utils/date',
     }
   ];
 
+  function RosterPlayerModel() {
+    Model.call(this);
+  }
+
+  RosterPlayerModel.prototype = Object.create(Model.prototype);
+  RosterPlayerModel.prototype.constructor = RosterPlayerModel;
+
+  RosterPlayerModel.dbName = 'roster_player';
+
+  RosterPlayerModel.objects = new ModelManager(RosterPlayerModel);
+
+
+  RosterPlayerModel.schema = [
+    { 
+      'name': '_id',
+      'type': 'string',
+    },
+    { 
+      'name': '_rev',
+      'type': 'string',
+    },
+    {
+      'name': 'roster',
+      'type': 'foreignkey',
+      'model': 'Roster',
+    },
+    {
+      'name': 'player',
+      'type': 'foreignkey',
+      'model': 'Player',
+    }
+  ];
 
   return {
     RosterModel: RosterModel,
+    RosterPlayerModel: RosterPlayerModel,
   };
 });
 

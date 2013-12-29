@@ -23,6 +23,7 @@ DB.prototype = {
     'team': 'team',
     'game': 'game',
     'event': 'event',
+    'player': 'player',
   },
   dbHandles: {
   },
