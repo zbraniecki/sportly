@@ -24,6 +24,8 @@ DB.prototype = {
     'game': 'game',
     'event': 'event',
     'player': 'player',
+    'roster': 'roster',
+    'roster_player': 'roster_player',
   },
   dbHandles: {
   },

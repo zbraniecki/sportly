@@ -6,7 +6,6 @@ define(function (require, exports) {
 
   var EventEmitter = require('feather/event_emitter').EventEmitter;
   var DateFormatter = require('feather/utils/date').DateFormatter;
-  var TeamModel = require('reporter/models/team').TeamModel;
 
   function Form(fields, name, model) {
 
@@ -250,9 +249,14 @@ define(function (require, exports) {
 
   ForeignkeyField.prototype.getHTML = function() {
 
+    var lname = this.schema.model.toLowerCase();
+    var Model = require('reporter/models/'+lname)[this.schema.model+'Model'];
+
     var formGroup = document.createElement('div');
 
-    TeamModel.objects.all(function(docs) {
+    Model.objects.all(function(docs) {
+      var label = document.createElement('label');
+      label.textContent = this.schema.model;
       var select = document.createElement('select');
 
       for (var i in docs) {
@@ -270,6 +274,7 @@ define(function (require, exports) {
       }
       select.addEventListener('change', this.onChange.bind(this));
 
+      formGroup.appendChild(label);
       formGroup.appendChild(select);
     }.bind(this));
 

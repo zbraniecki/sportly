@@ -74,6 +74,10 @@ define(function (require, exports) {
   }
 
   TeamListView.prototype.onRosterListEvent = function(e) {
+    var tr = e.target.parentNode.parentNode;
+    this.viewManager.showView('rosterlist', {
+      eid: tr.dataset.eid 
+    }); 
   }
 
   TeamListView.prototype.buildRowNode = function(evt) {

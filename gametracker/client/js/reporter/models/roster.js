@@ -19,7 +19,7 @@ define(['feather/utils/date',
   RosterModel.prototype = Object.create(Model.prototype);
   RosterModel.prototype.constructor = RosterModel;
 
-  RosterModel.dbName = 'team';
+  RosterModel.dbName = 'roster';
 
   RosterModel.objects = new ModelManager(RosterModel);
 

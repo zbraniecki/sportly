@@ -5,7 +5,7 @@ define(function (require, exports) {
   'use strict';
 
   var ViewManager = require('feather/view_manager');
-  var PlayerModel = require('reporter/models/player').PlayerModel;
+  var RosterModel = require('reporter/models/roster').RosterModel;
   var View = ViewManager.View;
   var DateFormatter = require('feather/utils/date').DateFormatter;
 
@@ -16,20 +16,20 @@ define(function (require, exports) {
   ];
 
 
-  function PlayerListView(viewManager) {
+  function RosterListView(viewManager) {
     View.call(this, viewManager);
   }
 
 
-  PlayerListView.prototype = Object.create(View.prototype);
-  PlayerListView.prototype.constructor = PlayerListView;
+  RosterListView.prototype = Object.create(View.prototype);
+  RosterListView.prototype.constructor = RosterListView;
 
-  PlayerListView.prototype.drawRows = function(cb, docs) {
+  RosterListView.prototype.drawRows = function(cb, docs) {
     docs.forEach(this.drawRow.bind(this));
     cb();
   }
 
-  PlayerListView.prototype.drawRow = function(doc) {
+  RosterListView.prototype.drawRow = function(doc) {
     var rootNode = this.viewNode.querySelector('tbody');
     var rows = rootNode.children;
     var newRow = this.buildRowNode(doc.fields);
@@ -43,16 +43,16 @@ define(function (require, exports) {
     rootNode.appendChild(newRow);
   }
 
-  PlayerListView.prototype._drawUI = function(cb) {
+  RosterListView.prototype._drawUI = function(cb) {
     var rootNode = this.viewNode.querySelector('tbody');
 
-    PlayerModel.objects.all(this.drawRows.bind(this, cb));
+    RosterModel.objects.all(this.drawRows.bind(this, cb));
 
     // it unfortunately reruns all events
-    PlayerModel.objects.addEventListener('added', this.drawRow.bind(this));
+    RosterModel.objects.addEventListener('added', this.drawRow.bind(this));
   }
 
-  PlayerListView.prototype.onRemoveEvent = function(e) {
+  RosterListView.prototype.onRemoveEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
 
     var evt = {
@@ -60,17 +60,17 @@ define(function (require, exports) {
       '_rev': tr.dataset.rev
     };
 
-    PlayerModel.objects.delete(evt);
+    RosterModel.objects.delete(evt);
   }
 
-  PlayerListView.prototype.onTeamEvent = function(e) {
+  RosterListView.prototype.onTeamEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
-    this.viewManager.showView('playeredit', {
+    this.viewManager.showView('rosteredit', {
       eid: tr.dataset.eid 
     }); 
   }
 
-  PlayerListView.prototype.buildRowNode = function(evt) {
+  RosterListView.prototype.buildRowNode = function(evt) {
     var tr = document.createElement('tr');
     tr.dataset.eid = evt._id;
     tr.dataset.rev = evt._rev;
@@ -112,12 +112,12 @@ define(function (require, exports) {
     return tr;
   }
 
-  PlayerListView.prototype._bindUI = function(cb) {
+  RosterListView.prototype._bindUI = function(cb) {
     var self = this;
 
     this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
     this.nodes['add_button'].addEventListener('click', function() {
-      self.viewManager.showView('playeredit'); 
+      self.viewManager.showView('rosteredit'); 
     });
 
     this.nodes['events_button'] = this.viewNode.querySelector('.btn-events');
@@ -130,7 +130,7 @@ define(function (require, exports) {
       self.viewManager.showView('teamlist'); 
     });
 
-    PlayerModel.objects.addEventListener('removed', function(eid) {
+    RosterModel.objects.addEventListener('removed', function(eid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');
 
@@ -143,6 +143,6 @@ define(function (require, exports) {
     cb();
   }
 
-  exports.View = PlayerListView;
+  exports.View = RosterListView;
 });
 
