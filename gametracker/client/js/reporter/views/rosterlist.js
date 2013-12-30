@@ -8,6 +8,7 @@ define(function (require, exports) {
   var RosterModel = require('reporter/models/roster').RosterModel;
   var View = ViewManager.View;
   var DateFormatter = require('feather/utils/date').DateFormatter;
+  var TeamModel = require('reporter/models/team').TeamModel;
 
   var cols = [
     'firstname',
@@ -35,12 +36,21 @@ define(function (require, exports) {
     var newRow = this.buildRowNode(doc.fields);
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      if (row.dataset.eid == doc.fields._id) {
+      if (row.dataset.rid == doc.fields._id) {
         rootNode.replaceChild(newRow, row);
         return;
       }
     }
     rootNode.appendChild(newRow);
+  }
+
+  RosterListView.prototype._preShow = function(cb) {
+    var tid = this.options.tid;
+
+    TeamModel.objects.get(tid, function(doc) {
+      this.viewNode.querySelector('.panel-title').textContent = 'Roster for '+doc.fields.name;
+      cb();
+    }.bind(this));
   }
 
   RosterListView.prototype._drawUI = function(cb) {
@@ -56,7 +66,7 @@ define(function (require, exports) {
     var tr = e.target.parentNode.parentNode;
 
     var evt = {
-      '_id': tr.dataset.eid,
+      '_id': tr.dataset.rid,
       '_rev': tr.dataset.rev
     };
 
@@ -66,13 +76,13 @@ define(function (require, exports) {
   RosterListView.prototype.onTeamEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
     this.viewManager.showView('rosteredit', {
-      eid: tr.dataset.eid 
+      rid: tr.dataset.rid 
     }); 
   }
 
   RosterListView.prototype.buildRowNode = function(evt) {
     var tr = document.createElement('tr');
-    tr.dataset.eid = evt._id;
+    tr.dataset.rid = evt._id;
     tr.dataset.rev = evt._rev;
 
     cols.forEach(function (col) {
@@ -117,8 +127,10 @@ define(function (require, exports) {
 
     this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
     this.nodes['add_button'].addEventListener('click', function() {
-      self.viewManager.showView('rosteredit'); 
-    });
+      self.viewManager.showView('rosteredit', {
+        tid: this.options.tid, 
+      }); 
+    }.bind(this));
 
     this.nodes['events_button'] = this.viewNode.querySelector('.btn-events');
     this.nodes['events_button'].addEventListener('click', function() {
@@ -130,12 +142,12 @@ define(function (require, exports) {
       self.viewManager.showView('teamlist'); 
     });
 
-    RosterModel.objects.addEventListener('removed', function(eid) {
+    RosterModel.objects.addEventListener('removed', function(rid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');
 
       for (var i=0; i < trs.length; i++) {
-        if (trs[i].dataset.eid == eid) {
+        if (trs[i].dataset.rid == rid) {
           trs[i].parentNode.removeChild(trs[i]);
         }
       }

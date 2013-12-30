@@ -9,6 +9,7 @@ define(function (require, exports) {
 
   var RosterForm = null;
   var RosterModel = null;
+  var TeamModel = null;
 
   function RosterEditView(viewManager) {
     View.call(this, viewManager);
@@ -22,9 +23,11 @@ define(function (require, exports) {
     require(['feather/forms/model_form',
              'feather/forms/manager',
              'reporter/models/roster',
-             'reporter/forms/roster'], function(MF, FM, RM, RF) {
+             'reporter/forms/roster',
+             'reporter/models/team'], function(MF, FM, RM, RF, TM) {
       RosterForm = RF.RosterForm;
       RosterModel = RM.RosterModel;
+      TeamModel = TM.TeamModel;
       cb();
     });
   }
@@ -36,30 +39,38 @@ define(function (require, exports) {
       rootNode.removeChild(rootNode.childNodes[0]);
     }
 
-    if (!('eid' in this.options)) {
-      var tf = new RosterForm();
+    var tid = this.options.tid;
 
-      tf.addEventListener('commit', function() {
-        this.viewManager.showView('rosterlist');
+    TeamModel.objects.get(tid, function(doc) {
+
+      this.viewNode.querySelector('.panel-title').textContent = 'New roster for ' + doc.fields.name;
+
+      if (!('rid' in this.options)) {
+        var tf = new RosterForm();
+
+        tf.addEventListener('commit', function() {
+          this.viewManager.showView('rosterlist');
+        }.bind(this));
+
+        var domFragment = tf.getHTML();
+
+        rootNode.appendChild(domFragment);
+        cb();
+        return;
+      }
+
+      RosterModel.objects.get(this.options.rid, function(model) {
+        var tf = new RosterForm(model);
+
+        tf.addEventListener('commit', function() {
+          this.viewManager.showView('rosterlist');
+        }.bind(this));
+
+        var domFragment = tf.getHTML();
+
+        rootNode.appendChild(domFragment);
+        cb();
       }.bind(this));
-
-      var domFragment = tf.getHTML();
-
-      rootNode.appendChild(domFragment);
-      cb();
-      return;
-    }
-    RosterModel.objects.get(this.options.eid, function(model) {
-      var tf = new RosterForm(model);
-
-      tf.addEventListener('commit', function() {
-        this.viewManager.showView('rosterlist');
-      }.bind(this));
-
-      var domFragment = tf.getHTML();
-
-      rootNode.appendChild(domFragment);
-      cb();
     }.bind(this));
   }
 

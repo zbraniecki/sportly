@@ -38,7 +38,7 @@ define(function (require, exports) {
     var newRow = this.buildRowNode(doc.fields);
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      if (row.dataset.eid == doc.fields._id) {
+      if (row.dataset.tid == doc.fields._id) {
         rootNode.replaceChild(newRow, row);
         return;
       }
@@ -59,7 +59,7 @@ define(function (require, exports) {
     var tr = e.target.parentNode.parentNode;
 
     var evt = {
-      '_id': tr.dataset.eid,
+      '_id': tr.dataset.tid,
       '_rev': tr.dataset.rev
     };
 
@@ -69,20 +69,20 @@ define(function (require, exports) {
   TeamListView.prototype.onTeamEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
     this.viewManager.showView('teamedit', {
-      eid: tr.dataset.eid 
+      tid: tr.dataset.tid 
     }); 
   }
 
   TeamListView.prototype.onRosterListEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
     this.viewManager.showView('rosterlist', {
-      eid: tr.dataset.eid 
+      tid: tr.dataset.tid 
     }); 
   }
 
   TeamListView.prototype.buildRowNode = function(evt) {
     var tr = document.createElement('tr');
-    tr.dataset.eid = evt._id;
+    tr.dataset.tid = evt._id;
     tr.dataset.rev = evt._rev;
 
     cols.forEach(function (col) {
@@ -155,12 +155,12 @@ define(function (require, exports) {
       self.viewManager.showView('playerlist'); 
     });
 
-    TeamModel.objects.addEventListener('removed', function(eid) {
+    TeamModel.objects.addEventListener('removed', function(tid) {
       var rootNode = this.viewNode.querySelector('tbody');
       var trs = rootNode.getElementsByTagName('tr');
 
       for (var i=0; i < trs.length; i++) {
-        if (trs[i].dataset.eid == eid) {
+        if (trs[i].dataset.tid == tid) {
           trs[i].parentNode.removeChild(trs[i]);
         }
       }
