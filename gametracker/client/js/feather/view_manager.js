@@ -10,7 +10,7 @@ define(function (require, exports) {
     this.currentView = null;
   }
 
-  ViewManager.prototype.init = function() {
+  ViewManager.prototype.init = function(opts) {
     var viewNodes = document.querySelectorAll('.view');
 
     for (var i = 0; i < viewNodes.length; i++) {
@@ -19,17 +19,15 @@ define(function (require, exports) {
 
       this.views[name] = {'node': viewNodes[i], 'obj': null};
     } 
-    this.showView('eventlist');
   }
 
   ViewManager.prototype.initView = function(name, cb) {
     var view = this.views[name];
-    var appDir = this.app.appName.toLowerCase();
-    var self = this;
+    var appDir = this.app.constructor.name.toLowerCase();
     require([appDir+'/views/'+name], function(View) {
-      view.obj = new View.View(self);
+      view.obj = new View.View(this);
       view.obj.init(view.node, cb);
-    });
+    }.bind(this));
   }
 
   ViewManager.prototype.ensureViewInitialized = function(name, cb) {
@@ -43,19 +41,18 @@ define(function (require, exports) {
 
   ViewManager.prototype.showView = function(name, options, cb) {
     var view = this.views[name];
-    var self = this;
     this.ensureViewInitialized(name, function() {
       view.obj.preShow(options, function() {
-        if (self.currentView) {
-          self.views[self.currentView].node.classList.remove('current');
+        if (this.currentView) {
+          this.views[this.currentView].node.classList.remove('current');
         }
         view.node.classList.add('current');
-        self.currentView = name;
+        this.currentView = name;
         if (cb) {
           cb();
         }
-      });
-    });
+      }.bind(this));
+    }.bind(this));
   }
 
 
@@ -68,18 +65,25 @@ define(function (require, exports) {
     this.options = {};
   }
 
-  View.prototype.init = function(node, cb) {
-    if (this._init) {
-      this._init(function() {
-        this.viewNode = node;
-        cb();
-      }.bind(this));
-    } else {
-      this.viewNode = node;
-      cb();
-    }
+  View.extend = function(subClass){
+    subClass.prototype = Object.create(View.prototype);
+    subClass.prototype.constructor = subClass;
   }
 
+  View.prototype.init = function(node, cb) {
+    this.viewNode = node;
+    cb();
+  }
+
+  View.prototype.preShow = function(options, cb) {
+    cb();
+  }
+
+  View.prototype.preHide = function(cb) {
+    cb();
+  }
+
+  /*
   View.prototype.bindUI = function(cb) {
     if (this._bindUI) {
       this._bindUI(function() {
@@ -125,6 +129,7 @@ define(function (require, exports) {
 
   View.prototype.preHide = function() {
   }
+  */
 
   exports.ViewManager = ViewManager;
   exports.View = View;

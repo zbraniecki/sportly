@@ -18,20 +18,24 @@ define(function (require, exports) {
     }
 
     var fields = [];
-    this.model.constructor.schema.forEach(function(field) {
-      if (this.constructor.fields.indexOf(field.name) === -1) {
-        return;
+    this.constructor.fields.forEach(function(field) {
+      var mfield = this.model.constructor.schema[field];
+
+      if (mfield) {
+        switch (mfield.type) {
+          case 'foreignkey':
+            if (this.model.fields[mfield.name]) {
+              field.value = this.model.fields[mfield.name].id;
+            }
+            break;
+          default:
+            field.value = this.model.fields[mfield.name];
+        }
+        mfield.name = field;
+        fields.push(mfield);
+      } else {
+        fields.push(field);
       }
-      switch (field.type) {
-        case 'foreignkey':
-          if (this.model.fields[field.name]) {
-            field.value = this.model.fields[field.name].id;
-          }
-          break;
-        default:
-          field.value = this.model.fields[field.name];
-      }
-      fields.push(field);
     }.bind(this));
 
     this.form = new Form(fields, this.constructor.formName, this.model);
@@ -55,9 +59,9 @@ define(function (require, exports) {
     return this._emitter.removeEventListener(type, cb);
   }
 
-  ModelForm.prototype.commit = function() {
+  ModelForm.prototype.commit = function(cb) {
     this.form.fields.forEach(function (field) {
-      if (field.name in this.model.fields) {
+      if (field.name && (field.name in this.model.fields)) {
         switch (field.schema.type) {
           case 'string':
             this.model.fields[field.name] = field.value;
@@ -67,14 +71,18 @@ define(function (require, exports) {
             this.model.fields[field.name] = dt;
             break;
           case 'foreignkey':
-            // here should go model
+            // here should go model object, not it's ID
             this.model.fields[field.name] = field.value;
             break;
         }
       }
     }.bind(this));
-    this.model.commit();
-    this._emitter.emit('commit');
+    this.model.commit(function(id) {
+      this._emitter.emit('commit');
+      if (cb) {
+        cb(id);
+      }
+    }.bind(this));
   }
 
   ModelForm.prototype.getHTML = function() {

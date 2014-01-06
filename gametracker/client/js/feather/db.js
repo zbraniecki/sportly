@@ -1,16 +1,14 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
-define(function (require, exports) {
+define(['feather/event_emitter',
+        'feather/models/model'], function (ee, model) {
   'use strict';
 
-  var EventEmitter = require('feather/event_emitter').EventEmitter;
+  var EventEmitter = ee.EventEmitter;
 
-function DB() {
-  this.startSync();
+function DB(app) {
+  this.app = app;
 }
 
-var DEBUG = false;
+var DEBUG = true;
 
 function dump(msg) {
   if (DEBUG) {
@@ -19,20 +17,15 @@ function dump(msg) {
 }
 
 DB.prototype = {
-  dbNames: {
-    'team': 'team',
-    'game': 'game',
-    'event': 'event',
-    'player': 'player',
-    'roster': 'roster',
-    'roster_player': 'roster_player',
-  },
   dbHandles: {
   },
   dbEmitters: {
   },
   remote: 'http://zbraniecki:zbraniecki@127.0.0.1:5984/',
 
+  init: function(opts) {
+    model.Model.db = this;
+  },
   openDb: function(name, cb) {
     if (!this.dbHandles[name]) {
       this.initDBHandle(name);
@@ -50,9 +43,11 @@ DB.prototype = {
 
   initDBHandle: function(name) {
     this.dbHandles[name] = new PouchDB(name);
+    //this.sync(name);
   },
 
   registerChangeListener: function(name) {
+    dump('registering change listener for '+name);
     this.dbHandles[name].changes({
       continuous: true,
       include_docs: true,
@@ -66,25 +61,11 @@ DB.prototype = {
     });
   },
 
-  startSync: function() {
-    for (var name in this.dbNames) {
-      if (!this.dbHandles[name]) {
-        this.initDBHandle(name);
-      }
-      this.sync(this.dbNames[name]);
-    }
-  },
-
   sync: function(name) {
-    var opts = {continuous: true, complete: this.onComplete.bind(this, name)};
+    dump('starting sync for '+name);
+    var opts = {continuous: false};
     this.dbHandles[name].replicate.to(this.remote+name, opts);
     this.dbHandles[name].replicate.from(this.remote+name, opts);
-  },
-
-  onComplete: function(name) {
-    if (this.dbEmitters[name]) {
-      this.dbEmitters[name].emit('complete');
-    }
   },
 
   syncError: function(err) {
@@ -94,7 +75,7 @@ DB.prototype = {
   clear: function() {
   },
 
-  putDocument: function(doc, dbName) {
+  putDocument: function(doc, dbName, cb) {
     var self = this;
     this.openDb(dbName, function(db) {
       var oper = db.put;
@@ -105,6 +86,7 @@ DB.prototype = {
         if (!err) {
           dump('added doc to '+dbName);
         }
+        cb(result.id);
       });
     });
   },
@@ -138,6 +120,8 @@ DB.prototype = {
   },
 }
 
-exports.DB = DB;
+return {
+  DB: DB,
+};
 
 });

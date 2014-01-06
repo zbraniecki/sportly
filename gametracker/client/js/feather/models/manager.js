@@ -1,34 +1,34 @@
-define(['feather/event_emitter',
-        'feather/models/model'],
-       function (emitter, model) {
+define(['feather/event_emitter'],
+       function (emitter) {
   'use strict';
 
   var EventEmitter = emitter.EventEmitter;
-  var Model = model.Model;
 
   function ModelManager(model) {
     this.model = model;
-    this.emitter = new EventEmitter();
 
-    Model.db.addEventListener(this.model.dbName, 'added', function(doc) {
-      var model = new this.model();
-      for(var k in model.fields) {
-        model.fields[k] = doc[k];
-      }
-      this.emitter.emit('added', model);
-    }.bind(this));
-    Model.db.addEventListener(this.model.dbName, 'removed', function(docid) {
-      this.emitter.emit('removed', docid);
-    }.bind(this));
   }
 
   ModelManager.prototype.addEventListener = function(type, cb) {
+    if (!this.emitter) {
+      this.emitter = new EventEmitter();
+      this.model.db.addEventListener(this.model.dbName, 'added', function(doc) {
+        var model = new this.model();
+        for(var k in model.fields) {
+          model.fields[k] = doc[k];
+        }
+        this.emitter.emit('added', model);
+      }.bind(this));
+      this.model.db.addEventListener(this.model.dbName, 'removed', function(docid) {
+        this.emitter.emit('removed', docid);
+      }.bind(this));
+    }
     this.emitter.addEventListener(type, cb);
   }
 
   ModelManager.prototype.get = function(eid, cb) {
     var model = new this.model();
-    Model.db.getDocument(eid, this.model.dbName, function(doc) {
+    this.model.db.getDocument(eid, this.model.dbName, function(doc) {
       for(var k in model.fields) {
         model.fields[k] = doc[k];
       }
@@ -37,13 +37,15 @@ define(['feather/event_emitter',
   }
 
   ModelManager.prototype.all = function(cb) {
-    Model.db.getDocuments(this.model.dbName, function(docs) {
+    this.model.db.getDocuments(this.model.dbName, function(docs) {
       var models = [];
       docs.forEach(function(doc) {
         var model = new this.model();
         for(var k in model.fields) {
           model.fields[k] = doc[k];
         }
+        model.fields['_id'] = doc._id;
+        model.fields['_rev'] = doc._rev;
         models.push(model);
       }.bind(this));
       cb(models);
@@ -51,7 +53,7 @@ define(['feather/event_emitter',
   }
 
   ModelManager.prototype.delete = function(evt, cb) {
-    Model.db.removeDocument(evt, this.model.dbName);
+    this.model.db.removeDocument(evt, this.model.dbName);
   }
 
   return {

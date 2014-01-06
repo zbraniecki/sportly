@@ -1,61 +1,39 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
 define(['feather/utils/date',
-        'feather/models/model',
-        'feather/models/manager'],
-        function (date, model, manager) {
+        'feather/models/model'],
+        function (date, model) {
   'use strict';
 
   var DateFormatter = date.DateFormatter;
   var Model = model.Model;
-  var ModelManager = manager.ModelManager;
-
-  function DivisionModel() {
-  }
-
-  DivisionModel.model = {
-    'name': String,
-  };
 
   function EventModel() {
     Model.call(this);
   }
 
-  EventModel.prototype = Object.create(Model.prototype);
-  EventModel.prototype.constructor = EventModel;
+  Model.extend(EventModel);
 
-  EventModel.dbName = 'event';
-
-  EventModel.objects = new ModelManager(EventModel);
-
-  EventModel.schema = [
-    { 
-      'name': '_id',
+  EventModel.schema = {
+    '_id': {
       'type': 'string',
     },
-    { 
-      'name': '_rev',
+    '_rev': {
       'type': 'string',
     },
-    {
-      'name': 'name',
-      'type': 'string'
+    'name': {
+      'type': 'string',
     },
     //'parent': {'type': 'ForeignKey', 'fk': 'Division'},
     //'series': Array,
     //'event_type': Array,
     //'field_type': Array,
-    {
-      'name': 'start_date',
+    'start_date': {
       'type': 'dateTime',
       'default': function() {
         var d = new Date();
         return DateFormatter.dateToString(d);
       },
     },
-    {
-      'name': 'end_date',
+    'end_date': {
       'type': 'dateTime',
       'default': function() {
         var d = new Date();
@@ -64,29 +42,15 @@ define(['feather/utils/date',
         return DateFormatter.dateToString(d);
       },
     },
-    {
-      'name': 'location',
+    'location': {
       'type': 'string'
-    },
-    {
-      'name': 'team',
-      'type': 'foreignkey',
-      'model': 'Team',
     },
     //'visibility': Array,
     //'organizer': Array,
-  ];
-
-  function EventDivisionModel() {
-  }
-
-  EventDivisionModel.model = {
-    'event': {'type': 'ForeignKey', 'fk': 'Event'},
-    'division': {'type': 'ForeignKey', 'fk': 'Division'},
   };
+
 
   return {
     EventModel: EventModel,
-    EventDivisionModel: EventDivisionModel
   };
 });

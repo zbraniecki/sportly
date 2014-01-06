@@ -1,13 +1,9 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
 define(function (require, exports) {
   'use strict';
 
-  var ViewManager = require('feather/view_manager');
-  var EventModel = require('reporter/models/event').EventModel;
-  var View = ViewManager.View;
+  var View = require('feather/view_manager').View;
   var DateFormatter = require('feather/utils/date').DateFormatter;
+  var EventModel = require('reporter/models/event').EventModel;
 
   var cols = [
     'date',
@@ -23,9 +19,52 @@ define(function (require, exports) {
     View.call(this, viewManager);
   }
 
+  View.extend(EventListView);
 
-  EventListView.prototype = Object.create(View.prototype);
-  EventListView.prototype.constructor = EventListView;
+  EventListView.prototype.init = function(node, cb) {
+    View.prototype.init.call(this, node, cb);
+
+    var self = this;
+
+    this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
+    this.nodes['add_button'].addEventListener('click', function() {
+      self.viewManager.showView('eventedit'); 
+    });
+
+    this.nodes['teams_button'] = this.viewNode.querySelector('.btn-teams');
+    this.nodes['teams_button'].addEventListener('click', function() {
+      self.viewManager.showView('teamlist'); 
+    });
+
+    this.nodes['players_button'] = this.viewNode.querySelector('.btn-players');
+    this.nodes['players_button'].addEventListener('click', function() {
+      self.viewManager.showView('playerlist'); 
+    });
+
+  }
+
+  EventListView.prototype.onDataLoaded = function() {
+    EventModel.objects.addEventListener('added', this.drawRow.bind(this));
+    EventModel.objects.addEventListener('removed', this.removeRow.bind(this));
+    //EventModel.db.sync('event');
+  }
+
+  EventListView.prototype.preShow = function(options, cb) {
+    var EventModel = require('reporter/models/event').EventModel;
+
+    EventModel.objects.all(this.drawRows.bind(this, function() {
+      this.onDataLoaded();
+      View.prototype.preShow.call(this, options, cb);
+    }.bind(this)));
+
+  }
+
+  EventListView.prototype.preHide = function(cb) {
+    EventModel.objects.removeEventListener('added');
+    EventModel.objects.removeEventListener('removed');
+    View.prototype.preHide.call(this, cb);
+  }
+
 
   EventListView.prototype.drawRows = function(cb, docs) {
     docs.forEach(this.drawRow.bind(this));
@@ -46,15 +85,17 @@ define(function (require, exports) {
     rootNode.appendChild(newRow);
   }
 
-  EventListView.prototype._drawUI = function(cb) {
+  EventListView.prototype.removeRow = function(eid) {
+    console.log('removed registered '+eid)
     var rootNode = this.viewNode.querySelector('tbody');
+    var trs = rootNode.getElementsByTagName('tr');
 
-    EventModel.objects.all(this.drawRows.bind(this, cb));
-
-    // it unfortunately reruns all events
-    EventModel.objects.addEventListener('added', this.drawRow.bind(this));
+    for (var i=0; i < trs.length; i++) {
+      if (trs[i].dataset.eid == eid) {
+        trs[i].parentNode.removeChild(trs[i]);
+      }
+    }
   }
-
 
   EventListView.prototype.onRemoveEvent = function(e) {
     var tr = e.target.parentNode.parentNode;
@@ -122,37 +163,6 @@ define(function (require, exports) {
       tr.appendChild(td);
     }.bind(this));
     return tr;
-  }
-
-  EventListView.prototype._bindUI = function(cb) {
-    var self = this;
-
-    this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
-    this.nodes['add_button'].addEventListener('click', function() {
-      self.viewManager.showView('eventedit'); 
-    });
-
-    this.nodes['teams_button'] = this.viewNode.querySelector('.btn-teams');
-    this.nodes['teams_button'].addEventListener('click', function() {
-      self.viewManager.showView('teamlist'); 
-    });
-
-    this.nodes['players_button'] = this.viewNode.querySelector('.btn-players');
-    this.nodes['players_button'].addEventListener('click', function() {
-      self.viewManager.showView('playerlist'); 
-    });
-
-    EventModel.objects.addEventListener('removed', function(eid) {
-      var rootNode = this.viewNode.querySelector('tbody');
-      var trs = rootNode.getElementsByTagName('tr');
-
-      for (var i=0; i < trs.length; i++) {
-        if (trs[i].dataset.eid == eid) {
-          trs[i].parentNode.removeChild(trs[i]);
-        }
-      }
-    }.bind(this));
-    cb();
   }
 
   exports.View = EventListView;

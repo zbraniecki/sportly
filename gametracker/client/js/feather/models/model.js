@@ -1,36 +1,63 @@
-define(function (require, exports) {
+define(['feather/models/manager'],
+       function (mmanager) {
   'use strict';
 
   function Model() {
     this.fields = {};
-    this.constructor.schema.forEach(function (field) {
-      this.fields[field.name] = null;
-    }.bind(this));
+    for (var i in this.constructor.schema) {
+      var field = this.constructor.schema[i];
+
+      this.fields[i] = null;
+    }
   }
 
-  Model.prototype.commit = function() {
+  Model.db = null;
+
+  function getDBName(db) {
+    var name = db.name.substr(0, db.name.length - 5);
+    return name.toLowerCase();
+  }
+
+  Model.extend = function(subClass){
+    subClass.prototype = Object.create(Model.prototype);
+    subClass.prototype.constructor = subClass;
+
+    subClass.db = Model.db;
+    subClass.dbName = getDBName(subClass);
+    subClass.db.initDBHandle(subClass.dbName);
+    subClass.objects = new mmanager.ModelManager(subClass);
+
+  }
+
+  Model.prototype.commit = function(cb) {
     var doc = {};
     for (var i in this.constructor.schema) {
       var field = this.constructor.schema[i];
       switch (field.type) {
         case 'foreignkey':
-          doc[field.name] = {
+          doc[i] = {
             'type': 'foreignkey',
             'model': field.model,
             //'id': this.fields[field.name].fields._id
-            'id': this.fields[field.name]
+            'id': this.fields[i]
           }
           break;
         default:
-          doc[field.name] = this.fields[field.name];
+          doc[i] = this.fields[i];
       }
     }
     doc['acl'] = {
       'groups': ['4hands'],
       'users': ['rlenczewski'],
     };
-    Model.db.putDocument(doc, this.constructor.dbName);
+    Model.db.putDocument(doc, this.constructor.dbName, cb);
   }
 
-  exports.Model = Model;
+  Model.prototype.toString = function() {
+    return this.fields.name;
+  }
+
+  return {
+    Model: Model,
+  };
 });

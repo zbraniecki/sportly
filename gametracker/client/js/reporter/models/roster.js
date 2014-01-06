@@ -24,30 +24,19 @@ define(['feather/utils/date',
   RosterModel.objects = new ModelManager(RosterModel);
 
 
-  RosterModel.schema = [
-    { 
-      'name': '_id',
+  RosterModel.schema = {
+    'name': {
       'type': 'string',
     },
-    { 
-      'name': '_rev',
-      'type': 'string',
-    },
-    {
-      'name': 'name',
-      'type': 'string'
-    },
-    {
-      'name': 'event',
+    'event': {
       'type': 'foreignkey',
       'model': 'Event',
     },
-    {
-      'name': 'team',
+    'team': {
       'type': 'foreignkey',
       'model': 'Team',
     }
-  ];
+  };
 
   function RosterPlayerModel() {
     Model.call(this);
@@ -61,26 +50,25 @@ define(['feather/utils/date',
   RosterPlayerModel.objects = new ModelManager(RosterPlayerModel);
 
 
-  RosterPlayerModel.schema = [
-    { 
-      'name': '_id',
+  RosterPlayerModel.schema = {
+    '_id': {
       'type': 'string',
     },
-    { 
-      'name': '_rev',
+    '_rev': {
       'type': 'string',
     },
-    {
-      'name': 'roster',
+    'roster': {
       'type': 'foreignkey',
       'model': 'Roster',
     },
-    {
-      'name': 'player',
+    'player': {
       'type': 'foreignkey',
       'model': 'Player',
-    }
-  ];
+    },
+    'number': {
+      'type': 'string',
+    },
+  };
 
   return {
     RosterModel: RosterModel,

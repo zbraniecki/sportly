@@ -1,31 +1,31 @@
 define(['feather/app',
         'feather/view_manager',
-        'feather/db',
-        'feather/models/model'],
-        function (app, view_manager, db, model) {
+        'feather/db'],
+        function (app, view_manager, db) {
   'use strict';
 
   var DB = db.DB;
   var ViewManager = view_manager.ViewManager;
-  var Model = model.Model;
 
   function Reporter() {
     app.App.call(this);
 
-    this.appName = 'Reporter';
-
     this.db = null;
+    this.viewManager = null;
   }
 
-  Reporter.prototype = Object.create(app.App);
-  Reporter.prototype.constructor = Reporter;
+  app.App.extend(Reporter);
 
   Reporter.prototype.init = function() {
-    this.db = new DB();
-    Model.db = this.db;
+    this.db = new DB(this);
+    this.viewManager = new ViewManager(this);
 
-    var viewManager = new ViewManager(this);
-    viewManager.init();
+    this.db.init({
+      'dbs': ['team', 'game', 'event', 'player', 'roster', 'roster_player']
+    });
+    this.viewManager.init();
+    this.viewManager.showView('eventlist');
+
   }
 
   return {

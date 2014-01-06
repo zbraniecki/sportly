@@ -52,27 +52,36 @@ define(function (require, exports) {
     }.bind(this));
   }
 
-  Form.prototype.createFields = function() {
+  function createFields() {
     this.schema.forEach(function(schemaElement) {
       var field;
-      switch(schemaElement.type) {
-        case 'string':
-          field = new StringField(schemaElement, this);
-          break;
-        case 'dateTime':
-          field = new DateTimeField(schemaElement, this);
-          break;
-        case 'foreignkey':
-          field = new ForeignkeyField(schemaElement, this);
-          break;
-        case 'submit':
-          field = new SubmitField(schemaElement, this);
-          break;
+      if (!schemaElement.type) {
+        field = new schemaElement(this);
+      } else {
+        switch(schemaElement.type) {
+          case 'string':
+            field = new StringField(schemaElement, this);
+            break;
+          case 'dateTime':
+            field = new DateTimeField(schemaElement, this);
+            break;
+          case 'foreignkey':
+            field = new ForeignkeyField(schemaElement, this);
+            break;
+          case 'fieldgroup':
+            field = new FieldGroup(schemaElement, this);
+            break;
+          case 'submit':
+            field = new SubmitField(schemaElement, this);
+            break;
+        }
+        field.name = schemaElement.name.toLowerCase().replace(' ', '_');
       }
-      field.name = schemaElement.name.toLowerCase().replace(' ', '_');
       this.fields.push(field);
     }.bind(this));
   }
+
+  Form.prototype.createFields = createFields; 
 
   Form.prototype.getHTML = function() {
     var formNode = document.createElement('form');
@@ -259,16 +268,18 @@ define(function (require, exports) {
       label.textContent = this.schema.model;
       var select = document.createElement('select');
 
+      var option = document.createElement('option');
+      option.textContent = '---';
+      option.value = null;
+      select.appendChild(option);
       for (var i in docs) {
         var doc = docs[i];
         var option = document.createElement('option');
-        option.textContent = doc.fields.name;
+        option.textContent = doc.toString();
         option.value = doc.fields._id;
         select.appendChild(option);
 
-        if (!this.value) {
-          this.value = doc.fields._id;
-        } else if (this.value == doc.fields._id) {
+        if (this.value == doc.fields._id) {
           option.setAttribute('selected', 'selected');
         }
       }
@@ -282,6 +293,55 @@ define(function (require, exports) {
     return formGroup;
   }
 
+  /*
+  function FieldGroup(schema, form) {
+    this.form = form;
+    this.fields = [];
+    this.schema = schema;
+
+    this.createFields();
+
+    this.node = null;
+  }
+
+  FieldGroup.prototype.createFields = createFields;
+
+  FieldGroup.prototype.getHTML = function() {
+    var PlayerModel = require('reporter/models/player').PlayerModel;
+
+    var table = document.createElement('table');
+    var tr = document.createElement('tr');
+    var th = document.createElement('th');
+    th.textContent = 'Name';
+    tr.appendChild(th);
+    table.appendChild(tr);
+
+    var selects = [];
+
+    for (var i in this.fields) {
+      var tr = document.createElement('tr');
+
+      var td = document.createElement('td');
+      td.appendChild(this.fields[i].getHTML());
+      tr.appendChild(td);
+
+      table.appendChild(tr);
+    }
+    PlayerModel.objects.all(function(docs) {
+      for (var i in selects) {
+        for (var j in docs) {
+          var option = document.createElement('option');
+          option.textContent = docs[j].fields.firstname;
+          option.value = docs[j].fields._id;
+          selects[i].appendChild(option);
+        }
+      }
+    });
+    return table;
+  }
+  */
+
   exports.Form = Form;
   exports.Field = Field;
+  //exports.FieldGroup = FieldGroup;
 });

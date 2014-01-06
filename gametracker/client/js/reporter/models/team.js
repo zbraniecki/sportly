@@ -22,36 +22,29 @@ define(['feather/utils/date',
   TeamModel.objects = new ModelManager(TeamModel);
 
 
-  TeamModel.schema = [
-    { 
-      'name': '_id',
+  TeamModel.schema = {
+    '_id': {
       'type': 'string',
     },
-    { 
-      'name': '_rev',
+    '_rev': {
       'type': 'string',
     },
-    {
-      'name': 'name',
+    'name': {
       'type': 'string'
     },
-    {
-      'name': 'division',
+    'division': {
       'type': 'string'
     },
-    {
-      'name': 'city',
+    'city': {
       'type': 'string'
     },
-    {
-      'name': 'region',
+    'region': {
       'type': 'string'
     },
-    {
-      'name': 'country',
+    'country': {
       'type': 'string'
     },
-  ];
+  };
 
 
   return {

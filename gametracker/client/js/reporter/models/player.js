@@ -22,25 +22,24 @@ define(['feather/utils/date',
   PlayerModel.objects = new ModelManager(PlayerModel);
 
 
-  PlayerModel.schema = [
-    { 
-      'name': '_id',
+  PlayerModel.schema = {
+    '_id': {
       'type': 'string',
     },
-    { 
-      'name': '_rev',
+    '_rev': {
       'type': 'string',
     },
-    {
-      'name': 'firstname',
+    'firstname': {
       'type': 'string'
     },
-    {
-      'name': 'lastname',
+    'lastname': { 
       'type': 'string'
     },
-  ];
+  };
 
+  PlayerModel.prototype.toString = function() {
+    return this.fields.firstname + ' ' + this.fields.lastname;
+  }
 
   return {
     PlayerModel: PlayerModel,

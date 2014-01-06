@@ -30,6 +30,10 @@ define(function (require, exports) {
   };
 
   EventEmitter.prototype.removeEventListener = function ee_rm(type, listener) {
+    if (!listener) {
+      this._listeners[type] = [];
+    }
+
     var typeListeners = this._listeners[type];
     var pos = typeListeners.indexOf(listener);
     if (pos === -1) {

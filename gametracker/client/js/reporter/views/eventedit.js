@@ -1,11 +1,7 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
 define(function (require, exports) {
   'use strict';
 
-  var ViewManager = require('feather/view_manager');
-  var View = ViewManager.View;
+  var View = require('feather/view_manager').View;
 
   var EventForm = null;
   var EventModel = null;
@@ -14,22 +10,24 @@ define(function (require, exports) {
     View.call(this, viewManager);
   }
 
+  View.extend(EventEditView);
 
-  EventEditView.prototype = Object.create(View.prototype);
-  EventEditView.prototype.constructor = EventEditView;
-
-  EventEditView.prototype._init = function(cb) {
-    require(['feather/forms/model_form',
-             'feather/forms/manager',
-             'reporter/models/event',
-             'reporter/forms/event'], function(MF, FM, EM, EF) {
+  EventEditView.prototype.init = function(node, cb) {
+    require(['reporter/models/event',
+             'reporter/forms/event'], function(EM, EF) {
       EventForm = EF.EventForm;
       EventModel = EM.EventModel;
-      cb();
-    });
+      View.prototype.init.call(this, node, cb);
+      var self = this;
+
+      this.nodes['back_button'] = this.viewNode.querySelector('.btn-back');
+      this.nodes['back_button'].addEventListener('click', function() {
+        self.viewManager.showView('eventlist'); 
+      });
+    }.bind(this));
   }
 
-  EventEditView.prototype._preShow = function(cb) {
+  EventEditView.prototype.preShow = function(options, cb) {
     var rootNode = this.viewNode.querySelector('.panel-body');
 
     if (rootNode.childNodes.length) {
@@ -46,7 +44,7 @@ define(function (require, exports) {
       var domFragment = ef.getHTML();
 
       rootNode.appendChild(domFragment);
-      cb();
+      View.prototype.preShow.call(this, options, cb);
       return;
     }
     EventModel.objects.get(this.options.eid, function(model) {
@@ -59,18 +57,8 @@ define(function (require, exports) {
       var domFragment = ef.getHTML();
 
       rootNode.appendChild(domFragment);
-      cb();
+      View.prototype.preShow.call(this, options, cb);
     }.bind(this));
-  }
-
-  EventEditView.prototype._bindUI = function(cb) {
-    var self = this;
-
-    this.nodes['back_button'] = this.viewNode.querySelector('.btn-back');
-    this.nodes['back_button'].addEventListener('click', function() {
-      self.viewManager.showView('eventlist'); 
-    });
-    cb();
   }
 
   exports.View = EventEditView;

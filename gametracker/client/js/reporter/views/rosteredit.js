@@ -46,13 +46,15 @@ define(function (require, exports) {
       this.viewNode.querySelector('.panel-title').textContent = 'New roster for ' + doc.fields.name;
 
       if (!('rid' in this.options)) {
-        var tf = new RosterForm();
+        var rf = new RosterForm();
 
-        tf.addEventListener('commit', function() {
-          this.viewManager.showView('rosterlist');
+        rf.addEventListener('commit', function() {
+          this.viewManager.showView('rosterlist', {
+            'tid': tid,
+          });
         }.bind(this));
 
-        var domFragment = tf.getHTML();
+        var domFragment = rf.getHTML();
 
         rootNode.appendChild(domFragment);
         cb();
