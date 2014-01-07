@@ -48,19 +48,22 @@ DB.prototype = {
 
   registerChangeListener: function(name) {
     dump('registering change listener for '+name);
-    this.dbHandles[name].changes({
-      continuous: true,
-      include_docs: true,
-      onChange: function(change) {
-        if (!change.deleted) {
-          dump('added event fired');
-          this.dbEmitters[name].emit('added', change.doc);
-        } else {
-          dump('remove event fired');
-          this.dbEmitters[name].emit('removed', change.id); 
-        }
-      }.bind(this)
-    });
+    this.dbHandles[name].info(function(err, info) {
+      this.dbHandles[name].changes({
+        continuous: true,
+        since: info.update_seq,
+        include_docs: true,
+        onChange: function(change) {
+          if (!change.deleted) {
+            dump('added event fired');
+            this.dbEmitters[name].emit('added', change.doc);
+          } else {
+            dump('remove event fired');
+            this.dbEmitters[name].emit('removed', change.id); 
+          }
+        }.bind(this)
+      });
+    }.bind(this));
   },
 
   sync: function(name) {
