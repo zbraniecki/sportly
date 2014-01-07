@@ -1,8 +1,8 @@
 define(['feather/view_manager'],
-       function (require, exports) {
+       function (vm) {
   'use strict';
 
-  var View = require('feather/view_manager').View;
+  var View = vm.View;
 
   var EventForm = null;
   var EventModel = null;
@@ -35,33 +35,35 @@ define(['feather/view_manager'],
       rootNode.removeChild(rootNode.childNodes[0]);
     }
 
-    if (!('eid' in this.options)) {
-      var ef = new EventForm();
+    if (options && ('eid' in options)) {
+      EventModel.objects.get(options.eid, function(model) {
+        var ef = new EventForm(model);
 
-      ef.addEventListener('commit', function() {
-        this.viewManager.showView('eventlist');
+        ef.addEventListener('commit', function() {
+          this.viewManager.showView('eventlist');
+        }.bind(this));
+
+        var domFragment = ef.getHTML();
+
+        rootNode.appendChild(domFragment);
+        View.prototype.preShow.call(this, options, cb);
       }.bind(this));
-
-      var domFragment = ef.getHTML();
-
-      rootNode.appendChild(domFragment);
-      View.prototype.preShow.call(this, options, cb);
       return;
     }
-    EventModel.objects.get(this.options.eid, function(model) {
-      var ef = new EventForm(model);
+    var ef = new EventForm();
 
-      ef.addEventListener('commit', function() {
-        this.viewManager.showView('eventlist');
-      }.bind(this));
-
-      var domFragment = ef.getHTML();
-
-      rootNode.appendChild(domFragment);
-      View.prototype.preShow.call(this, options, cb);
+    ef.addEventListener('commit', function() {
+      this.viewManager.showView('eventlist');
     }.bind(this));
+
+    var domFragment = ef.getHTML();
+
+    rootNode.appendChild(domFragment);
+    View.prototype.preShow.call(this, options, cb);
   }
 
-  exports.View = EventEditView;
+  return {
+    View: EventEditView,
+  };
 });
 
