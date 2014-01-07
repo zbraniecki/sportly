@@ -1,9 +1,12 @@
-define(function (require, exports) {
+define(['feather/view_manager',
+       'feather/utils/date',
+       'reporter/models/event'],
+       function (vm, date, emodel) {
   'use strict';
 
-  var View = require('feather/view_manager').View;
-  var DateFormatter = require('feather/utils/date').DateFormatter;
-  var EventModel = require('reporter/models/event').EventModel;
+  var View = vm.View;
+  var DateFormatter = date.DateFormatter;
+  var EventModel = emodel.EventModel;
 
   var cols = [
     'date',
@@ -46,7 +49,6 @@ define(function (require, exports) {
   EventListView.prototype.onDataLoaded = function() {
     EventModel.objects.addEventListener('added', this.drawRow.bind(this));
     EventModel.objects.addEventListener('removed', this.removeRow.bind(this));
-    //EventModel.db.sync('event');
   }
 
   EventListView.prototype.preShow = function(options, cb) {
@@ -86,7 +88,6 @@ define(function (require, exports) {
   }
 
   EventListView.prototype.removeRow = function(eid) {
-    console.log('removed registered '+eid)
     var rootNode = this.viewNode.querySelector('tbody');
     var trs = rootNode.getElementsByTagName('tr');
 
@@ -165,5 +166,7 @@ define(function (require, exports) {
     return tr;
   }
 
-  exports.View = EventListView;
+  return {
+    View: EventListView,
+  };
 });

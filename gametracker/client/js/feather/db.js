@@ -12,7 +12,7 @@ var DEBUG = true;
 
 function dump(msg) {
   if (DEBUG) {
-    console.log(msg);
+    console.log('DB: '+msg);
   }
 }
 
@@ -53,8 +53,10 @@ DB.prototype = {
       include_docs: true,
       onChange: function(change) {
         if (!change.deleted) {
+          dump('added event fired');
           this.dbEmitters[name].emit('added', change.doc);
         } else {
+          dump('remove event fired');
           this.dbEmitters[name].emit('removed', change.id); 
         }
       }.bind(this)

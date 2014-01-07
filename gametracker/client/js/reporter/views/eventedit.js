@@ -1,4 +1,5 @@
-define(function (require, exports) {
+define(['feather/view_manager'],
+       function (require, exports) {
   'use strict';
 
   var View = require('feather/view_manager').View;

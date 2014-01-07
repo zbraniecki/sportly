@@ -26,6 +26,10 @@ define(['feather/event_emitter'],
     this.emitter.addEventListener(type, cb);
   }
 
+  ModelManager.prototype.removeEventListener = function(type, cb) {
+    this.emitter.removeEventListener(type, cb);
+  }
+
   ModelManager.prototype.get = function(eid, cb) {
     var model = new this.model();
     this.model.db.getDocument(eid, this.model.dbName, function(doc) {

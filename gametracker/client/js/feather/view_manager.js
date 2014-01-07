@@ -1,8 +1,13 @@
-if (typeof define !== 'function') {
-  var define = require('amdefine')(module);
-}
 define(function (require, exports) {
   'use strict';
+
+var DEBUG = true;
+
+function dump(msg) {
+  if (DEBUG) {
+    console.log('ViewManager: '+msg);
+  }
+}
 
   function ViewManager(app) {
     this.app = app;
@@ -44,6 +49,7 @@ define(function (require, exports) {
     this.ensureViewInitialized(name, function() {
       view.obj.preShow(options, function() {
         if (this.currentView) {
+          this.views[this.currentView].obj.preHide();
           this.views[this.currentView].node.classList.remove('current');
         }
         view.node.classList.add('current');
@@ -71,65 +77,22 @@ define(function (require, exports) {
   }
 
   View.prototype.init = function(node, cb) {
+    dump('View.init '+this.constructor.name);
     this.viewNode = node;
     cb();
   }
 
   View.prototype.preShow = function(options, cb) {
+    dump('View.preShow '+this.constructor.name);
     cb();
   }
 
   View.prototype.preHide = function(cb) {
-    cb();
-  }
-
-  /*
-  View.prototype.bindUI = function(cb) {
-    if (this._bindUI) {
-      this._bindUI(function() {
-        this.loaded = true;
-        cb();
-      }.bind(this));
-    } else {
-      this.loaded = true;
+    dump('View.preHide '+this.constructor.name);
+    if (cb) {
       cb();
     }
   }
-
-  View.prototype.drawUI = function(cb) {
-    if (this._drawUI) {
-      this._drawUI(cb);
-    } else {
-      cb();
-    }
-  }
-
-  View.prototype.preShow = function(options, cb) {
-    if (options) {
-      this.options = options;
-    } else {
-      this.options = {};
-    }
-    if (this._preShow) {
-      this._preShow(function() {
-        if (!this.loaded) {
-          this.drawUI(this.bindUI.bind(this, cb));
-        } else {
-          cb();
-        }
-      }.bind(this));
-    } else {
-      if (!this.loaded) {
-        this.drawUI(this.bindUI.bind(this, cb));
-      } else {
-        cb();
-      }
-    }
-  }
-
-  View.prototype.preHide = function() {
-  }
-  */
 
   exports.ViewManager = ViewManager;
   exports.View = View;
