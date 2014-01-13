@@ -1,4 +1,4 @@
-define(['feather/models/manager'],
+define(['feather/db/models/manager'],
        function (mmanager) {
   'use strict';
 
@@ -24,7 +24,6 @@ define(['feather/models/manager'],
 
     subClass.db = Model.db;
     subClass.dbName = getDBName(subClass);
-    subClass.db.initDBHandle(subClass.dbName);
     subClass.objects = new mmanager.ModelManager(subClass);
 
   }
