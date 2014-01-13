@@ -1,6 +1,6 @@
 define(['feather/app',
         'feather/view_manager',
-        'feather/db'],
+        'feather/db/db'],
         function (app, view_manager, db) {
   'use strict';
 
@@ -21,11 +21,13 @@ define(['feather/app',
     this.viewManager = new ViewManager(this);
 
     this.db.init({
-      'dbs': ['team', 'game', 'event', 'player', 'roster', 'roster_player']
-    });
-    this.viewManager.init();
-    this.viewManager.showView('eventlist');
-
+      'driver': 'pouchdb',
+      //'dbs': ['team', 'game', 'event', 'player', 'roster', 'roster_player']
+      'dbs': ['event']
+    }).then(function() {
+      this.viewManager.init();
+      this.viewManager.showView('eventlist');
+    }.bind(this));
   }
 
   return {

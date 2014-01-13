@@ -1,5 +1,5 @@
 define(['feather/utils/date',
-        'feather/models/model'],
+        'feather/db/models/model'],
         function (date, model) {
   'use strict';
 
