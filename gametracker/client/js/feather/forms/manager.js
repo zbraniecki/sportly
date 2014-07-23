@@ -176,7 +176,7 @@ define(function (require, exports) {
   }
 
   DateTimeField.prototype.onChange = function(evt) {
-    this.value = evt.value;
+    this.value = evt.target.value;
   }
 
   DateTimeField.prototype.getHTML = function() {

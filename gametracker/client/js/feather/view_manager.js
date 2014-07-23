@@ -1,7 +1,7 @@
 define(function (require, exports) {
   'use strict';
 
-var DEBUG = true;
+var DEBUG = false;
 
 function dump(msg) {
   if (DEBUG) {

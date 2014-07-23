@@ -44,6 +44,11 @@ define(['feather/view_manager',
       self.viewManager.showView('playerlist'); 
     });
 
+    this.nodes['clear_button'] = this.viewNode.querySelector('.btn-clear');
+    this.nodes['clear_button'].addEventListener('click', function() {
+      EventModel.db.clear();
+    });
+
   }
 
   EventListView.prototype.onDataLoaded = function() {

@@ -5,7 +5,7 @@ define(['feather/event_emitter',
   var EventEmitter = ee.EventEmitter;
 
 
-var DEBUG = true;
+var DEBUG = false;
 
 function dump(msg) {
   if (DEBUG) {
@@ -56,6 +56,7 @@ DB.prototype = {
   },
 
   clear: function() {
+    PouchDB.destroy('event', function(err, info) { console.dir(err); console.dir(info); });
   },
 
   putDocument: function(doc, dbName, cb) {

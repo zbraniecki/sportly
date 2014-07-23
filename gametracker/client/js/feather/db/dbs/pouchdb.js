@@ -1,5 +1,13 @@
 define(['feather/db/dbs/dbs'], function (dbs) {
 
+var DEBUG = true;
+
+function dump(msg) {
+  if (DEBUG) {
+    console.log('DB: '+msg);
+  }
+}
+
   function PouchDBS() {
     dbs.DBS.call(this);
 
@@ -21,9 +29,9 @@ define(['feather/db/dbs/dbs'], function (dbs) {
   PouchDBS.prototype.putDocument = function(doc, dbName) {
     var promise = new Promise(function(resolve, reject) {
 
-      var oper = this.dbHandles[dbName].put;
+      var oper = this.dbHandles[dbName].put.bind(this.dbHandles[dbName]);
       if (!doc['_id']) {
-        oper = this.dbHandles[dbName].post;
+        oper = this.dbHandles[dbName].post.bind(this.dbHandles[dbName]);
       }
       oper(doc, function callback(err, result) {
         if (!err) {
@@ -59,7 +67,7 @@ define(['feather/db/dbs/dbs'], function (dbs) {
   PouchDBS.prototype.removeDocument = function(doc, dbName) {
     var promise = new Promise(function(resolve, reject) {
 
-      this.dbHandlers[dbName].remove(evt, function(err, response) {
+      this.dbHandles[dbName].remove(doc, function(err, response) {
         dump('document removed');
         resolve();
       });
@@ -71,7 +79,7 @@ define(['feather/db/dbs/dbs'], function (dbs) {
   PouchDBS.prototype.getDocument = function(did, dbName) {
     var promise = new Promise(function(resolve, reject) {
 
-      this.dbHandlers[dbName].get(did, function(err, doc) {
+      this.dbHandles[dbName].get(did, function(err, doc) {
         resolve(doc);
       });
 
