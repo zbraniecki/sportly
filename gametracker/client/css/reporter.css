@@ -6,7 +6,82 @@ body {
    margin: 0;
    height: 100%;
    width: 100%;
+   background-color: #eee;
+   display: flex;
+   flex-flow: column;
 } 
+
+
+header, footer {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  min-height: 2em;
+  background: #ffeebb;
+}
+
+#main {
+  margin: 0px;
+  padding: 0px;
+  flex: 1 1 auto;
+  display: flex;
+}
+
+#logo {
+  cursor: pointer;
+}
+
+h1 {
+  display: inline-block;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+nav {
+  background-color: #eebbff;
+  width: 10em;
+  overflow: hidden;
+  position: absolute;
+  left: -10em;
+  height: calc(100% - 2em);
+  transition: 0.4s;
+  z-index: 100;
+  transition-timing-function: ease;
+}
+
+body.menu_open nav {
+  left: 0em;
+}
+
+div#views {
+  flex: 1 1 auto;
+}
+
+div.cover {
+  position: absolute;
+  left: 0em;
+  width: 100%;
+  height: calc(100% - 2em);
+  background-color: black;
+  opacity: 0;
+  transition: 0.4s;
+  z-index: -1;
+}
+
+body.menu_open div.cover {
+  opacity: 0.5;
+  z-index: 50;
+}
+
+.menu-toggle {
+  transition: 0.4s;
+}
+
+body.menu_open .menu-toggle {
+  margin-left: -0.5em;
+  margin-right: 0.5em;
+}
 
 .view {
   display: none;

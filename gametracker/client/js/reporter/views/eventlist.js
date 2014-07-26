@@ -25,30 +25,34 @@ define(['feather/view_manager',
   View.extend(EventListView);
 
   EventListView.prototype.init = function(node, cb) {
-    View.prototype.init.call(this, node, cb);
+    return new Promise(function (resolve, reject) {
+      View.prototype.init.call(this, node).then(function() {
+      
+        var self = this;
 
-    var self = this;
+        this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
+        this.nodes['add_button'].addEventListener('click', function() {
+          self.viewManager.showView('eventedit'); 
+        });
 
-    this.nodes['add_button'] = this.viewNode.querySelector('.btn-add');
-    this.nodes['add_button'].addEventListener('click', function() {
-      self.viewManager.showView('eventedit'); 
-    });
+        this.nodes['teams_button'] = this.viewNode.querySelector('.btn-teams');
+        this.nodes['teams_button'].addEventListener('click', function() {
+          self.viewManager.showView('teamlist'); 
+        });
 
-    this.nodes['teams_button'] = this.viewNode.querySelector('.btn-teams');
-    this.nodes['teams_button'].addEventListener('click', function() {
-      self.viewManager.showView('teamlist'); 
-    });
+        this.nodes['players_button'] = this.viewNode.querySelector('.btn-players');
+        this.nodes['players_button'].addEventListener('click', function() {
+          self.viewManager.showView('playerlist'); 
+        });
 
-    this.nodes['players_button'] = this.viewNode.querySelector('.btn-players');
-    this.nodes['players_button'].addEventListener('click', function() {
-      self.viewManager.showView('playerlist'); 
-    });
+        this.nodes['clear_button'] = this.viewNode.querySelector('.btn-clear');
+        this.nodes['clear_button'].addEventListener('click', function() {
+          EventModel.db.clear();
+        });
+        resolve();
 
-    this.nodes['clear_button'] = this.viewNode.querySelector('.btn-clear');
-    this.nodes['clear_button'].addEventListener('click', function() {
-      EventModel.db.clear();
-    });
-
+      }.bind(this));
+    }.bind(this));
   }
 
   EventListView.prototype.onDataLoaded = function() {
@@ -56,14 +60,16 @@ define(['feather/view_manager',
     EventModel.objects.addEventListener('removed', this.removeRow.bind(this));
   }
 
-  EventListView.prototype.preShow = function(options, cb) {
-    var EventModel = require('reporter/models/event').EventModel;
+  EventListView.prototype.preShow = function(options) {
+    return new Promise(function (resolve, reject) {
+      var EventModel = require('reporter/models/event').EventModel;
 
-    EventModel.objects.all(this.drawRows.bind(this, function() {
-      this.onDataLoaded();
-      View.prototype.preShow.call(this, options, cb);
-    }.bind(this)));
-
+      /* XXX resolve DB issues */
+      EventModel.objects.all(this.drawRows.bind(this, function() {
+        this.onDataLoaded();
+        View.prototype.preShow.call(this, options).then(resolve);
+      }.bind(this)));
+    }.bind(this));
   }
 
   EventListView.prototype.preHide = function(cb) {

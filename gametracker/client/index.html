@@ -10,9 +10,25 @@
     <script src="./js/vendor/jquery.js"></script>
     <script src="./js/vendor/bootstrap.js"></script>
     <script data-main="js/reporter/main" src="./js/vendor/require.js"></script>
+
+    <link rel="import" for="eventlist" href="views/eventlist.html">
   </head>
 
   <body>
+    <header>
+      <div id="logo">
+        <span class="glyphicon glyphicon-align-justify menu-toggle"></span>
+        <h1>Sportly</h1>
+      </div>
+    </header>
+    <div id='main'>
+      <nav>nav</nav>
+      <div class="cover"></div>
+      <div id="views">
+        <section is="eventlist" role="region" id="eventlist"></section>
+      </div>
+    </div>
+    <!--
     <div id="view-eventlist" class="view view-eventlist">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -167,6 +183,7 @@
       </div>
     </div>
 
+    -->
  </body>
 </html>
 

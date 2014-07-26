@@ -1,33 +1,32 @@
 define(['feather/app',
-        'feather/view_manager',
-        'feather/db/db'],
-        function (app, view_manager, db) {
+        'feather/db/db',
+        'reporter/chrome'],
+        function (app, db, chrome) {
   'use strict';
 
   var DB = db.DB;
-  var ViewManager = view_manager.ViewManager;
+  var Chrome = chrome.Chrome;
 
   function Reporter() {
     app.App.call(this);
 
     this.db = null;
-    this.viewManager = null;
+    this.chrome = null;
   }
 
   app.App.extend(Reporter);
 
   Reporter.prototype.init = function() {
     this.db = new DB(this);
-    this.viewManager = new ViewManager(this);
+    this.chrome = new Chrome(this);
 
-    this.db.init({
-      'driver': 'pouchdb',
-      //'dbs': ['team', 'game', 'event', 'player', 'roster', 'roster_player']
-      'dbs': ['event']
-    }).then(function() {
-      this.viewManager.init();
-      this.viewManager.showView('eventlist');
-    }.bind(this));
+    this.chrome.init().then(
+      this.db.init.bind(this, {
+        'driver': 'pouchdb',
+        'dbs': ['event']
+      })).then(function() {
+        this.chrome.viewManager.showView('eventlist');
+      }.bind(this));
   }
 
   return {

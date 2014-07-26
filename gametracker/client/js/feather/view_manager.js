@@ -1,4 +1,5 @@
-define(function (require, exports) {
+define(['feather/utils/io'],
+       function (io) {
   'use strict';
 
 var DEBUG = false;
@@ -9,55 +10,90 @@ function dump(msg) {
   }
 }
 
-  function ViewManager(app) {
-    this.app = app;
+  function ViewManager(chrome) {
+    this.chrome = chrome;
     this.views = {};
     this.currentView = null;
   }
 
   ViewManager.prototype.init = function(opts) {
-    var viewNodes = document.querySelectorAll('.view');
+    var viewNodes = document.querySelectorAll('#views > section');
 
-    for (var i = 0; i < viewNodes.length; i++) {
-      var node = viewNodes[i];
-      var name = viewNodes[i].getAttribute('id').substring(5);
+    return new Promise(function (resolve, reject) {
+      for (var i = 0; i < viewNodes.length; i++) {
+        var node = viewNodes[i];
+        var name = viewNodes[i].getAttribute('id');
 
-      this.views[name] = {'node': viewNodes[i], 'obj': null};
-    } 
-  }
-
-  ViewManager.prototype.initView = function(name, cb) {
-    var view = this.views[name];
-    var appDir = this.app.constructor.name.toLowerCase();
-    require([appDir+'/views/'+name], function(View) {
-      view.obj = new View.View(this);
-      view.obj.init(view.node, cb);
+        this.views[name] = {'node': viewNodes[i], 'obj': null};
+      } 
+      resolve();
     }.bind(this));
   }
 
-  ViewManager.prototype.ensureViewInitialized = function(name, cb) {
-    var view = this.views[name];
-    if (!view.obj) {
-      this.initView(name, cb);
-    } else {
-      cb();
-    }
+  ViewManager.prototype.loadHTML = function(name) {
+    return new Promise(function (resolve, reject) {
+      var link = document.querySelector('link[rel="import"][for="eventlist"]');
+
+      var importURL = link.getAttribute('href');
+
+      io.load(importURL, function(err, source) {
+        this.views[name].node.innerHTML = source;
+        resolve();
+      }.bind(this));
+    }.bind(this));
   }
 
-  ViewManager.prototype.showView = function(name, options, cb) {
+  ViewManager.prototype.loadClass = function(name) {
     var view = this.views[name];
-    this.ensureViewInitialized(name, function() {
-      view.obj.preShow(options, function() {
-        if (this.currentView) {
-          this.views[this.currentView].obj.preHide();
-          this.views[this.currentView].node.classList.remove('current');
-        }
-        view.node.classList.add('current');
-        this.currentView = name;
-        if (cb) {
-          cb();
-        }
+    var appDir = this.chrome.app.constructor.name.toLowerCase();
+
+    return new Promise(function (resolve, reject) {
+      require([appDir+'/views/'+name], function(View) {
+        view.obj = new View.View(this);
+        view.obj.init(view.node).then(function() {
+          resolve();
+        });
       }.bind(this));
+    });
+  }
+
+  ViewManager.prototype.initView = function(name) {
+
+    return new Promise(function (resolve, reject) {
+      this.views[name].node = document.querySelector('section[is="eventlist"]'); 
+      this.loadHTML(name).then(this.loadClass.bind(this, name)).then(resolve);
+    }.bind(this));
+  }
+
+  ViewManager.prototype.ensureViewInitialized = function(name) {
+    var view = this.views[name];
+    return new Promise(function (resolve, reject) {
+      if (!view.obj) {
+        this.initView(name).then(resolve);
+      } else {
+        resolve();
+      }
+    }.bind(this));
+  }
+
+  ViewManager.prototype.showView = function(name, options) {
+    var view = this.views[name];
+
+    return new Promise(function (resolve, reject) {
+      this.ensureViewInitialized(name).then(function() {
+        view.obj.preShow(options).then(function() {
+          console.log('foo');
+          if (this.currentView) {
+            this.views[this.currentView].obj.preHide();
+            this.views[this.currentView].node.classList.remove('current');
+          }
+          view.node.classList.add('current');
+          this.currentView = name;
+          if (cb) {
+            cb();
+          }
+        }.bind(this));
+      }.bind(this)); 
     }.bind(this));
   }
 
@@ -76,15 +112,19 @@ function dump(msg) {
     subClass.prototype.constructor = subClass;
   }
 
-  View.prototype.init = function(node, cb) {
-    dump('View.init '+this.constructor.name);
-    this.viewNode = node;
-    cb();
+  View.prototype.init = function(node) {
+    return new Promise(function (resolve, reject) {
+      dump('View.init '+this.constructor.name);
+      this.viewNode = node;
+      resolve();
+    }.bind(this));
   }
 
   View.prototype.preShow = function(options, cb) {
-    dump('View.preShow '+this.constructor.name);
-    cb();
+    return new Promise(function (resolve, reject) {
+      dump('View.preShow '+this.constructor.name);
+      resolve();
+    });
   }
 
   View.prototype.preHide = function(cb) {
@@ -94,6 +134,8 @@ function dump(msg) {
     }
   }
 
-  exports.ViewManager = ViewManager;
-  exports.View = View;
+  return {
+    ViewManager: ViewManager,
+    View: View
+  };
 });
