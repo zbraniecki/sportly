@@ -64,10 +64,8 @@ DB.prototype = {
       cb(did);
     });
   },
-  getDocuments: function(dbName, cb) {
-    this.dbs.getDocuments(dbName).then(function(docs) {
-      cb(docs);
-    });
+  getDocuments: function(dbName) {
+    return this.dbs.getDocuments(dbName);
   },
   removeDocument: function(doc, dbName, cb) {
     this.dbs.removeDocument(doc, dbName).then(function() {

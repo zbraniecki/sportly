@@ -13,53 +13,61 @@ define(['feather/view_manager'],
 
   View.extend(EventEditView);
 
-  EventEditView.prototype.init = function(node, cb) {
-    require(['reporter/models/event',
-             'reporter/forms/event'], function(EM, EF) {
-      EventForm = EF.EventForm;
-      EventModel = EM.EventModel;
-      View.prototype.init.call(this, node, cb);
-      var self = this;
+  EventEditView.prototype.init = function(node) {
+    return new Promise(function (resolve, reject) {
+      require(['reporter/models/event',
+               'reporter/forms/event'], function(EM, EF) {
+          EventForm = EF.EventForm;
+          EventModel = EM.EventModel;
+          View.prototype.init.call(this, node).then(function() {
+            resolve();
+          });
+          var self = this;
 
-      this.nodes['back_button'] = this.viewNode.querySelector('.btn-back');
-      this.nodes['back_button'].addEventListener('click', function() {
-        self.viewManager.showView('eventlist'); 
-      });
+          this.nodes['back_button'] = this.viewNode.querySelector('.btn-back');
+          this.nodes['back_button'].addEventListener('click', function() {
+            self.viewManager.showView('eventlist'); 
+          });
+        }.bind(this));
     }.bind(this));
   }
 
-  EventEditView.prototype.preShow = function(options, cb) {
-    var rootNode = this.viewNode.querySelector('.panel-body');
+  EventEditView.prototype.preShow = function(options) {
+    return new Promise(function (resolve, reject) {
+      var rootNode = this.viewNode.querySelector('.panel-body');
 
-    if (rootNode.childNodes.length) {
-      rootNode.removeChild(rootNode.childNodes[0]);
-    }
+      if (rootNode.childNodes.length) {
+        rootNode.removeChild(rootNode.childNodes[0]);
+      }
 
-    if (options && ('eid' in options)) {
-      EventModel.objects.get(options.eid, function(model) {
-        var ef = new EventForm(model);
+      if (options && ('eid' in options)) {
+        EventModel.objects.get(options.eid, function(model) {
+          var ef = new EventForm(model);
 
-        ef.addEventListener('commit', function() {
-          this.viewManager.showView('eventlist');
+          ef.addEventListener('commit', function() {
+            this.viewManager.showView('eventlist');
+          }.bind(this));
+
+          var domFragment = ef.getHTML();
+
+          rootNode.appendChild(domFragment);
+          View.prototype.preShow.call(this, options, cb);
         }.bind(this));
+        return;
+      }
+      var ef = new EventForm();
 
-        var domFragment = ef.getHTML();
-
-        rootNode.appendChild(domFragment);
-        View.prototype.preShow.call(this, options, cb);
+      ef.addEventListener('commit', function() {
+        this.viewManager.showView('eventlist');
       }.bind(this));
-      return;
-    }
-    var ef = new EventForm();
 
-    ef.addEventListener('commit', function() {
-      this.viewManager.showView('eventlist');
+      var domFragment = ef.getHTML();
+
+      rootNode.appendChild(domFragment);
+      View.prototype.preShow.call(this, options).then(function() {
+        resolve();
+      });
     }.bind(this));
-
-    var domFragment = ef.getHTML();
-
-    rootNode.appendChild(domFragment);
-    View.prototype.preShow.call(this, options, cb);
   }
 
   return {

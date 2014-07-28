@@ -83,11 +83,11 @@ body.menu_open .menu-toggle {
   margin-right: 0.5em;
 }
 
-.view {
+#views > section {
   display: none;
 }
 
-.view.current {
+#views > section.current {
   display: block;
 }
 

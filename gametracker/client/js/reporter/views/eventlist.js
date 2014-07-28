@@ -24,7 +24,7 @@ define(['feather/view_manager',
 
   View.extend(EventListView);
 
-  EventListView.prototype.init = function(node, cb) {
+  EventListView.prototype.init = function(node) {
     return new Promise(function (resolve, reject) {
       View.prototype.init.call(this, node).then(function() {
       
@@ -64,11 +64,12 @@ define(['feather/view_manager',
     return new Promise(function (resolve, reject) {
       var EventModel = require('reporter/models/event').EventModel;
 
-      /* XXX resolve DB issues */
-      EventModel.objects.all(this.drawRows.bind(this, function() {
-        this.onDataLoaded();
-        View.prototype.preShow.call(this, options).then(resolve);
-      }.bind(this)));
+      EventModel.objects.all().then(
+        this.drawRows.bind(this)).then(function() {
+          this.onDataLoaded();
+          View.prototype.preShow.call(this, options).then(resolve);
+          resolve();
+        }.bind(this));
     }.bind(this));
   }
 
@@ -79,9 +80,11 @@ define(['feather/view_manager',
   }
 
 
-  EventListView.prototype.drawRows = function(cb, docs) {
-    docs.forEach(this.drawRow.bind(this));
-    cb();
+  EventListView.prototype.drawRows = function(docs) {
+    return new Promise(function (resolve, reject) {
+      docs.forEach(this.drawRow.bind(this));
+      resolve();
+    }.bind(this));
   }
 
   EventListView.prototype.drawRow = function(doc) {

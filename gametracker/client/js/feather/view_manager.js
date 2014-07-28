@@ -32,11 +32,11 @@ function dump(msg) {
 
   ViewManager.prototype.loadHTML = function(name) {
     return new Promise(function (resolve, reject) {
-      var link = document.querySelector('link[rel="import"][for="eventlist"]');
+      var link = document.querySelector('link[rel="import"][for="'+name+'"]');
 
       var importURL = link.getAttribute('href');
 
-      io.load(importURL, function(err, source) {
+      io.load(importURL).then(function(source) {
         this.views[name].node.innerHTML = source;
         resolve();
       }.bind(this));
@@ -54,13 +54,12 @@ function dump(msg) {
           resolve();
         });
       }.bind(this));
-    });
+    }.bind(this));
   }
 
   ViewManager.prototype.initView = function(name) {
-
     return new Promise(function (resolve, reject) {
-      this.views[name].node = document.querySelector('section[is="eventlist"]'); 
+      this.views[name].node = document.querySelector('section[is="'+name+'"]'); 
       this.loadHTML(name).then(this.loadClass.bind(this, name)).then(resolve);
     }.bind(this));
   }
@@ -82,16 +81,13 @@ function dump(msg) {
     return new Promise(function (resolve, reject) {
       this.ensureViewInitialized(name).then(function() {
         view.obj.preShow(options).then(function() {
-          console.log('foo');
           if (this.currentView) {
             this.views[this.currentView].obj.preHide();
             this.views[this.currentView].node.classList.remove('current');
           }
           view.node.classList.add('current');
           this.currentView = name;
-          if (cb) {
-            cb();
-          }
+          resolve();
         }.bind(this));
       }.bind(this)); 
     }.bind(this));
@@ -124,7 +120,7 @@ function dump(msg) {
     return new Promise(function (resolve, reject) {
       dump('View.preShow '+this.constructor.name);
       resolve();
-    });
+    }.bind(this));
   }
 
   View.prototype.preHide = function(cb) {

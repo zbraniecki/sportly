@@ -21,7 +21,7 @@ define(['feather/app',
     this.chrome = new Chrome(this);
 
     this.chrome.init().then(
-      this.db.init.bind(this, {
+      this.db.init.bind(this.db, {
         'driver': 'pouchdb',
         'dbs': ['event']
       })).then(function() {

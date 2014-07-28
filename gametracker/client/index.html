@@ -12,6 +12,7 @@
     <script data-main="js/reporter/main" src="./js/vendor/require.js"></script>
 
     <link rel="import" for="eventlist" href="views/eventlist.html">
+    <link rel="import" for="eventedit" href="views/eventedit.html">
   </head>
 
   <body>
@@ -26,48 +27,10 @@
       <div class="cover"></div>
       <div id="views">
         <section is="eventlist" role="region" id="eventlist"></section>
+        <section is="eventedit" role="region" id="eventedit"></section>
       </div>
     </div>
     <!--
-    <div id="view-eventlist" class="view view-eventlist">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Events</h3>
-        </div>
-        <table class="panel-body table table-bordered game-list">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Division</th>
-              <th>Teams</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-      <button class="btn-add btn btn-default">Add event</button>
-      <button class="btn-teams btn btn-default">Teams</button>
-      <button class="btn-players btn btn-default">Players</button>
-      <button class="btn-fullscreen btn btn-default">Full screen</button>
-      <button class="btn-clear btn btn-warning">Clear data</button>
-      <button class="btn-sync btn btn-info">Sync</button>
-    </div>
-    <div id="view-eventedit" class="view view-eventedit">
-      <button class="btn-back btn btn-default">Back</button>
-      <div class="container">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-          <h3 class="panel-title">New event</h3>
-          </div>
-          <div class="panel-body">
-          </div>
-        </div>
-      </div>
-    </div>
     <div id="view-teamlist" class="view view-teamlist">
       <h1></h1>
       <div class="panel panel-default">

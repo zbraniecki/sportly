@@ -40,19 +40,21 @@ define(['feather/event_emitter'],
     }.bind(this));
   }
 
-  ModelManager.prototype.all = function(cb) {
-    this.model.db.getDocuments(this.model.dbName, function(docs) {
-      var models = [];
-      docs.forEach(function(doc) {
-        var model = new this.model();
-        for(var k in model.fields) {
-          model.fields[k] = doc[k];
-        }
-        model.fields['_id'] = doc._id;
-        model.fields['_rev'] = doc._rev;
-        models.push(model);
+  ModelManager.prototype.all = function() {
+    return new Promise(function (resolve, reject) {
+      this.model.db.getDocuments(this.model.dbName).then(function(docs) {
+        var models = [];
+        docs.forEach(function(doc) {
+          var model = new this.model();
+          for(var k in model.fields) {
+            model.fields[k] = doc[k];
+          }
+          model.fields['_id'] = doc._id;
+          model.fields['_rev'] = doc._rev;
+          models.push(model);
+        }.bind(this));
+        resolve(models);
       }.bind(this));
-      cb(models);
     }.bind(this));
   }
 
