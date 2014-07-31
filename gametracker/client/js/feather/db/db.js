@@ -68,9 +68,7 @@ DB.prototype = {
     return this.dbs.getDocuments(dbName);
   },
   removeDocument: function(doc, dbName, cb) {
-    this.dbs.removeDocument(doc, dbName).then(function() {
-      cb();
-    });
+    return this.dbs.removeDocument(doc, dbName);
   },
   getDocument: function(did, dbName, cb) {
     this.dbs.getDocument(did, dbName).then(function(doc) {

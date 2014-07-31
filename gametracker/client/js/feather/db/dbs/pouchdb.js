@@ -65,7 +65,7 @@ function dump(msg) {
   }
 
   PouchDBS.prototype.removeDocument = function(doc, dbName) {
-    var promise = new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
 
       this.dbHandles[dbName].remove(doc, function(err, response) {
         dump('document removed');
@@ -73,7 +73,6 @@ function dump(msg) {
       });
 
     }.bind(this));
-    return promise;
   }
 
   PouchDBS.prototype.getDocument = function(did, dbName) {
@@ -89,6 +88,7 @@ function dump(msg) {
 
   PouchDBS.prototype.registerChangeListener = function(name) {
     dump('registering change listener for '+name);
+    console.log(this);
     this.dbHandles[name].info(function(err, info) {
       this.dbHandles[name].changes({
         continuous: true,

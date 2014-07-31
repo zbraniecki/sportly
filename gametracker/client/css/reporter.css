@@ -29,6 +29,19 @@ header, footer {
 
 #logo {
   cursor: pointer;
+  display: inline-block;
+  height: 2em;
+  line-height: 2em;
+}
+
+.breadcrumb {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 2em;
+  height: 2em;
+  margin-left: 0.5em;
+  background: none;
 }
 
 h1 {
